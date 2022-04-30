@@ -1,0 +1,143 @@
+body {
+    margin: unset;
+}
+
+img {
+    user-select: none;
+}
+
+#bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(24, 23, 23, 0.9);
+    padding: 10px 0px;
+    width: 100%;
+    z-index: 10;
+}
+
+#title {
+    font-size: 20px;
+    margin-left: 20px;
+    color: white;
+    background-color: unset;
+    border: unset;
+}
+
+#barImg {
+    margin-right: 20px;
+}
+
+#barImg img {
+height: 30px;
+padding-right: 18px;
+}
+
+#background {
+    background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
+    overflow: hidden;
+    width: 100%;
+    min-height: 100vh;
+}
+
+#msg {
+    margin-top: 60px;
+    text-align: center;
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#elementBox {
+    background-color: rgba(24, 23, 23, 0.6);
+    margin: 10px auto;
+    border: 1px solid #ccc;
+    width: 96%;
+}
+
+#notesArea {
+    padding: 5px 8px;
+    color: white;
+    font-size: 18px;
+    resize: vertical;
+    width: calc(100% - 16px);
+    min-height: 80vh;
+    background: unset;
+    border: unset;
+}
+.toDosBox {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ccc;
+}
+
+.toDosBox:first-child {
+    border-top: unset;
+}
+
+.toDosBox img {
+    height: 22px !important;
+    padding: 6px;
+}
+.todos {
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    resize: vertical;
+    outline: unset;
+    width: 94%;
+}
+
+.todos:focus {
+    background-color: rgb(49, 48, 48);
+}
+
+.todosIsDone {
+    text-decoration: line-through;
+    text-decoration-color: rgb(255, 182, 182);
+    text-decoration-thickness: 2px;
+}
+
+.toDosCheckbox {
+    cursor: pointer;
+    background-color: aqua;
+    width: 17px; 
+    height: 17px;
+}
+
+#addTodos {
+    margin-left: 12px;
+    padding: 5px;
+    background-color: rgba(24, 23, 23, 0.6);
+    color: white;
+    border: 1px solid #ccc;
+    width: fit-content;
+    user-select: none;
+    cursor: pointer;
+}
+
+#error {
+    text-align: center;
+    color: red;
+    font-size: 30px;
+}
+
+/* ...............................mWeb............................. */
+@media screen and (max-width: 480px) {
+    #title {
+        font-size: 19px;
+        margin-left: 15px;
+        width: 220px;
+    }
+
+    #barImg {
+        margin: unset;
+        /* background-color: red; */
+    }
+    #barImg img {
+    padding-right: 12px;
+    }
+}

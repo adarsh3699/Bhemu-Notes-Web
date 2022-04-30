@@ -1,0 +1,117 @@
+body {
+    margin: unset;
+}
+
+#bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align: center;
+    font-weight: 500;
+    font-size: 18px;
+    background-color: rgba(24, 23, 23, 0.9);
+    color: rgb(255, 255, 255);
+    width: 100%;
+    user-select: none;
+}
+
+#inputBox {
+    height: 25px;
+    width: 350px;
+    margin: 8px 0px;
+    font-size: 105%;
+}
+
+#addButton {
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    z-index: 2;
+    width: 100px;
+    text-align: center;
+}
+
+#addButton img {
+    margin-bottom: 2px;
+    padding: 2px 8px;
+}
+
+#option {
+    background-color: rgb(110, 110, 95);
+    border: solid black 1px;
+    display: none;
+    user-select: none;
+    font-size: 17px;
+}
+
+.showOption {
+    display: block !important;
+}
+
+#option div{
+    padding: 10px;
+}
+#option div:first-child {
+    border-bottom: solid black 1px;
+}
+
+#background {
+    background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
+    overflow: hidden;
+    width: 100%;
+    min-height: 100vh;
+}
+
+#msg {
+    margin-top: 60px;
+    text-align: center;
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#list div{
+    display: flex;
+    align-items: center;
+    border: 1px rgb(70, 66, 66) solid;
+    background-color: rgba(29, 28, 28, 0.9);
+    padding-left: 10px;
+    height: 90px;
+    margin-top: 5px;
+    font-size: 150%;
+    color: white;
+}
+
+#list img{
+    user-select: none;
+    padding-left: 10px;
+    height: 28px;
+}
+
+/* ...............................mWeb............................. */
+@media screen and (max-width: 510px) {
+    #bar {
+        text-align: unset;
+
+   }
+
+    #inputBox {
+        width: 290px;
+        margin: 8px 8px;
+        font-size: 105%;
+    }
+
+    #addButton {
+        right: 0px;
+        text-align: right;
+    }
+    
+    #option {
+        background-color: rgb(110, 110, 95);
+        border: solid black 1px;
+        display: none;
+        user-select: none;
+        text-align: center;
+        font-size: 17px;
+    }
+}

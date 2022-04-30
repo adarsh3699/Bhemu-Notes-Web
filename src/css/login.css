@@ -1,0 +1,95 @@
+body {
+    font-family: 'Arial';
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: unset;
+}
+
+#background {
+    background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
+    overflow: hidden;
+    width: 100%;
+    min-height: 100vh;
+}
+
+#wrapper {
+    padding-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#form {
+    border-radius: 5px;
+    width: 360px;
+    background-color: rgba(26, 25, 25, 0.89);
+    text-align: center;
+    margin-top: 10px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+}
+
+#form input {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+    background-color: #f0f2f5;
+    border: none;
+    border-radius: 5px;
+    width: 90%;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+hr {
+    background: #dadde1 !important;
+}
+
+#login {
+    background-color: #1877f2;
+    height: 40px;
+    color: white;
+    font-weight: 700;
+    font-size: 100%;
+    margin-bottom: 10px;
+    width: 50%;
+}
+
+.red {
+    color: red;
+    font-size: 80%;
+}
+
+.disableBtn {
+    background-color: gray !important;
+    pointer-events: none;
+}
+
+#createAcc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #42b72a !important;
+    color: white;
+    font-weight: 600;
+    font-size: 100%;
+    margin-top: 15px;
+    height: 35px;
+    border-radius: 2px;
+}
+
+#signup {
+    background-color: #42b72a !important;
+    color: white;
+    font-weight: 600;
+    font-size: 100%;
+    border-radius: 3px;
+    padding: 10px;
+    margin-top: 15px;
+    width: 80%;
+}
+
+/* @media screen and (max-width: 480px) {
+
+} */

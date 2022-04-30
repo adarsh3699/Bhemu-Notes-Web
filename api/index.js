@@ -40,6 +40,6 @@ app.use(function(err, req, res, next) {
 });
 
 //setup server
-app.listen(process.env.PORT || 3000, function() {
+app.listen(process.env.PORT || 4000, function() {
   console.log("Server Running");
 });
