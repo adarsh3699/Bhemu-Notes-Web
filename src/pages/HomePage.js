@@ -45,10 +45,10 @@ function HomePage() {
 
     async function addNotes(type, notesTitle) {
         const apiResp = await apiCall("http://localhost:4000/api/notes?userId=" + myUserId, false, "post", (type === "todo" ? { notesType: 1, notesTitle: "" } : { notesTitle: notesTitle }));
-        
+
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
-            console.log("Notes Added");  
+            console.log("Notes Added");
             handleNoteClick(apiResp.noteId)
         }
     };
@@ -80,6 +80,7 @@ function HomePage() {
                         <form id="bar" onSubmit={handelFormSubmit}>
                             <input type="text" id="inputBox" autoFocus placeholder="Take a note..." value={textInput} onChange={handelTextInput} />
                         </form>
+                        
                         <div id="addButton" onClick={handleAddBtnClick} >
                             <img src={addIcon} height="30px" id="addImg" />
                             <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >

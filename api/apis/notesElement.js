@@ -73,8 +73,10 @@ app.put('/', function(req, res) {
 
 app.post('/save', function(req, res) {
     const notesId = req.query.notesId;
-    const element = mySQLRealEscapeString(req.body.element);
-    console.log("element", element)
+    // const element = mySQLRealEscapeString(req.body.element);
+    const element = req.body.element;
+    
+    // console.log("element", element)
     if (!notesId || !element) {
         res.status(400);
         res.send({statusCode: 400, msg: "Please provide all details"});

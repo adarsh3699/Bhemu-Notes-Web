@@ -81,7 +81,14 @@ function NotesPage() {
         }
 
         if (noteData[0].notesType === 1) {
-            // await apiCall("http://localhost:4000/api/notesElement/save?notesId="+ myNotesId, false, "post", {element: todosData} );
+            const apiResp = await apiCall("http://localhost:4000/api/notesElement/save?notesId="+ myNotesId, false, "post", {element: noteData} );
+            if (apiResp.statusCode === 200) {
+                setMsg("Saved");
+                console.log("Todos Updated =>", apiResp.msg);
+            } else {
+                setMsg(apiResp.msg);
+            }
+
         } else if (noteData[0].notesType === 0) {
             if (noteData[0].element !== notesText) {
                 const apiResp = await apiCall("http://localhost:4000/api/notesElement?notesId=" + myNotesId, false, "put", { element: notesText });
@@ -105,8 +112,36 @@ function NotesPage() {
         }
     }
 
-    function handelTodoText(e) {
-        console.log(e.target.value);
+    function handelTodoText(index, e) {
+        const newToDos = noteData.map(function(toDo, i) {
+            return (i === index ? { ...toDo, element: e.target.value } : toDo)
+        })
+
+        setNoteData(newToDos);
+    }
+
+    function handleAddToDoBtnClick() {
+        const newNoteData = noteData.push({ element: "", isDone: 0 });
+        setNoteData([ ...noteData, { element: "", isDone: 0, notesType:1 }]);
+        console.log(noteData);
+    }
+
+    function handleCheckboxClick(index, isDone) {
+        const newToDos = noteData.map(function(toDo, i) {
+            return (i === index ? { ...toDo, isDone: isDone === 1 ? 0:1 } : toDo)
+        })
+        setNoteData(newToDos);
+    }
+
+    function handleDeleteToDoBtnClick(index) {
+
+        // const newToDos = noteData.map(function(toDo, i) {
+        //     return (i === index ? noteData.splice(i, 1) : toDo)
+
+        // })
+        // setNoteData(newToDos);
+        // console.log(newToDos);
+        
     }
 
     return (
@@ -127,17 +162,19 @@ function NotesPage() {
                     {/* <textarea id="notesArea"></textarea> */}
 
                     {
-                        noteData.map(function (list) {
+                        noteData.map(function (list, index) {
                             return (
 
                                 list.notesType === 0 ?
-                                <textarea id="notesArea" key={list.elementId} role="textbox" onChange={handelNotesTextChange} value={notesText} ></textarea>
+                                <textarea id="notesArea" key={index} role="textbox" onChange={handelNotesTextChange} value={notesText} ></textarea>
                                 :
                                 list.notesType === 1 ?
-                                    <div className="toDosBox" key={ list.elementId } >
-                                        <input type="checkbox" />
-                                        <input type="text" id={list.elementId} className="todos ' + isDoneClass + '" value={list.element} onChange={handelTodoText} />
-                                        <img src={crossIcon} />
+                                    <div className="toDosBox" key={ index } >
+
+                                        <input type="checkbox" checked={list?.isDone === 1 ? true : false} onChange={()=> handleCheckboxClick(index, list.isDone) } />
+                                        <input type="text" id={ index } className={ list?.isDone === 1 ? "todosIsDone todos" : "todos" } value={list.element} onChange={(e)=> handelTodoText(index, e)} />
+                                        <img src={crossIcon} onClick={() => handleDeleteToDoBtnClick(index) } />
+
                                     </div>
                                     : null
                                 
@@ -145,7 +182,7 @@ function NotesPage() {
                         })
                     }
                 </div>
-                    {noteData[0]?.notesType === 1 ? <div id="addTodos">Add ToDos</div>: null}
+                    {noteData[0]?.notesType === 1 ? <div id="addTodos" onClick={ handleAddToDoBtnClick }>Add ToDos</div>: null}
             </div>
         </>
     )
