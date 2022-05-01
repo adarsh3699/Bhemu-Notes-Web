@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#loadingScreen {
+  margin-top: 10%;
+  font-size: 50px;
+  text-align: center;
+}

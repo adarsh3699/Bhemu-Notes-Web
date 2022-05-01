@@ -93,6 +93,8 @@ padding-right: 18px;
     resize: vertical;
     outline: unset;
     width: 94%;
+    background-color: unset;
+    border: unset;
 }
 
 .todos:focus {

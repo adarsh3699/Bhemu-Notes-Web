@@ -46,7 +46,7 @@ function HomePage() {
     async function addNotes(type, notesTitle) {
         const apiResp = await apiCall("http://localhost:4000/api/notes?userId=" + myUserId, false, "post", (type === "todo" ? { notesType: 1, notesTitle: "" } : { notesTitle: notesTitle }));
         
-        if (apiResp.statusCode == 200) {
+        if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");  
             handleNoteClick(apiResp.noteId)

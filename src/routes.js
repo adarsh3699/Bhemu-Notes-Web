@@ -14,7 +14,7 @@ const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 function Routes() {
     return (
         <BrowserRouter>
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={<div id='loadingScreen'>loading...</div>}>
                 <Switch>
                     <Route exact path="/" element={<LoginPage />} />
                     <Route exact path="/home" element={<HomePage />} />
