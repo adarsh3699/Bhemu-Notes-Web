@@ -10,6 +10,9 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
 
+    if (cookies.get('userId')) {
+        document.location.href = "/home";
+    }
     
     function handelUserNameChange(e) {
         setuserName(e.target.value)

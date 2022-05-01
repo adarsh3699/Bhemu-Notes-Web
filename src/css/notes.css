@@ -6,6 +6,10 @@ img {
     user-select: none;
 }
 
+.noteIdNotFound {
+    display: none !important;
+}
+
 #bar {
     position: fixed;
     top: 0;
