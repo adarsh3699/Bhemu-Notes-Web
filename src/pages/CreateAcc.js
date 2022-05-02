@@ -3,21 +3,20 @@ import { apiCall } from "../utils";
 import "../css/login.css";
 
 function CreateAcc() {
-
     const [userName, setuserName] = useState("");
     const [password, setPassword] = useState("");
     const [confPassword, setConfPassword] = useState("");
     const [msg, setMsg] = useState("");
 
-    function handelNewUsername(e) {
+    function handleNewUsername(e) {
         setuserName(e.target.value)
     }
 
-    function handelNewPassword(e) {
+    function handleNewPassword(e) {
         setPassword(e.target.value)
     }
 
-    function handelConfirmPassword(e) {
+    function handleConfirmPassword(e) {
         setConfPassword(e.target.value)
     }
 
@@ -26,8 +25,8 @@ function CreateAcc() {
 
         if(userName !== "" && password !== "" && confPassword !== "") {
             if(password === confPassword) {
-                const apiResp = await apiCall("http://localhost:4000/api/users", false , "post", { username: userName , password: password});
-                console.log(apiResp);
+                const apiResp = await apiCall("users", false , "post", { username: userName , password: password});
+                setMsg("successfully registered")
             } else {
                 setMsg("Passwords didn't match. Try again.")
             }
@@ -41,15 +40,15 @@ function CreateAcc() {
             <div id="wrapper">
                 <form id="form" onSubmit={ handleFormSubmit }>
                     <div>
-                        <input type="text" placeholder="User Name" id="newUserName" value={ userName } onChange={handelNewUsername} />
+                        <input type="text" placeholder="User Name" id="newUserName" value={ userName } onChange={handleNewUsername} />
                     </div>
 
                     <div>
-                        <input type="Password" placeholder="Password" id="newPassword" value={ password } onChange={handelNewPassword} />
+                        <input type="Password" placeholder="Password" id="newPassword" value={ password } onChange={handleNewPassword} />
                     </div>
 
                     <div>
-                        <input type="Password" placeholder="Confirm Password" id="confirmPass" value={ confPassword } onChange={handelConfirmPassword} />
+                        <input type="Password" placeholder="Confirm Password" id="confirmPass" value={ confPassword } onChange={handleConfirmPassword} />
                     </div>
 
                     <hr />

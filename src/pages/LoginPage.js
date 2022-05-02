@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
-import Cookies from 'universal-cookie';
-import { apiCall } from "../utils";
+import React, { useState, useEffect } from 'react';
+import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import "../css/login.css";
 
 function LoginPage() {
-    const cookies = new Cookies();
-    
     const [userName, setuserName] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
-    if (cookies.get('userId')) {
-        document.location.href = "/home";
-    }
-    
-    function handelUserNameChange(e) {
+    useEffect(() => {
+        if (getLoggedUserId()) {
+            document.location.href = "/home";
+            return;
+        } else {
+            setIsLoading(false);
+        }
+    }, []);
+
+    function handleUserNameChange(e) {
         setuserName(e.target.value)
     }
 
-    function handelPasswordChange(e) {
+    function handlePasswordChange(e) {
         setPassword(e.target.value)
     }
 
@@ -26,49 +29,55 @@ function LoginPage() {
         e.preventDefault();
 
         if (userName !== "" && password !== "") {
-            const apiResp = await apiCall("http://localhost:4000/api/users?userName=" + userName + "&password=" + password);
+            const apiResp = await apiCall("users?userName=" + userName + "&password=" + password);
             if (apiResp.statusCode === 200) {
                 const userId = apiResp?.data[0]?.id;
                 if (userId) {
-                    cookies.set('userId', userId);
+                    setLoggedUserId(userId)
                     document.location.href = "/home";
+                    return;
                 } else {
                     setMsg(apiResp.msg)
                 }
             } else {
                 setMsg(apiResp.msg)
             }
-
         } else {
             setMsg("Please enter Your Username and Password")
         }
     }
 
     return (
-        <div id="background">
-            <div id="wrapper">
-                <form id="form" onSubmit={handleFormSubmit}>
-                    <div>
-                        <input type="text" placeholder="User Name" id="userName" value={userName} onChange={handelUserNameChange} />
+        <>
+            {
+                isLoading ? null
+                    :
+                    <div id="background">
+                        <div id="wrapper">
+                            <form id="form" onSubmit={handleFormSubmit}>
+                                <div>
+                                    <input type="text" placeholder="User Name" id="userName" value={userName} onChange={handleUserNameChange} />
+                                </div>
+
+                                <div>
+                                    <input type="password" placeholder="Password" id="password" value={password} onChange={handlePasswordChange} />
+                                </div>
+
+                                <div>
+                                    <button id="login">Login</button>
+                                </div>
+
+                                <div id="msg" className="red" > {msg} </div>
+                                <hr />
+
+                                <a href="/createAcc">
+                                    <div id="createAcc">Create New Account</div>
+                                </a>
+                            </form>
+                        </div>
                     </div>
-
-                    <div>
-                        <input type="password" placeholder="Password" id="password" value={password} onChange={handelPasswordChange} />
-                    </div>
-
-                    <div>
-                        <button id="login">Login</button>
-                    </div>
-
-                    <div id="msg" className="red" > {msg} </div>
-                    <hr />
-
-                    <a href="/createAcc">
-                        <div id="createAcc">Create New Account</div>
-                    </a>
-                </form>
-            </div>
-        </div>
+            }
+        </>
     )
 }
 
