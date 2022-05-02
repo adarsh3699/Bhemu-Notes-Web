@@ -19,7 +19,7 @@ function NotesPage() {
     const [msg, setMsg] = useState("");
 
 
-    useEffect(() => {
+    useEffect(function getDataFromUrl() {
         if (!myUserId) {
             document.location.href = "/";
             return;
@@ -43,7 +43,7 @@ function NotesPage() {
         }
     }, [])
 
-    useEffect(() => {
+    useEffect(function getApiCaller() {
         return async function () {
             if (myNotesId) {
                 const apiResp = await apiCall("http://localhost:4000/api/notesElement?notesId=" + myNotesId)
@@ -81,7 +81,7 @@ function NotesPage() {
         }
 
         if (noteData[0].notesType === 1) {
-            const apiResp = await apiCall("http://localhost:4000/api/notesElement/save?notesId="+ myNotesId, false, "post", {element: noteData} );
+            const apiResp = await apiCall("http://localhost:4000/api/notesElement/save?notesId=" + myNotesId, false, "post", { element: noteData });
             if (apiResp.statusCode === 200) {
                 setMsg("Saved");
                 console.log("Todos Updated =>", apiResp.msg);
@@ -112,8 +112,9 @@ function NotesPage() {
         }
     }
 
+    //for todos
     function handelTodoText(index, e) {
-        const newToDos = noteData.map(function(toDo, i) {
+        const newToDos = noteData.map(function (toDo, i) {
             return (i === index ? { ...toDo, element: e.target.value } : toDo)
         })
 
@@ -122,26 +123,23 @@ function NotesPage() {
 
     function handleAddToDoBtnClick() {
         const newNoteData = noteData.push({ element: "", isDone: 0 });
-        setNoteData([ ...noteData, { element: "", isDone: 0, notesType:1 }]);
+        setNoteData([...noteData, { element: "", isDone: 0, notesType: 1 }]);
         console.log(noteData);
     }
 
     function handleCheckboxClick(index, isDone) {
-        const newToDos = noteData.map(function(toDo, i) {
-            return (i === index ? { ...toDo, isDone: isDone === 1 ? 0:1 } : toDo)
+        const newToDos = noteData.map(function (toDo, i) {
+            return (i === index ? { ...toDo, isDone: isDone === 1 ? 0 : 1 } : toDo)
         })
         setNoteData(newToDos);
     }
 
     function handleDeleteToDoBtnClick(index) {
 
-        // const newToDos = noteData.map(function(toDo, i) {
-        //     return (i === index ? noteData.splice(i, 1) : toDo)
-
-        // })
-        // setNoteData(newToDos);
-        // console.log(newToDos);
+        let newToDos = [...noteData];
+        newToDos.splice(index, 1);
         
+        setNoteData(newToDos);
     }
 
     return (
@@ -159,30 +157,28 @@ function NotesPage() {
                 <div id="msg">{msg}</div>
                 <div id="elementBox" className={isNotesId.condition ? null : 'noteIdNotFound'}>
 
-                    {/* <textarea id="notesArea"></textarea> */}
-
                     {
                         noteData.map(function (list, index) {
                             return (
 
                                 list.notesType === 0 ?
-                                <textarea id="notesArea" key={index} role="textbox" onChange={handelNotesTextChange} value={notesText} ></textarea>
-                                :
-                                list.notesType === 1 ?
-                                    <div className="toDosBox" key={ index } >
+                                    <textarea id="notesArea" key={index} role="textbox" onChange={handelNotesTextChange} value={notesText} ></textarea>
+                                    :
+                                    list.notesType === 1 ?
+                                        <div className="toDosBox" key={index} >
 
-                                        <input type="checkbox" checked={list?.isDone === 1 ? true : false} onChange={()=> handleCheckboxClick(index, list.isDone) } />
-                                        <input type="text" id={ index } className={ list?.isDone === 1 ? "todosIsDone todos" : "todos" } value={list.element} onChange={(e)=> handelTodoText(index, e)} />
-                                        <img src={crossIcon} onClick={() => handleDeleteToDoBtnClick(index) } />
+                                            <input type="checkbox" checked={list?.isDone === 1 ? true : false} onChange={() => handleCheckboxClick(index, list.isDone)} />
+                                            <input type="text" id={index} className={list?.isDone === 1 ? "todosIsDone todos" : "todos"} value={list.element} onChange={(e) => handelTodoText(index, e)} />
+                                            <img src={crossIcon} onClick={() => handleDeleteToDoBtnClick(index)} />
 
-                                    </div>
-                                    : null
-                                
+                                        </div>
+                                        : null
+
                             )
                         })
                     }
                 </div>
-                    {noteData[0]?.notesType === 1 ? <div id="addTodos" onClick={ handleAddToDoBtnClick }>Add ToDos</div>: null}
+                {noteData[0]?.notesType === 1 ? <div id="addTodos" onClick={handleAddToDoBtnClick}>Add ToDos</div> : null}
             </div>
         </>
     )
