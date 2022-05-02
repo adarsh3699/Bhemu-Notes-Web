@@ -70,7 +70,7 @@ function LoginPage() {
                                 <div id="msg" className="red" > {msg} </div>
                                 <hr />
 
-                                <a href="/createAcc">
+                                <a href="/register">
                                     <div id="createAcc">Create New Account</div>
                                 </a>
                             </form>
