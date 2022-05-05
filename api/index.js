@@ -27,12 +27,21 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api', function(req, res) {
-  res.send("notes apis");
+  res.send("notes mysql apis");
 });
 
 app.use('/api/users', require('./apis/users'));
 app.use('/api/notes', require('./apis/notes'));
 app.use('/api/notesElement', require('./apis/notesElement'));
+
+
+app.get('/api2', function(req, res) {
+  res.send("notes mongo apis");
+});
+
+app.use('/api2/users', require('./apis-mongo/users'));
+app.use('/api2/notes', require('./apis-mongo/notes'));
+app.use('/api2/notesElement', require('./apis-mongo/notesElement'));
 
 //error handling
 app.use(function(err, req, res, next) {
