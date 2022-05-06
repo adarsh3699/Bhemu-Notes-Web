@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiCall, getLoggedUserId } from "../utils";
+import { apiCall, getLoggedUserId, decryptText } from "../utils";
 import "../css/home.css";
 import addIcon from "../img/add.png"
 import deleteBtn from "../img/delete.png"
@@ -40,12 +40,13 @@ function HomePage() {
     }, [flag]);
 
     async function addNotes(type, notesTitle) {
-        const apiResp = await apiCall("notes?userId=" + myUserId, false, "post", (type === "todo" ? { notesType: 1, notesTitle: "" } : { notesTitle: notesTitle }));
+        const apiResp = await apiCall("notes?userId=" + myUserId, false, "post", (type === "todo" ? { notesType: true} : { notesTitle: notesTitle }));
 
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
-            handleNoteClick(apiResp.noteId)
+            console.log(apiResp);
+            handleNoteClick(apiResp.data._id)
         } else {
             setMsg(apiResp.msg)
         }
@@ -66,7 +67,7 @@ function HomePage() {
     }
 
     async function handleDeleteBtnClick(noteId) {
-        const apiResp = await apiCall("notes/" + noteId, false, "delete");
+        const apiResp = await apiCall("notes?noteId=" + noteId, false, "delete");
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
         } else {
@@ -99,7 +100,7 @@ function HomePage() {
                                     list.map(function (list) {
                                         return (
                                             <div id={list.notesId} key={list.notesId} onClick={() => handleNoteClick(list.notesId)}>
-                                                {list.notesTitle}
+                                                {decryptText(list.notesTitle)}
                                                 <img src={deleteBtn} onClick={(e) => { e.stopPropagation(); handleDeleteBtnClick(list.notesId) }} />
                                             </div>
                                         )
