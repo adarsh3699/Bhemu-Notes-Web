@@ -37,7 +37,9 @@ img {
 
 #barImg img {
 height: 30px;
-padding-right: 18px;
+margin-right: 8px;
+padding: 0 5px;
+cursor: pointer;
 }
 
 #background {
