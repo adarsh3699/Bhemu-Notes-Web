@@ -1,31 +1,31 @@
 const express = require('express');
-var mysql = require('mysql');
 const { runQuery, mySQLRealEscapeString } = require('../helpers');
 
 //setting express
 const app = express();
 
-//mysql databse connection
-const dbConnect = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database : 'notes2'
-});
-dbConnect.connect(function(error) {});
+//mongo databse connection
+var dbConnect = require('monk')('mongodb://localhost/bhemu-notes');
+var notesElementTable = dbConnect.get('notesElement');
 
-app.get('/', function(req, res) {
+//get
+app.get('/', async function(req, res) {
     const notesId =  req.query.notesId;
     if (!notesId) {
         res.status(400);
         res.send({statusCode: 400, msg: "notesId not provided"});
         return;
     }
-    const query = ` SELECT notesElement.*, notes.notesTitle, notes.notesType FROM notesElement INNER JOIN notes WHERE notes.notesId = ` + notesId + ` AND notesElement.notesId = ` + notesId;
-    runQuery(dbConnect, query, res);
+    const queryResp = await notesElementTable.find({ notesId });
+    res.status(200);
+    res.send({ statusCode: 200, msg: "success", data: queryResp})
+
+    // const query = ` SELECT notesElement.*, notes.notesTitle, notes.notesType FROM notesElement INNER JOIN notes WHERE notes.notesId = ` + notesId + ` AND notesElement.notesId = ` + notesId;
+    // runQuery(dbConnect, query, res);
 });
 
-app.post('/', function(req, res) {
+//insert
+app.post('/', async function(req, res) {
     const notesId = req.query.notesId;
     const element = req.body.element;
     if (!notesId || !element) {
@@ -33,44 +33,48 @@ app.post('/', function(req, res) {
         res.send({statusCode: 400, msg: "Please provide all details"});
         return;
     }
-    runQuery(dbConnect, "INSERT INTO `notesElement` (`notesId`, `element`) VALUES ('"+ notesId +"', '"+ element +"')", res);
+    const queryResp = await notesElementTable.insert({ notesId, element, idDone: 0 });
+    res.status(200);
+    res.send({ statusCode: 200, msg: "success", data: queryResp})
+
+    // runQuery(dbConnect, "INSERT INTO `notesElement` (`notesId`, `element`) VALUES ('"+ notesId +"', '"+ element +"')", res);
 })
 
-app.delete('/', function(req, res) {
+//delete
+app.delete('/', async function(req, res) {
     const elementId = req.query.elementId;
     if (!elementId) {
         res.status(400);
         res.send({statusCode: 400, msg: "elementId not provided"});
         return;
     }
-    runQuery(dbConnect, "DELETE FROM `notesElement` WHERE `notesElement`.`elementId` =" + elementId, res);
+    const queryResp = await notesElementTable.remove({ _id: elementId });
+    res.status(200);
+    res.send({ statusCode: 200, msg: "success", data: queryResp})
+
+    // runQuery(dbConnect, "DELETE FROM `notesElement` WHERE `notesElement`.`elementId` =" + elementId, res);
 })
 
-app.put('/', function(req, res) {
+//update notes type
+app.put('/', async function(req, res) {
     const notesId = req.query.notesId; 
-    const element = mySQLRealEscapeString(req.body.element);
-    console.log("element", element)
-    const isDone = req.body.isDone;
+    let element;
+    try {
+        element = mySQLRealEscapeString(req.body.element);
+    } catch{ }
     
-    if (!notesId || (!element && !isDone)) {
+    if (!notesId || !element) {
         res.status(400);
         res.send({statusCode: 400, msg: "Please provide all details"});
         return;
     }
+    const queryResp = await notesElementTable.update({ _id: notesId }, { $set: { element: element } });
+    res.status(200);
+    res.send({ statusCode: 200, msg: "success", data: queryResp})
 
-    let query = "UPDATE `notesElement` SET ";
-    if (isDone && element) {
-        query += "`element` = '"+ element +"', `isDone` = '"+ isDone;
-    } else if (isDone) {
-        query += "`isDone` = '"+ isDone;
-    } else if (element) {
-        query += "`element` = '"+ element;
-    }
-    query += "' WHERE `notesElement`.`notesId` = "+ notesId;
-
-    runQuery(dbConnect, query , res);
 });
 
+//save toDo type
 app.post('/save', function(req, res) {
     const notesId = req.query.notesId;
     // const element = mySQLRealEscapeString(req.body.element);

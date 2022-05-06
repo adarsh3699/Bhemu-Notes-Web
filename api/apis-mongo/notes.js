@@ -1,25 +1,98 @@
 const express = require('express');
-var mysql = require('mysql');
-const { runQuery } = require('../helpers');
+const { encryptText, decryptText } = require("../encryptionUtil");
 
 //setting express
 const app = express();
 
 //mongo databse connection
 var dbConnect = require('monk')('mongodb://localhost/bhemu-notes');
-var usersTable = dbConnect.get('users');
+var notesTable = dbConnect.get('notes');
 
-//read
+//get
 app.get('/', async function(req, res) {
-    // const userId = req.query.userId;
-    // if (!userId) {
-    //     res.status(400);
-    //     res.send({statusCode: 400, msg: "userId is not provided"});
-    //     return;
-    // }
-    const queryResp = await usersTable.find();
-    res.send({data: queryResp})
-    // runQuery(dbConnect, 'SELECT notesId, notesTitle FROM notes WHERE userId = ' + userId, res);
+    const userId = req.query.userId;
+    if (!userId) {
+        res.status(400);
+        res.send({statusCode: 400, msg: "userId is not provided"});
+        return;
+    }
+
+    const queryResp = await notesTable.find({ userId });
+    const data = queryResp.map((element) => (
+        { ...element, notesId: element._id }
+        ))
+
+    res.status(200);
+    res.send({ statusCode: 200, msg: "success", data})
+});
+
+// // get notesElement
+app.get('/getNotes', async function(req, res) {
+    const _id = req.query.notesId;
+    if (!_id) {
+        res.status(400);
+        res.send({statusCode: 400, msg: "userId is not provided"});
+        return;
+    }
+
+    const queryResp = await notesTable.find({ _id });
+
+    res.status(200);
+    res.send({ statusCode: 200, msg: "success", data: queryResp})
+});
+
+//create
+app.post('/', async function(req, res) {
+    const userId = req.query.userId;
+    let notesType = false;
+    if (req.body.notesType) {
+        notesType = req.body.notesType;
+    }
+    if (!userId) {
+        res.status(400);
+        res.send({statusCode: 400, msg: "userId is not provided"});
+        return;
+    }
+
+    const queryResp = await notesTable.insert({ userId: userId, notesTitle: "Enter NotesTitle", notesType, notes: [{element1:"", isDone:false}] }
+            );
+
+    res.status(200);
+    res.send({ statusCode: 200, msg: "inserted", queryResp})
+});
+
+//delete
+app.delete('/', async function(req, res) {
+    const _id = req.query.notesId;
+
+    if (!_id) {
+        res.status(400);
+        res.send({statusCode: 400, msg: "notesId is not provided"});
+        return;
+    }
+
+    const queryResp = await notesTable.remove({ _id });
+
+    res.status(200);
+    res.send({ statusCode: 200, msg: "deleted", queryResp})
+});
+
+//update
+app.put('/', async function(req, res) {
+    const _id = req.query.notesId;
+    const newNotes = req.body.newNotes; 
+    const notesTitle = encryptText(req.body.notesTitle);
+
+    if (!_id || !req.body.newNotes || !req.body.notesTitle) {
+        res.status(400);
+        res.send({statusCode: 400, msg: "Please provide notesId, newNotes and notesTitle"});
+        return;
+    }
+
+    const queryResp = await notesTable.update({ _id }, { $set: { notes: newNotes, notesTitle } });
+
+    res.status(200);
+    res.send({ statusCode: 200, msg: "updated", queryResp})
 });
 
 // //create

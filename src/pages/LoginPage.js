@@ -31,13 +31,13 @@ function LoginPage() {
         if (userName !== "" && password !== "") {
             const apiResp = await apiCall("users?userName=" + userName + "&password=" + password);
             if (apiResp.statusCode === 200) {
-                const userId = apiResp?.data[0]?.id;
+                const userId = apiResp?.data[0]?._id;
                 if (userId) {
                     setLoggedUserId(userId)
                     document.location.href = "/home";
                     return;
                 } else {
-                    setMsg(apiResp.msg)
+                    setMsg("Please Check Your UserName or Password")
                 }
             } else {
                 setMsg(apiResp.msg)

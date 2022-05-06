@@ -1,7 +1,7 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const apiBaseUrl = "http://localhost:4000/api/v2/";
+const apiBaseUrl = "http://localhost:4000/api2/";
 
 async function apiCall(endpoint, isGet ,method, body) {
     const apiUrl =  apiBaseUrl + endpoint;

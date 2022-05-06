@@ -1,6 +1,5 @@
 const express = require('express');
-var mysql = require('mysql');
-const { runQuery } = require('../helpers');
+const { md5Hash } = require("../encryptionUtil");
 
 //setting express
 const app = express();
@@ -12,12 +11,10 @@ var usersTable = dbConnect.get('users');
 // read
 app.get('/', async function(req, res) {
     const username = req.query.userName;
-    const password = req.query.password; 
+    const password = md5Hash(req.query.password); 
 
     if (username && password) {
-        const queryResp = await usersTable.find(
-            {userName: username, password: password}
-        );
+        const queryResp = await usersTable.find({ username, password }, {_id:0});
         res.status(200);
         res.send({ statusCode: 200, msg: "success", data: queryResp})
     } else {
@@ -29,12 +26,10 @@ app.get('/', async function(req, res) {
 
 app.post('/', async function(req, res) {
     const username = req.body.username;
-    const password = req.body.password; 
+    const password = md5Hash(req.body.password); 
 
     if (username && password) {
-        const queryResp = await usersTable.insert(
-            {userName: username, password: password}
-        );
+        const queryResp = await usersTable.insert({ username, password });
         res.status(200);
         res.send({ statusCode: 200, msg: "Inserted", data: queryResp})
     } else {
