@@ -6,6 +6,9 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     text-align: center;
     font-weight: 500;
     font-size: 18px;
@@ -15,32 +18,42 @@ body {
     user-select: none;
 }
 
+#inputArea {
+    width: 95%;
+}
+
 #inputBox {
     height: 25px;
-    width: 350px;
+    width: 35%;
     margin: 8px 0px;
     font-size: 105%;
+}
+
+#logoutBtn {
+    margin-right: 20px;
 }
 
 #addButton {
     position: absolute;
     right: 5px;
-    top: 7px;
+    bottom: 15px;
     z-index: 2;
-    width: 100px;
     text-align: center;
+    width: 100px;
+    user-select: none;
 }
 
 #addButton img {
     margin-bottom: 2px;
-    padding: 2px 8px;
+    padding: 5px;
+    border-radius: 100%;
+    background-color: #27273c;
 }
 
 #option {
     background-color: rgb(110, 110, 95);
     border: solid black 1px;
     display: none;
-    user-select: none;
     font-size: 17px;
 }
 

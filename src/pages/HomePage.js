@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { apiCall, getLoggedUserId } from "../utils";
+import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import "../css/home.css";
 import addIcon from "../img/add.png"
 import deleteBtn from "../img/delete.png"
+import logoutBtn from "../img/logout.png"
 
 const myUserId = getLoggedUserId();
 function HomePage() {
@@ -75,6 +76,11 @@ function HomePage() {
         }
     }
 
+    function handleLogoutBtnClick () {
+        setLoggedUserId("");
+        document.location.href = "/";
+    }
+
     return (
         <>
             {
@@ -82,15 +88,18 @@ function HomePage() {
                     :
                     <>
                         <form id="bar" onSubmit={handleFormSubmit}>
-                            <input type="text" id="inputBox" autoFocus placeholder="Take a note..." value={textInput} onChange={handleTextInput} />
+                            <div id='inputArea'>
+                                <input type="text" id="inputBox" autoFocus placeholder="Take a note..." value={textInput} onChange={handleTextInput} />
+                            </div>
+                            <div id='logoutBox'><img src={logoutBtn} height="30px" id="logoutBtn" onClick={handleLogoutBtnClick} /></div>
                         </form>
-
-                        <div id="addButton" onClick={handleAddBtnClick} >
-                            <img src={addIcon} height="30px" id="addImg" />
+                        
+                        <div id="addButton"  >
                             <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
                                 <div id="addNotes" onClick={addNotes}>Note</div>
                                 <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
                             </div>
+                            <img src={addIcon} height="40px" id="addImg" onClick={handleAddBtnClick}/>
                         </div>
 
                         <div id="background">
