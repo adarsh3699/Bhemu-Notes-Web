@@ -8,7 +8,7 @@ const app = express();
 var dbConnect = require('monk')('mongodb://localhost/bhemu-notes');
 var notesTable = dbConnect.get('notes');
 
-//read 
+//get all notes 
 app.get('/', async function(req, res) {
     const userId = req.query.userId;
     if (!userId) {
@@ -17,28 +17,38 @@ app.get('/', async function(req, res) {
         return;
     }
 
-    const queryResp = await notesTable.find({ userId });
-    const data = queryResp.map((element) => (
-        { ...element, notesId: element._id }
+    try {
+        const queryResp = await notesTable.find({ userId }, 'notesTitle'); //only notesTitle field is sent
+        const data = queryResp.map((element) => (
+            { ...element, notesId: element._id, notesTitle: decryptText(element.notesTitle) }
         ))
-
-    res.status(200);
-    res.send({ statusCode: 200, msg: "success", data})
+        res.status(200);
+        res.send({ statusCode: 200, msg: "success", data});
+    } catch(e) {
+        res.status(500);
+        res.send({ statusCode: 500, msg: "Internal server error"});
+    }
 });
 
-// read notesElement
-app.get('/getNotes', async function(req, res) {
-    const _id = req.query.notesId;
+// get notes by notesId
+app.get('/:notesId', async function(req, res) {
+    const _id = req.params.notesId;
     if (!_id) {
         res.status(400);
         res.send({statusCode: 400, msg: "userId is not provided"});
         return;
     }
 
-    const queryResp = await notesTable.find({ _id });
+    try {
+        const queryResp = await notesTable.find({ _id });
+        const data = { ...queryResp[0], notesTitle: decryptText(queryResp[0].notesTitle) };
 
-    res.status(200);
-    res.send({ statusCode: 200, msg: "success", data: queryResp})
+        res.status(200);
+        res.send({ statusCode: 200, msg: "success", data });
+    } catch(e) {
+        res.status(500);
+        res.send({ statusCode: 500, msg: "Internal server error"});
+    }
 });
 
 //create
@@ -58,11 +68,14 @@ app.post('/', async function(req, res) {
         return;
     }
 
-    const queryResp = await notesTable.insert({ userId: userId, notesTitle , notesType, notes: [{element:"", isDone:false}] }
-            );
-
-    res.status(200);
-    res.send({ statusCode: 200, msg: "inserted", data: queryResp})
+    try {
+        const queryResp = await notesTable.insert({ userId: userId, notesTitle , notesType, notes: [{element:"", isDone:false}] });
+        res.status(200);
+        res.send({ statusCode: 200, msg: "inserted"});
+    } catch(e) {
+        res.status(500);
+        res.send({ statusCode: 500, msg: "Internal server error"});
+    }
 });
 
 //update
@@ -71,16 +84,21 @@ app.put('/', async function(req, res) {
     const notesTitle = encryptText(req.body.notesTitle);
     const newNotes = req.body.newNotes; 
 
-    if (!_id || !req.body.newNotes || !req.body.notesTitle) {
+    if (!_id || !newNotes || !req.body.notesTitle) {
         res.status(400);
         res.send({statusCode: 400, msg: "Please provide notesId, newNotes and notesTitle"});
         return;
     }
 
-    const queryResp = await notesTable.update({ _id }, { $set: { notes: newNotes, notesTitle } });
+    try {
+        const queryResp = await notesTable.update({ _id }, { $set: { notes: newNotes, notesTitle } });
 
-    res.status(200);
-    res.send({ statusCode: 200, msg: "updated", queryResp})
+        res.status(200);
+        res.send({ statusCode: 200, msg: "updated"});
+    } catch(e) {
+        res.status(500);
+        res.send({ statusCode: 500, msg: "Internal server error"});
+    }
 });
 
 //delete
@@ -93,10 +111,15 @@ app.delete('/', async function(req, res) {
         return;
     }
 
-    const queryResp = await notesTable.remove({ _id });
+    try {
+        const queryResp = await notesTable.remove({ _id });
 
-    res.status(200);
-    res.send({ statusCode: 200, msg: "deleted", queryResp})
+        res.status(200);
+        res.send({ statusCode: 200, msg: "deleted"});
+    } catch(e) {
+        res.status(500);
+        res.send({ statusCode: 500, msg: "Internal server error"});
+    }
 });
 
 //CRUD

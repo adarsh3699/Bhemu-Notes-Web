@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiCall, getLoggedUserId, decryptText } from "../utils";
+import { apiCall, getLoggedUserId } from "../utils";
 import "../css/home.css";
 import addIcon from "../img/add.png"
 import deleteBtn from "../img/delete.png"
@@ -100,7 +100,7 @@ function HomePage() {
                                     list.map(function (list) {
                                         return (
                                             <div id={list.notesId} key={list.notesId} onClick={() => handleNoteClick(list.notesId)}>
-                                                {decryptText(list.notesTitle)}
+                                                {list.notesTitle}
                                                 <img src={deleteBtn} onClick={(e) => { e.stopPropagation(); handleDeleteBtnClick(list.notesId) }} />
                                             </div>
                                         )

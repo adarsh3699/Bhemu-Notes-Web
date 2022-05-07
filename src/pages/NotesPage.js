@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiCall, getLoggedUserId, encryptText, decryptText } from "../utils";
+import { apiCall, getLoggedUserId } from "../utils";
 import "../css/notes.css";
 import deleteIcon from "../img/delete.png"
 import saveIcon from "../img/save.png"
@@ -46,15 +46,12 @@ function NotesPage() {
     useEffect(function getApiCaller() {
         return async function () {
             if (myNotesId && myNotesId !== "undefined") {
-                const apiResp = await apiCall("notes/getNotes?notesId=" + myNotesId)
+                const apiResp = await apiCall("notes/" + myNotesId)
                 if (apiResp.statusCode === 200) {
-                    setNotesType(apiResp.data?.[0]?.notesType)
+                    setNotesType(apiResp.data?.notesType)
 
-                    setNotesTitle(decryptText(apiResp.data?.[0]?.notesTitle));
-                    setNoteData(apiResp.data[0].notes);
-
-
-
+                    setNotesTitle(apiResp.data?.notesTitle);
+                    setNoteData(apiResp.data.notes);
                 } else {
                     setMsg(apiResp.msg);
                 }
@@ -74,18 +71,16 @@ function NotesPage() {
         } else {
             setMsg(apiResp.msg);
         }
-
     }
 
     async function handleDeleteBtnClick() {
-        // const apiResp = await apiCall("notes?noteId=" + myNotesId, false, "delete");
-        // if (apiResp.statusCode === 200) {
-        //     setMsg("Note Deleted");
-        //     window.close();
-        // } else {
-        //     setMsg(apiResp.msg);
-        // }
-        console.log(noteData);
+        const apiResp = await apiCall("notes?noteId=" + myNotesId, false, "delete");
+        if (apiResp.statusCode === 200) {
+            setMsg("Note Deleted");
+            window.close();
+        } else {
+            setMsg(apiResp.msg);
+        }
     }
 
     //for todos

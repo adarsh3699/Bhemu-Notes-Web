@@ -14,9 +14,14 @@ app.get('/', async function(req, res) {
     const password = md5Hash(req.query.password); 
 
     if (username && password) {
-        const queryResp = await usersTable.find({ username, password }, {_id:0});
-        res.status(200);
-        res.send({ statusCode: 200, msg: "success", data: queryResp})
+        try {
+            const queryResp = await usersTable.find({ username, password });
+            res.status(200);
+            res.send({ statusCode: 200, msg: "success", data: queryResp});
+        } catch(e) {
+            res.status(500);
+            res.send({ statusCode: 500, msg: "Internal server error"});
+        }
     } else {
         res.status(400);
         res.send({ statusCode: 400, msg: "please provide all details"})
@@ -29,9 +34,14 @@ app.post('/', async function(req, res) {
     const password = md5Hash(req.body.password); 
 
     if (username && password) {
-        const queryResp = await usersTable.insert({ username, password });
-        res.status(200);
-        res.send({ statusCode: 200, msg: "Inserted", data: queryResp})
+        try {
+            const queryResp = await usersTable.insert({ username, password });
+            res.status(200);
+            res.send({ statusCode: 200, msg: "Inserted", data: queryResp});
+        } catch(e) {
+            res.status(500);
+            res.send({ statusCode: 500, msg: "Internal server error"});
+        }
     } else {
         res.status(400);
         res.send({ statusCode: 400, msg: "please provide all details"})

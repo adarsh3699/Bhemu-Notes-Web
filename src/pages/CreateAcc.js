@@ -26,7 +26,11 @@ function CreateAcc() {
         if(userName !== "" && password !== "" && confPassword !== "") {
             if(password === confPassword) {
                 const apiResp = await apiCall("users", false , "post", { username: userName , password: password});
-                setMsg("successfully registered")
+                if (apiResp.statusCode === 200) {
+                    setMsg("successfully registered")
+                } else {
+                    setMsg(apiResp.msg)
+                }
             } else {
                 setMsg("Passwords didn't match. Try again.")
             }
