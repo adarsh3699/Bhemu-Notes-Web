@@ -7,6 +7,7 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
         if (getLoggedUserId()) {
@@ -29,8 +30,10 @@ function LoginPage() {
         e.preventDefault();
 
         if (userName !== "" && password !== "") {
+            setIsApiLoading(true);
             const apiResp = await apiCall("users?userName=" + userName + "&password=" + password);
             if (apiResp.statusCode === 200) {
+                setIsApiLoading(false);
                 const userId = apiResp?.data[0]?._id;
                 if (userId) {
                     setLoggedUserId(userId)
@@ -64,10 +67,11 @@ function LoginPage() {
                                 </div>
 
                                 <div>
-                                    <button id="login">Login</button>
+                                    <button id="login" className={isApiLoading? "isLogin": "" }>Login</button>
                                 </div>
 
                                 <div id="msg" className="red" > {msg} </div>
+                                <div className={isApiLoading? "lds-spinner": "" }><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                                 <hr />
 
                                 <a href="/register">

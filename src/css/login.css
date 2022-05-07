@@ -56,6 +56,11 @@ hr {
     width: 50%;
 }
 
+.isLogin{
+    background-color: #164077 !important;
+    pointer-events: none;
+}
+
 .red {
     color: red;
     font-size: 80%;
@@ -80,7 +85,8 @@ hr {
 }
 
 #signup {
-    background-color: #42b72a !important;
+    user-select: none;
+    background-color: #42b72a;
     color: white;
     font-weight: 600;
     font-size: 100%;
@@ -90,6 +96,11 @@ hr {
     width: 80%;
 }
 
+.isSignup {
+ background-color: #306e23 !important;
+ pointer-events: none;
+ margin-bottom: 10px;
+}
 /* @media screen and (max-width: 480px) {
 
 } */

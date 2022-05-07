@@ -7,6 +7,7 @@ function CreateAcc() {
     const [password, setPassword] = useState("");
     const [confPassword, setConfPassword] = useState("");
     const [msg, setMsg] = useState("");
+    const [isApiLoading, setIsApiLoading] = useState(false);
 
     function handleNewUsername(e) {
         setuserName(e.target.value)
@@ -25,8 +26,11 @@ function CreateAcc() {
 
         if(userName !== "" && password !== "" && confPassword !== "") {
             if(password === confPassword) {
+                setIsApiLoading(true);
+                
                 const apiResp = await apiCall("users", false , "post", { username: userName , password: password});
                 if (apiResp.statusCode === 200) {
+                    setIsApiLoading(false);
                     setMsg("successfully registered")
                 } else {
                     setMsg(apiResp.msg)
@@ -60,8 +64,9 @@ function CreateAcc() {
                     <div id="updateMsg" className="red"> {msg} </div>
 
                     <div>
-                        <button id="signup">Sign Up</button>
+                        <button id="signup" className={ isApiLoading? "isSignup": "" } >Sign Up</button>
                     </div>
+                    <div className={ isApiLoading? "lds-spinner": "" }><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 </form>
             </div>
         </div>

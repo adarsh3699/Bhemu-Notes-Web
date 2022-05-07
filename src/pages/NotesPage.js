@@ -17,7 +17,7 @@ function NotesPage() {
     
     const [msg, setMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-
+    const [isApiLoading, setIsApiLoading] = useState(false);
     useEffect(function getDataFromUrl() {
         if (!myUserId) {
             document.location.href = "/";
