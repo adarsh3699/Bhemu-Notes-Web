@@ -26,8 +26,8 @@ function HomePage() {
         setActive(!isActive)
     }
 
-    useEffect(function () {
-        return async function () {
+    useEffect(() => {
+        (async function() {
             if (myUserId) {
                 const apiResp = await apiCall("notes?userId=" + myUserId);
                 if (apiResp.statusCode === 200) {
@@ -36,7 +36,7 @@ function HomePage() {
                     setMsg(apiResp.msg)
                 }
             }
-        }
+        })();
     }, [flag]);
 
     async function addNotes(type, notesTitle) {

@@ -43,8 +43,8 @@ function NotesPage() {
         setIsLoading(false);
     }, [])
 
-    useEffect(function getApiCaller() {
-        return async function () {
+    useEffect(() => {
+        (async function() {
             if (myNotesId && myNotesId !== "undefined") {
                 const apiResp = await apiCall("notes/" + myNotesId)
                 if (apiResp.statusCode === 200) {
@@ -56,7 +56,7 @@ function NotesPage() {
                     setMsg(apiResp.msg);
                 }
             }
-        }
+        })();
     }, []);
 
     function handleTitleChange(e) {
