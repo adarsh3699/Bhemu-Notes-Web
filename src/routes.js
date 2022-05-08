@@ -1,6 +1,5 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes as Switch, Route } from 'react-router-dom';
-
 // import LoginPage from './pages/LoginPage';
 // import HomePage from "./pages/HomePage";
 // import NotesPage from "./pages/NotesPage"
@@ -14,7 +13,16 @@ const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 function Routes() {
     return (
         <BrowserRouter>
-            <Suspense fallback={<div id='loadingScreen'>loading...</div>}>
+            <Suspense fallback={
+                <>
+                    <div id='loadingScreen'>
+                        loading
+                        <div id='loadingIcon'>
+                            <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                        </div>
+                    </div>
+                </>
+            }>
                 <Switch>
                     <Route exact path="/" element={<LoginPage />} />
                     <Route exact path="/home" element={<HomePage />} />

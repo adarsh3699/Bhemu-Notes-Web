@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
+import Loader from "../components/Loader";
 import "../css/home.css";
 import addIcon from "../img/add.png"
 import deleteBtn from "../img/delete.png"
@@ -13,6 +14,7 @@ function HomePage() {
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
         if (!myUserId) {
@@ -30,8 +32,10 @@ function HomePage() {
     useEffect(() => {
         (async function() {
             if (myUserId) {
+                setIsApiLoading(true);
                 const apiResp = await apiCall("notes?userId=" + myUserId);
                 if (apiResp.statusCode === 200) {
+                    setIsApiLoading(false);
                     setList(apiResp.data)
                 } else {
                     setMsg(apiResp.msg)
@@ -91,19 +95,13 @@ function HomePage() {
                             <div id='inputArea'>
                                 <input type="text" id="inputBox" autoFocus placeholder="Take a note..." value={textInput} onChange={handleTextInput} />
                             </div>
-                            <div id='logoutBox'><img src={logoutBtn} height="30px" id="logoutBtn" onClick={handleLogoutBtnClick} /></div>
+                            <div id='logoutBox'><img src={logoutBtn} height="28px" id="logoutBtn" onClick={handleLogoutBtnClick} /></div>
                         </form>
                         
-                        <div id="addButton"  >
-                            <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
-                                <div id="addNotes" onClick={addNotes}>Note</div>
-                                <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
-                            </div>
-                            <img src={addIcon} height="40px" id="addImg" onClick={handleAddBtnClick}/>
-                        </div>
-
                         <div id="background">
                             <div id="msg">{msg}</div>
+                            <Loader isLoading={isApiLoading} />
+
                             <div id="list">
                                 {
                                     list.map(function (list) {
@@ -116,6 +114,14 @@ function HomePage() {
                                     })
                                 }
                             </div>
+                        </div>
+
+                        <div id="addButton"  >
+                            <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
+                                <div id="addNotes" onClick={addNotes}>Note</div>
+                                <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
+                            </div>
+                            <img src={addIcon} height="40px" id="addImg" onClick={handleAddBtnClick}/>
                         </div>
                     </>
             }

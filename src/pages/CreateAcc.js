@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { apiCall } from "../utils";
+import Loader from "../components/Loader";
 import "../css/login.css";
 
 function CreateAcc() {
@@ -66,7 +67,7 @@ function CreateAcc() {
                     <div>
                         <button id="signup" className={ isApiLoading? "isSignup": "" } >Sign Up</button>
                     </div>
-                    <div className={ isApiLoading? "lds-spinner": "" }><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <Loader isLoading={isApiLoading} />
                 </form>
             </div>
         </div>

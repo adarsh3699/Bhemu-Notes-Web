@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId } from "../utils";
+import Loader from "../components/Loader";
 import "../css/notes.css";
 import deleteIcon from "../img/delete.png"
 import saveIcon from "../img/save.png"
@@ -32,9 +33,8 @@ function NotesPage() {
                 tmp = params[i].split('=');
                 notes[tmp[0]] = tmp[1];
             }
-
             myNotesId = notes.id;
-            if (notes.id === "" || myNotesId == "undefined") {
+            if (notes.id === "" || myNotesId === "undefined") {
                 setIsNotesId({ condition: false, errorMsg: "Note not found (404)" });
             }
         } catch {
@@ -46,10 +46,12 @@ function NotesPage() {
     useEffect(() => {
         (async function() {
             if (myNotesId && myNotesId !== "undefined") {
+                setIsApiLoading(true);
                 const apiResp = await apiCall("notes/" + myNotesId)
                 if (apiResp.statusCode === 200) {
+                    setIsApiLoading(false);
+                    
                     setNotesType(apiResp.data?.notesType)
-
                     setNotesTitle(apiResp.data?.notesTitle);
                     setNoteData(apiResp.data.notes);
                 } else {
@@ -64,8 +66,11 @@ function NotesPage() {
     }
 
     async function handleSaveBtnClick() {
+        setIsApiLoading(true);
         const apiResp = await apiCall("notes?notesId=" + myNotesId, false, "put", { notesTitle, newNotes: noteData });
+
         if (apiResp.statusCode === 200) {
+            setIsApiLoading(false);
             setMsg("Saved");
             console.log("Notes Updated =>", apiResp.msg);
         } else {
@@ -74,8 +79,10 @@ function NotesPage() {
     }
 
     async function handleDeleteBtnClick() {
+        setIsApiLoading(true);
         const apiResp = await apiCall("notes?noteId=" + myNotesId, false, "delete");
         if (apiResp.statusCode === 200) {
+            setIsApiLoading(false);
             setMsg("Note Deleted");
             window.close();
         } else {
@@ -127,8 +134,9 @@ function NotesPage() {
                         <div id="background">
                             <div id="error">{isNotesId.errorMsg}</div>
                             <div id="msg">{msg}</div>
-                            <div id="elementBox" className={isNotesId.condition ? null : 'noteIdNotFound'}>
+                            <Loader isLoading={isApiLoading} />
                             
+                            <div id="elementBox" className={isNotesId.condition ? null : 'noteIdNotFound'}>
                                 {
                                     noteData.map(function (item, index) {
                                         return (

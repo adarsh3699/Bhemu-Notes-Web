@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
+import Loader from "../components/Loader";
 import "../css/login.css";
 
 function LoginPage() {
@@ -71,7 +72,7 @@ function LoginPage() {
                                 </div>
 
                                 <div id="msg" className="red" > {msg} </div>
-                                <div className={isApiLoading? "lds-spinner": "" }><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                                <Loader isLoading={isApiLoading} />
                                 <hr />
 
                                 <a href="/register">
