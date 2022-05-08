@@ -1,7 +1,3 @@
-body {
-    margin: unset;
-}
-
 img {
     user-select: none;
 }
@@ -74,6 +70,7 @@ cursor: pointer;
     background: unset;
     border: unset;
 }
+
 .toDosBox {
     display: flex;
     align-items: center;
@@ -136,16 +133,45 @@ cursor: pointer;
 /* ...............................mWeb............................. */
 @media screen and (max-width: 480px) {
     #title {
-        font-size: 19px;
+        font-size: 18px;
         margin-left: 15px;
         width: 220px;
     }
 
     #barImg {
         margin: unset;
-        /* background-color: red; */
     }
+
     #barImg img {
-    padding-right: 12px;
+        height: 27px;
+    }
+
+    #barImg img:first-child {
+        height: 27px;
+        margin-right: 5px;
+    }
+
+    #notesArea {
+        font-size: 15px;
+    }
+
+    .todos {
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    #title {
+        font-size: 17px;
+        margin-left: 12px;
+        width: 200px;
+    }
+
+    #notesArea {
+        font-size: 14px;
+    }
+
+    .todos {
+        font-size: 14px;
     }
 }

@@ -13,6 +13,7 @@ function HomePage() {
     const [textInput, setTextInput] = useState("");
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
+
     const [isLoading, setIsLoading] = useState(true);
     const [isApiLoading, setIsApiLoading] = useState(false);
 
@@ -45,8 +46,8 @@ function HomePage() {
     }, [flag]);
 
     async function addNotes(type, notesTitle) {
+        setIsApiLoading(true);
         const apiResp = await apiCall("notes?userId=" + myUserId, false, "post", (type === "todo" ? { notesType: true} : { notesTitle: notesTitle }));
-
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
@@ -72,6 +73,7 @@ function HomePage() {
     }
 
     async function handleDeleteBtnClick(noteId) {
+        setIsApiLoading(true)
         const apiResp = await apiCall("notes?noteId=" + noteId, false, "delete");
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
@@ -116,12 +118,14 @@ function HomePage() {
                             </div>
                         </div>
 
-                        <div id="addButton"  >
+                        <div id="addButton" >
                             <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
                                 <div id="addNotes" onClick={addNotes}>Note</div>
                                 <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
                             </div>
-                            <img src={addIcon} height="40px" id="addImg" onClick={handleAddBtnClick}/>
+                            <div className={isActive ? 'addBtnActive' : null} >
+                                <img src={addIcon} height="40px" id="addImg" onClick={handleAddBtnClick}/>
+                            </div>
                         </div>
                     </>
             }
