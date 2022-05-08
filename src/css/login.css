@@ -10,7 +10,7 @@ a {
 }
 
 #wrapper {
-    padding-top: 50px;
+    margin-top: 20vh !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,22 +18,22 @@ a {
 
 #form {
     border-radius: 5px;
-    width: 360px;
-    background-color: rgba(26, 25, 25, 0.89);
+    width: 380px;
+    background-color: rgba(26, 25, 25, 0.65);
     text-align: center;
-    margin-top: 10px;
-    padding: 12px;
+    padding: 20px 12px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 }
 
 #form input {
-    font-size: 15px;
+    font-size: 17px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
     background-color: #f0f2f5;
-    border: none;
+    border: black 1px solid;
     border-radius: 5px;
     width: 90%;
-    padding: 10px;
+    height: 35px;
+    padding-left: 10px;
     margin-bottom: 15px;
 }
 
@@ -47,7 +47,7 @@ hr {
     color: white;
     font-weight: 700;
     font-size: 100%;
-    margin-bottom: 10px;
+    margin: 10px 0px;
     width: 50%;
 }
 
@@ -99,12 +99,16 @@ hr {
 
 /* -----------mWeb----------- */
 @media screen and (max-width: 425px) {
+
     #wrapper {
-        margin: 5px
+        margin: 5px;
     }
 
     #form input {
-        padding: 8px;
         margin-bottom: 15px;
+    }
+
+    #login {
+        margin-top: 10px;
     }
 }
