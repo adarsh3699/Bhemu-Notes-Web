@@ -167,6 +167,12 @@ cursor: pointer;
         width: 200px;
     }
 
+    #barImg img {
+        height: 25px;
+        padding: unset;
+        margin-right: 10px !important;
+    }
+
     #notesArea {
         font-size: 14px;
     }
