@@ -32,7 +32,7 @@ function LoginPage() {
 
         if (userName !== "" && password !== "") {
             setIsApiLoading(true);
-            const apiResp = await apiCall("users?userName=" + userName + "&password=" + password);
+            const apiResp = await apiCall("users/login", false, "post", { userName, password });
             if (apiResp.statusCode === 200) {
                 setIsApiLoading(false);
                 const userId = apiResp?.data[0]?._id;

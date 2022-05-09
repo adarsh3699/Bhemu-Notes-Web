@@ -42,4 +42,9 @@ function setLoggedUserId(userId) {
     } catch {}
 }
 
-export { apiCall, getLoggedUserId, setLoggedUserId };
+function validateUsername(name) {
+    var re = /^[a-zA-Z0-9_]*$/;
+    return re.test(name);
+}
+
+export { apiCall, getLoggedUserId, setLoggedUserId, validateUsername };

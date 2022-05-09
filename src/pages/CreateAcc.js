@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { apiCall } from "../utils";
+import { apiCall, validateUsername } from "../utils";
 import Loader from "../components/Loader";
 import "../css/login.css";
 
@@ -26,6 +26,11 @@ function CreateAcc() {
         e.preventDefault();
 
         if(userName !== "" && password !== "" && confPassword !== "") {
+            if (!validateUsername(userName)) {
+                setMsg("Please Enter a Valid Username (Only Alphanumeric Allowed)");
+                return;
+            }
+
             if(password === confPassword) {
                 setIsApiLoading(true);
                 

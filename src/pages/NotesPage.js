@@ -144,8 +144,10 @@ function NotesPage() {
                                                 <textarea 
                                                     id="notesArea" 
                                                     key={index} 
+                                                    value={item.element}
                                                     onChange={(e) => handleTodoText(index, e)}
-                                                    value={item.element} >
+                                                >
+                                                        
                                                 </textarea>
                                                 :
                                                 notesType === true ?
