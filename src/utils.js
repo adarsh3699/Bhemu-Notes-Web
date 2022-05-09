@@ -1,8 +1,8 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-// const apiBaseUrl = "https://bhemu-notes.herokuapp.com/api/" 
-const apiBaseUrl = "http://localhost:4000/api/";
+const apiBaseUrl = "https://bhemu-notes.herokuapp.com/api/" 
+// const apiBaseUrl = "http://localhost:4000/api/";
 
 async function apiCall(endpoint, isGet ,method, body) {
     const apiUrl =  apiBaseUrl + endpoint;
