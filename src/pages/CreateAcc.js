@@ -32,8 +32,10 @@ function CreateAcc() {
                 const apiResp = await apiCall("users", false , "post", { username: userName , password: password});
                 if (apiResp.statusCode === 200) {
                     setIsApiLoading(false);
-                    setMsg("successfully registered")
+                    setMsg(apiResp.msg)
+                    document.location.href = "/";
                 } else {
+                    setIsApiLoading(false);
                     setMsg(apiResp.msg)
                 }
             } else {
@@ -67,7 +69,12 @@ function CreateAcc() {
                     <div>
                         <button id="signup" className={ isApiLoading? "isSignup": "" } >Sign Up</button>
                     </div>
+
                     <Loader isLoading={isApiLoading} />
+                    
+                    <div id='alreadyAcc' style={isApiLoading? null: { margin: "25px 0px 5px 0px" }} >
+                        <a href = "/" >Already have an Account</a>
+                    </div>
                 </form>
             </div>
         </div>

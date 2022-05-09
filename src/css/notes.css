@@ -25,6 +25,7 @@ img {
     color: white;
     background-color: unset;
     border: unset;
+    width: 300px;
 }
 
 #barImg {
@@ -46,7 +47,7 @@ cursor: pointer;
 }
 
 #msg {
-    margin-top: 60px;
+    margin-top: 65px;
     text-align: center;
     color: red;
     font-size: 18px;

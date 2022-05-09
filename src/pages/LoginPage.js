@@ -44,6 +44,7 @@ function LoginPage() {
                     setMsg("Please Check Your UserName or Password")
                 }
             } else {
+                setIsApiLoading(false);
                 setMsg(apiResp.msg)
             }
         } else {
@@ -73,7 +74,7 @@ function LoginPage() {
 
                                 <div id="msg" className="red" > {msg} </div>
                                 <Loader isLoading={isApiLoading} />
-                                <hr />
+                                <hr style={isApiLoading? { marginTop: "10px" }: null } />
 
                                 <a href="/register">
                                     <div id="createAcc">Create New Account</div>

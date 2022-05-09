@@ -39,6 +39,7 @@ function HomePage() {
                     setIsApiLoading(false);
                     setList(apiResp.data)
                 } else {
+                    setIsApiLoading(false);
                     setMsg(apiResp.msg)
                 }
             }
@@ -51,8 +52,7 @@ function HomePage() {
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
-            console.log(apiResp);
-            handleNoteClick(apiResp.data._id)
+            handleNoteClick(apiResp.notesId)
         } else {
             setMsg(apiResp.msg)
         }
@@ -101,7 +101,7 @@ function HomePage() {
                         </form>
                         
                         <div id="background">
-                            <div id="msg">{msg}</div>
+                            <div id="msg" style={msg == ""?{ marginTop: "64px"} :null}>{msg}</div>
                             <Loader isLoading={isApiLoading} />
 
                             <div id="list">

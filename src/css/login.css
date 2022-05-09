@@ -34,11 +34,12 @@ a {
     width: 90%;
     height: 35px;
     padding-left: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 hr {
     background: #dadde1 !important;
+    margin: 20px 0 10px 0;
 }
 
 #login {
@@ -74,7 +75,7 @@ hr {
     color: white;
     font-weight: 600;
     font-size: 100%;
-    margin-top: 15px;
+    margin-top: 20px;
     height: 35px;
     border-radius: 2px;
 }
@@ -95,6 +96,15 @@ hr {
  background-color: #306e23 !important;
  pointer-events: none;
  margin-bottom: 10px;
+}
+
+#alreadyAcc a {
+    color: white;
+}
+
+#alreadyAcc a:hover {
+    color: rgb(130, 193, 230);
+    text-decoration: underline;
 }
 
 /* -----------mWeb----------- */

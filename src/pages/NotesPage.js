@@ -50,11 +50,11 @@ function NotesPage() {
                 const apiResp = await apiCall("notes/" + myNotesId)
                 if (apiResp.statusCode === 200) {
                     setIsApiLoading(false);
-                    
                     setNotesType(apiResp.data?.notesType)
                     setNotesTitle(apiResp.data?.notesTitle);
                     setNoteData(apiResp.data.notes);
                 } else {
+                    setIsApiLoading(false);
                     setMsg(apiResp.msg);
                 }
             }
