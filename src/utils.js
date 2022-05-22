@@ -1,8 +1,15 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const apiBaseUrl = "https://bhemu-notes.herokuapp.com/api/" 
+const apiBaseUrl = "https://bhemu-notes.herokuapp.com/api/"
 // const apiBaseUrl = "http://localhost:4000/api/";
+
+// variables for setting cookie expiratiom tym
+const COOKIE_EXPIRATION_MINS = 30 * 24 * 60; // 30 days
+
+let COOKIE_EXPIRATION_TYM = new Date();
+COOKIE_EXPIRATION_TYM.setTime(COOKIE_EXPIRATION_TYM.getTime() + (COOKIE_EXPIRATION_MINS * 60 * 1000));
+const COOKIE_EXPIRATION_TIME = COOKIE_EXPIRATION_TYM;
 
 async function apiCall(endpoint, isGet ,method, body) {
     const apiUrl =  apiBaseUrl + endpoint;
@@ -38,7 +45,7 @@ function getLoggedUserId() {
 
 function setLoggedUserId(userId) {
     try {
-        cookies.set('userId', userId);
+        cookies.set('userId', userId, { path: "/", expires: COOKIE_EXPIRATION_TIME });
     } catch {}
 }
 
