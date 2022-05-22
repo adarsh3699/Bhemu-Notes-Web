@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
+
 import "../css/notes.css";
+
 import deleteIcon from "../img/delete.png"
 import saveIcon from "../img/save.png"
 import crossIcon from "../img/cross.png"
@@ -53,6 +55,7 @@ function NotesPage() {
                     setNotesType(apiResp.data?.notesType)
                     setNotesTitle(apiResp.data?.notesTitle);
                     setNoteData(apiResp.data.notes);
+                    document.title = apiResp.data?.notesTitle;
                 } else {
                     setIsApiLoading(false);
                     setMsg(apiResp.msg);

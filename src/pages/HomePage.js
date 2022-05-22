@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
+
 import "../css/home.css";
+
 import addIcon from "../img/add.png"
 import deleteBtn from "../img/delete.png"
 import logoutBtn from "../img/logout.png"
 
 const myUserId = getLoggedUserId();
+
 function HomePage() {
     const [isActive, setActive] = useState(false);
     const [msg, setMsg] = useState("");
@@ -23,6 +26,7 @@ function HomePage() {
             return;
         } else {
             setIsLoading(false);
+            document.title = "Bhemu Notes"
         }
     }, []);
 
