@@ -59,15 +59,15 @@ function CreateAcc() {
             <div id="wrapper">
                 <form id="form" onSubmit={ handleFormSubmit }>
                     <div>
-                        <input type="text" placeholder="User Name" id="newUserName" value={ userName } onChange={handleNewUsername} />
+                        <input type="text" placeholder="User Name (6 digit)" id="newUserName" pattern="().{6,}" value={ userName } onChange={handleNewUsername} />
                     </div>
 
                     <div>
-                        <input type="Password" placeholder="Password" id="newPassword" value={ password } onChange={handleNewPassword} />
+                        <input type="Password" placeholder="Password (8 digit)" id="newPassword" pattern="().{8,}" value={ password } onChange={handleNewPassword} />
                     </div>
 
                     <div>
-                        <input type="Password" placeholder="Confirm Password" id="confirmPass" value={ confPassword } onChange={handleConfirmPassword} />
+                        <input type="Password" placeholder="Confirm Password (8 digit)" id="confirmPass" pattern="().{8,}" value={ confPassword } onChange={handleConfirmPassword} />
                     </div>
 
                     <hr />
