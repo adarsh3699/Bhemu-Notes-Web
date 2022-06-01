@@ -30,7 +30,7 @@
 }
 
 #addButton {
-    position: absolute;
+    position: fixed;
     right: 5px;
     bottom: 20px;
     z-index: 2;
@@ -46,13 +46,14 @@
 }
 
 .addBtnActive img {
-    padding-bottom: 4px !important;
+    border: unset !important;
 }
 
 #addImg {
     padding: 5px;
     border-radius: 100%;
     background-color: #27273c;
+    border: solid black 1px;
 }
 
 #option {
