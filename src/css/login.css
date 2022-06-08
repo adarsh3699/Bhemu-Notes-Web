@@ -10,74 +10,102 @@ a {
 }
 
 #wrapper {
-    margin-top: 20vh !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: rgba(26, 25, 25, 0.65);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+    border-radius: 5px;
+    text-align: center;
+    padding: 50px 0;
+    margin: 12vh auto;
+    width: 70%;
+}
+
+#Title {
+    color: lightgray;
+    margin-bottom: 20px;
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 #form {
-    border-radius: 5px;
-    width: 380px;
-    background-color: rgba(26, 25, 25, 0.65);
     text-align: center;
-    padding: 20px 12px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 }
 
-#form input {
+input {
     font-size: 17px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-    background-color: #f0f2f5;
+    box-shadow: 0 2px 4px rgba(192, 192, 192, 0.1);
     border: black 1px solid;
     border-radius: 5px;
-    width: 90%;
-    height: 35px;
+    width: 400px;
+    height: 40px;
     padding-left: 10px;
     margin-bottom: 20px;
 }
 
 hr {
     background: #dadde1 !important;
-    margin: 20px 0 10px 0;
+    margin: 15px 80px !important;
 }
 
 #login {
-    background-color: #1877f2;
-    height: 40px;
+    background-color: #0091EA;
     color: white;
     font-weight: 700;
-    font-size: 100%;
-    margin: 10px 0px;
-    width: 50%;
+    font-size: 105%;
+    letter-spacing: 0.5px;
+    width: 40%;
+    height: 43px;
+    border-radius: 3px;
+    border: 1px black solid;
+    border: unset;
+    cursor: pointer;
+    user-select: none;
+    margin-top: 10px;
 }
 
-.isLogin{
+#login:hover {
+    background-color: #1f61b8;
+}
+
+.isLogin {
     background-color: #164077 !important;
     pointer-events: none;
 }
 
 .red {
+    margin-top: 10px;
+    margin-bottom: 40px;
     color: red;
     font-size: 80%;
 }
 
-.disableBtn {
-    background-color: gray !important;
-    pointer-events: none;
+#forgotPass {
+    color: white;
+}
+
+#forgotPass:hover {
+    text-decoration: underline;
 }
 
 #createAcc {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #42b72a !important;
+    background-color: #42b72a;
     color: white;
     font-weight: 600;
     font-size: 100%;
-    margin-top: 20px;
-    height: 35px;
-    border-radius: 2px;
+    border: unset;
+    border-radius: 5px;
+    height: 45px;
+    width: 40%;
+    margin: auto;
+    margin-top: 30px;
+    padding: 0 10px;
+}
+
+#createAcc:hover {
+    background-color: #358026;
 }
 
 #signup {
@@ -86,16 +114,19 @@ hr {
     color: white;
     font-weight: 600;
     font-size: 100%;
-    border-radius: 3px;
-    padding: 10px;
-    margin-top: 15px;
-    width: 80%;
+    width: 40%;
+    height: 40px;
+    border: unset;
+    border-radius: 5px;
+}
+
+#signup:hover {
+    background-color: #306e23 !important;
 }
 
 .isSignup {
- background-color: #306e23 !important;
- pointer-events: none;
- margin-bottom: 10px;
+    background-color: #306e23 !important;
+    pointer-events: none;
 }
 
 #alreadyAcc a {
@@ -108,17 +139,22 @@ hr {
 }
 
 /* -----------mWeb----------- */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 700px) {
 
     #wrapper {
-        margin: 5px;
+        margin: 15vh auto;
+        width: 95%;
+    }
+}
+
+@media screen and (max-width: 475px) {
+    input {
+        width: 90%;
+        height: 36px;
     }
 
-    #form input {
-        margin-bottom: 15px;
-    }
-
-    #login {
-        margin-top: 10px;
+    hr {
+        background: #dadde1 !important;
+        margin: 15px 30px !important;
     }
 }

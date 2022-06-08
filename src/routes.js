@@ -6,9 +6,10 @@ import { BrowserRouter, Routes as Switch, Route } from 'react-router-dom';
 // import CreateAcc from "./pages/CreateAcc";
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
+const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
+const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const NotesPage = lazy(() => import('./pages/NotesPage'));
-const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 
 function Routes() {
     return (
@@ -25,9 +26,10 @@ function Routes() {
             }>
                 <Switch>
                     <Route exact path="/" element={<LoginPage />} />
+                    <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
+                    <Route exact path="/register" element={<CreateAcc />} />
                     <Route exact path="/home" element={<HomePage />} />
                     <Route exact path="/notes" element={<NotesPage />} />
-                    <Route exact path="/register" element={<CreateAcc />} />
                     
                     <Route path="*" element={<div>page not found</div>} />
                 </Switch>

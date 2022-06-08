@@ -7,37 +7,20 @@ import "../css/login.css";
 document.title = "Bhemu Notes | Create Your Account";
 
 function CreateAcc() {
-    const [userName, setuserName] = useState("");
-    const [password, setPassword] = useState("");
-    const [confPassword, setConfPassword] = useState("");
     const [msg, setMsg] = useState("");
     const [isApiLoading, setIsApiLoading] = useState(false);
 
-    function handleNewUsername(e) {
-        setuserName(e.target.value)
-    }
-
-    function handleNewPassword(e) {
-        setPassword(e.target.value)
-    }
-
-    function handleConfirmPassword(e) {
-        setConfPassword(e.target.value)
-    }
-
     async function handleFormSubmit(e) {
         e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const confPassword = e.target.confPassword.value;
 
-        if(userName !== "" && password !== "" && confPassword !== "") {
-            if (!validateUsername(userName)) {
-                setMsg("Please Enter a Valid Username (Only Alphanumeric Allowed)");
-                return;
-            }
-
-            if(password === confPassword) {
+        if (email !== "" && password !== "" && confPassword !== "") {
+            if (password === confPassword) {
                 setIsApiLoading(true);
-                
-                const apiResp = await apiCall("users", false , "post", { username: userName , password: password});
+
+                const apiResp = await apiCall("auth/signUp", "post", { email, password });
                 if (apiResp.statusCode === 200) {
                     setIsApiLoading(false);
                     setMsg(apiResp.msg)
@@ -57,33 +40,26 @@ function CreateAcc() {
     return (
         <div id="background">
             <div id="wrapper">
-                <form id="form" onSubmit={ handleFormSubmit }>
-                    <div>
-                        <input type="text" placeholder="User Name (6 digit)" id="newUserName" pattern="().{6,}" value={ userName } onChange={handleNewUsername} />
-                    </div>
+                <div id='Title'>Create Your Account</div>
 
-                    <div>
-                        <input type="Password" placeholder="Password (8 digit)" id="newPassword" pattern="().{8,}" value={ password } onChange={handleNewPassword} />
-                    </div>
+                <form id="form" onSubmit={handleFormSubmit}>
+                    <input type="email" name='email' placeholder="Email" id="newUserName" />
+                    <br />
+                    <input type="Password" name='password' placeholder="Password (8 digit)" id="newPassword" pattern="().{8,}" />
+                    <br />
+                    <input type="Password" name='confPassword' placeholder="Confirm Password (8 digit)" id="confirmPass" pattern="().{8,}" />
+                    <br />
+                    <button id="signup" className={isApiLoading ? "isSignup" : ""} >Sign Up</button>
+                    <div id="updateMsg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
 
-                    <div>
-                        <input type="Password" placeholder="Confirm Password (8 digit)" id="confirmPass" pattern="().{8,}" value={ confPassword } onChange={handleConfirmPassword} />
-                    </div>
-
-                    <hr />
-
-                    <div id="updateMsg" className="red"> {msg} </div>
-
-                    <div>
-                        <button id="signup" className={ isApiLoading? "isSignup": "" } >Sign Up</button>
-                    </div>
-
-                    <Loader isLoading={isApiLoading} />
-                    
-                    <div id='alreadyAcc' style={isApiLoading? null: { margin: "25px 0px 5px 0px" }} >
-                        <a href = "/" >Already have an Account</a>
-                    </div>
                 </form>
+
+                <Loader isLoading={isApiLoading} />
+                <hr />
+
+                <div id='alreadyAcc' style={isApiLoading ? null : { margin: "25px 0px 5px 0px" }} >
+                    <a href="/" >Already have an Account</a>
+                </div>
             </div>
         </div>
     )

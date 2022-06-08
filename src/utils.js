@@ -1,8 +1,8 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const apiBaseUrl = "https://bhemu-notes.herokuapp.com/api/"
-// const apiBaseUrl = "http://localhost:4000/api/";
+const apiBaseUrl = "https://bhemu-notes.herokuapp.com/"
+// const apiBaseUrl = "http://localhost:4000/";
 
 // variables for setting cookie expiratiom tym
 const COOKIE_EXPIRATION_MINS = 30 * 24 * 60; // 30 days
@@ -11,18 +11,18 @@ let COOKIE_EXPIRATION_TYM = new Date();
 COOKIE_EXPIRATION_TYM.setTime(COOKIE_EXPIRATION_TYM.getTime() + (COOKIE_EXPIRATION_MINS * 60 * 1000));
 const COOKIE_EXPIRATION_TIME = COOKIE_EXPIRATION_TYM;
 
-async function apiCall(endpoint, isGet ,method, body) {
+async function apiCall(endpoint, method, body) {
     const apiUrl =  apiBaseUrl + endpoint;
     try {
         let apiCallResp;
-        if (isGet === false) {
+        if (method === "GET" || method === undefined) {
+            apiCallResp = await fetch(apiUrl);
+        } else {
             apiCallResp = await fetch(apiUrl, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
-        } else {
-            apiCallResp = await fetch(apiUrl);
         }
        
         const apiJsonResp = await apiCallResp.json();
@@ -31,6 +31,7 @@ async function apiCall(endpoint, isGet ,method, body) {
         return { msg: "Something went wrong", statusCode: 500 };
     }
 }
+
 
 function getLoggedUserId() {
     try {
