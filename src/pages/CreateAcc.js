@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { apiCall, validateUsername } from "../utils";
+import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 
 import "../css/login.css";

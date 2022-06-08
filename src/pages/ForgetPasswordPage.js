@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 
@@ -51,7 +51,7 @@ function ForgetPasswordPage() {
         const password = e.target.password.value;
         const confPassword = e.target.confPassword.value;
 
-        if (password == confPassword) {
+        if (password === confPassword) {
             const apiResp = await apiCall("auth/change-password", "POST", { email: emailVal, password, encryptedOtp, otp });
             if (apiResp.statusCode === 200) {
                 setPassMsg(apiResp.msg)
