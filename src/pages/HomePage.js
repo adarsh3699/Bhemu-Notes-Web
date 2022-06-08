@@ -52,7 +52,7 @@ function HomePage() {
 
     async function addNotes(type, notesTitle) {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?userId=" + myUserId, false, "post", (type === "todo" ? { notesType: true} : { notesTitle: notesTitle }));
+        const apiResp = await apiCall("notes?userId=" + myUserId, "post", (type === "todo" ? { notesType: true} : { notesTitle: notesTitle }));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
@@ -78,7 +78,7 @@ function HomePage() {
 
     async function handleDeleteBtnClick(noteId) {
         setIsApiLoading(true)
-        const apiResp = await apiCall("notes?noteId=" + noteId, false, "delete");
+        const apiResp = await apiCall("notes?noteId=" + noteId, "delete");
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
         } else {

@@ -70,7 +70,7 @@ function NotesPage() {
 
     async function handleSaveBtnClick() {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?notesId=" + myNotesId, false, "put", { notesTitle, newNotes: noteData });
+        const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
 
         if (apiResp.statusCode === 200) {
             setIsApiLoading(false);
@@ -83,7 +83,7 @@ function NotesPage() {
 
     async function handleDeleteBtnClick() {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?noteId=" + myNotesId, false, "delete");
+        const apiResp = await apiCall("notes?noteId=" + myNotesId, "delete");
         if (apiResp.statusCode === 200) {
             setIsApiLoading(false);
             setMsg("Note Deleted");
