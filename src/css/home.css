@@ -1,139 +1,204 @@
-#bar {
+#homePage {
+    background: rgb(44, 44, 44);
+    min-height: 100vh;
+    width: 100%;
+}
+
+.navbar {
     position: fixed;
     top: 0;
     left: 0;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    text-align: center;
-    color: rgb(255, 255, 255);
-    font-weight: 500;
-    background-color: rgba(24, 23, 23, 0.9);
+    align-items: center;
+    color: white;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f1f1;
     width: 100%;
-    padding: 3px 0px;
-    user-select: none;
+    background: rgb(44, 44, 44);
 }
 
-#inputArea {
-    width: 95%;
+#logo {
+    display: flex;
+    align-items: center;
 }
 
-#inputBox {
-    height: 25px;
-    width: 360px;
-    margin: 8px 0px;
-    font-size: 105%;
-}
-
-#logoutBtn {
-    margin-right: 20px;
-}
-
-#addButton {
-    position: fixed;
-    right: 5px;
-    bottom: 20px;
-    z-index: 2;
-    text-align: center;
-    width: 100px;
-    user-select: none;
-}
-
-.addBtnActive {
-    background-color: #27273c !important;
-    border: solid black 1px;
-    border-top: unset;
-}
-
-.addBtnActive img {
-    border: unset !important;
-}
-
-#addImg {
-    padding: 5px;
+#logo img {
+    width: 30px;
+    height: 30px;
     border-radius: 100%;
-    background-color: #27273c;
-    border: solid black 1px;
+    border: 2px solid white;
+    margin: 0 10px 0 30px;
+}
+
+#name {
+    font-size: 14px;
+    font-weight: 550;
+}
+
+#searchBox {
+    width: 550px;
+    height: 25px;
+    background: rgb(73, 73, 73);
+    padding-left: 10px;
+    color: rgb(226, 226, 226);
+    border: 1px solid grey;
+    border-radius: 3px;
+    font-weight: 550;
+}
+
+.addNoteBtn {
+    background: rgb(59, 134, 77);
+    margin-right: 20px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 550;
+    user-select: none;
 }
 
 #option {
+    position: fixed;
+    top: 45px;
+    right: 20px;
+    width: 90.69px;
     background-color: rgb(110, 110, 95);
     border: solid black 1px;
-    display: none;
     font-size: 17px;
+    text-align: center;
+    border-radius: 7px;
+    user-select: none;
 }
 
-.showOption {
-    display: block !important;
-}
-
-#option div{
+#option div {
     padding: 10px;
 }
+
 #option div:first-child {
     border-bottom: solid black 1px;
 }
 
-#background {
-    background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
-    overflow: hidden;
-    width: 100%;
-    min-height: 100vh;
+/* .......navBar_END......... */
+
+#content {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 40px;
 }
 
 #msg {
-    margin-top: 60px;
-    margin-bottom: 8px;
+    padding-top: 80px;
     text-align: center;
     color: red;
     font-size: 18px;
     font-weight: bold;
 }
 
-#list div{
+.noteBox {
     display: flex;
-    align-items: center;
-    border: 1px rgb(70, 66, 66) solid;
-    background-color: rgba(29, 28, 28, 0.9);
-    padding-left: 10px;
-    height: 90px;
-    margin-top: 5px;
-    font-size: 150%;
+    flex-direction: column;
+    justify-content: center;
+    background: rgb(238, 83, 109);
     color: white;
+    width: 370px;
+    height: 160px;
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin: 20px;
 }
 
-#list img{
-    user-select: none;
-    padding-left: 10px;
-    height: 30px;
+.titleAndType {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    align-items: center;
 }
 
-/* ...............................mWeb............................. */
-@media screen and (max-width: 510px) {
-    #bar {
-        text-align: unset;
-   }
-
-    #inputBox {
-        width: 290px;
-        margin: 8px 8px;
-        font-size: unset;
-    }
-
-    #addButton {
-        right: 0px;
-    }
-    
+.noteTitle {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-@media screen and (max-width: 360px) {
-    #inputBox {
-        width: 250px;
-        margin: 8px 8px;
-        font-size: 15px;
+.noteType {
+    background: rgb(53, 52, 52);
+    padding: 7px 13px;
+    border-radius: 10px;
+    color: rgb(231, 102, 145);
+    font-size: 14px;
+}
+
+.noteContent {
+    font-size: 13px;
+    margin: 15px 0px;
+    height: 78px;
+    overflow: hidden;
+}
+
+.todoDisplay {
+    margin-left: 1em;
+    display: list-item;
+}
+
+.date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* ..........M-Web........... */
+
+@media screen and (max-width: 945px) {
+    #searchBox {
+        width: 400px;
     }
 
-    #logoutBtn {
+    #content {
+        padding: unset;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .noteBox {
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    #searchBox {
+        width: 300px;
+    }
+
+    .noteBox {
+        width: 37%;
+    }
+}
+@media screen and (max-width: 615px) {
+    #name {
+        display: none;
+    }
+
+    .noteBox {
+        width: calc(90% - 40px);
+        margin: 8px auto;
+    }
+}
+
+@media screen and (max-width: 530px) {
+
+    #logo img {
+        margin-left: 10px;
+    }
+    .addNoteBtn {
         margin-right: 10px;
+    }
+
+    #option {
+        right: 10px;
+    }
+
+    #searchBox {
+        width: 200px;
     }
 }

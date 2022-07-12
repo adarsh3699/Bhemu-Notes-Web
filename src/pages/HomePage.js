@@ -4,16 +4,13 @@ import Loader from "../components/Loader";
 
 import "../css/home.css";
 
-import addIcon from "../img/add.png"
-import deleteBtn from "../img/delete.png"
-import logoutBtn from "../img/logout.png"
+import logo from "../img/logo.jpeg"
 
 const myUserId = getLoggedUserId();
 
 function HomePage() {
     const [isActive, setActive] = useState(false);
     const [msg, setMsg] = useState("");
-    const [textInput, setTextInput] = useState("");
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
 
@@ -30,18 +27,15 @@ function HomePage() {
         }
     }, []);
 
-    function handleAddBtnClick(e) {
-        setActive(!isActive)
-    }
-
     useEffect(() => {
-        (async function() {
+        (async function () {
             if (myUserId) {
                 setIsApiLoading(true);
                 const apiResp = await apiCall("notes?userId=" + myUserId);
                 if (apiResp.statusCode === 200) {
                     setIsApiLoading(false);
                     setList(apiResp.data)
+
                 } else {
                     setIsApiLoading(false);
                     setMsg(apiResp.msg)
@@ -52,7 +46,7 @@ function HomePage() {
 
     async function addNotes(type, notesTitle) {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?userId=" + myUserId, "post", (type === "todo" ? { notesType: true} : { notesTitle: notesTitle }));
+        const apiResp = await apiCall("notes?userId=" + myUserId, "post", (type === "todo" ? { notesType: true } : { notesTitle: notesTitle }));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
@@ -62,31 +56,19 @@ function HomePage() {
         }
     };
 
-    function handleTextInput(e) {
-        setTextInput(e.target.value)
-    }
-
     function handleFormSubmit(e) {
         e.preventDefault();
+        console.log(e.target.searchBox.value);
+        const textInput = e.target.searchBox.value
         addNotes("", textInput);
-        setTextInput("")
+        e.target.reset()
     }
 
     function handleNoteClick(noteId) {
         window.open("/notes?id=" + noteId, '_blank').focus();
     }
 
-    async function handleDeleteBtnClick(noteId) {
-        setIsApiLoading(true)
-        const apiResp = await apiCall("notes?noteId=" + noteId, "delete");
-        if (apiResp.statusCode === 200) {
-            setFlag(!flag)
-        } else {
-            setMsg(apiResp.msg)
-        }
-    }
-
-    function handleLogoutBtnClick () {
+    function handleLogoutBtnClick() {
         setLoggedUserId("");
         document.location.href = "/";
     }
@@ -96,42 +78,64 @@ function HomePage() {
             {
                 isLoading ? null
                     :
-                    <>
-                        <form id="bar" onSubmit={handleFormSubmit}>
-                            <div id='inputArea'>
-                                <input type="text" id="inputBox" autoFocus placeholder="Take a note..." value={textInput} onChange={handleTextInput} />
+                    <div id='homePage'>
+                        <div className="navbar">
+                            <div id="logo">
+                                <img src={logo} alt="" />
+                                <div id="name">Bhemu Notes</div>
                             </div>
-                            <div id='logoutBox'><img src={logoutBtn} height="28px" id="logoutBtn" onClick={handleLogoutBtnClick} /></div>
-                        </form>
-                        
-                        <div id="background">
-                            <div id="msg" style={msg == ""?{ marginTop: "64px"} :null}>{msg}</div>
-                            <Loader isLoading={isApiLoading} />
+                            <form id="bar" onSubmit={handleFormSubmit}>
+                                <input type="text" id="searchBox" name='searchBox' placeholder="Add Notes" />
+                            </form>
+                            <div className="addNoteBtn" onClick={() => setActive(!isActive)}>Add Note</div>
+                        </div>
 
-                            <div id="list">
-                                {
-                                    list.map(function (list) {
-                                        return (
-                                            <div id={list.notesId} key={list.notesId} onClick={() => handleNoteClick(list.notesId)}>
-                                                {list.notesTitle}
-                                                <img src={deleteBtn} onClick={(e) => { e.stopPropagation(); handleDeleteBtnClick(list.notesId) }} />
+                        {
+                            isActive ?
+                                <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
+                                    <div id="addNotes" onClick={addNotes}>Note</div>
+                                    <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
+                                </div>
+                                :
+                                null
+                        }
+
+                        <div id="msg" >{msg}</div>
+                        <Loader isLoading={isApiLoading} />
+                        <div id="content">
+
+                            {
+                                list.map(function (list) {
+                                    return (
+                                        <div className="noteBox" key={list.notesId} onClick={() => handleNoteClick(list.notesId)}>
+                                            <div className="titleAndType">
+                                                <div className="noteTitle">{list.notesTitle}</div>
+                                                <div className="noteType">{list.notesType ? "Todo" : "Note"}</div>
                                             </div>
-                                        )
-                                    })
-                                }
-                            </div>
+                                            <div className="noteContent">
+                                                {
+                                                    list.notesType ?
+                                                        <div>
+                                                            <div className={list.notes[0]?.element ? "todoDisplay" : null}>{list.notes[0]?.element}</div><br />
+                                                            <div className={list.notes[1]?.element ? "todoDisplay" : null}>{list.notes[1]?.element}</div><br />
+                                                            <div className={list.notes[2]?.element ? "todoDisplay" : null}>{list.notes[2]?.element}</div>
+                                                        </div>
+                                                        : <div>{list.notes[0].element ? list.notes[0].element : "Empty......."}</div>
+                                                }
+
+                                            </div>
+                                            <div className="date">
+                                                <div>09:40AM</div>
+                                                <div>10 July 2022</div>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
 
-                        <div id="addButton" >
-                            <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
-                                <div id="addNotes" onClick={addNotes}>Note</div>
-                                <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
-                            </div>
-                            <div className={isActive ? 'addBtnActive' : null} >
-                                <img src={addIcon} height="40px" id="addImg" onClick={handleAddBtnClick}/>
-                            </div>
-                        </div>
-                    </>
+
+                    </div>
             }
         </>
     )
