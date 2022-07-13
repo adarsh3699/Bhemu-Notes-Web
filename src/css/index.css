@@ -16,7 +16,7 @@ code {
   font-size: 50px;
   color: white;
   text-align: center;
-  background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
+  background: #252525;
   overflow: hidden;
   min-height: 100vh;
   width: 100%;

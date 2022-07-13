@@ -17,7 +17,7 @@ function Routes() {
             <Suspense fallback={
                 <>
                     <div id='loadingScreen'>
-                        loading
+                        Loading
                         <div id='loadingIcon'>
                             <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                         </div>

@@ -13,7 +13,8 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: rgba(24, 23, 23, 0.9);
+    background-color: rgb(30, 30, 30);
+    border-bottom: 1px solid #f1f1f1b0;
     padding: 10px 0px;
     width: 100%;
     z-index: 10;
@@ -40,14 +41,14 @@ cursor: pointer;
 }
 
 #background {
-    background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
+    background: #252525;
     overflow: hidden;
     width: 100%;
     min-height: 100vh;
 }
 
 #msg {
-    margin-top: 65px;
+    padding-top: 65px;
     text-align: center;
     color: red;
     font-size: 18px;
@@ -56,9 +57,9 @@ cursor: pointer;
 
 #elementBox {
     background-color: rgba(24, 23, 23, 0.6);
-    margin: 10px auto;
-    border: 1px solid #ccc;
+    margin: 15px auto;
     width: 96%;
+    outline: auto;
 }
 
 #notesArea {
@@ -70,6 +71,7 @@ cursor: pointer;
     min-height: 80vh;
     background: unset;
     border: unset;
+    outline: unset;
 }
 
 .toDosBox {
@@ -115,7 +117,8 @@ cursor: pointer;
 }
 
 #addTodos {
-    margin-left: 12px;
+    margin-top: 20px;
+    margin-left: 2%;
     padding: 5px;
     background-color: rgba(24, 23, 23, 0.6);
     color: white;

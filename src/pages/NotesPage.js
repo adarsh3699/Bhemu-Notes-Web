@@ -17,7 +17,7 @@ function NotesPage() {
     const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState("");
     const [noteData, setNoteData] = useState([]);
-    
+
     const [msg, setMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isApiLoading, setIsApiLoading] = useState(false);
@@ -46,7 +46,7 @@ function NotesPage() {
     }, [])
 
     useEffect(() => {
-        (async function() {
+        (async function () {
             if (myNotesId && myNotesId !== "undefined") {
                 setIsApiLoading(true);
                 const apiResp = await apiCall("notes/" + myNotesId)
@@ -118,7 +118,7 @@ function NotesPage() {
     }
 
     function handleAddToDoBtnClick() {
-        setNoteData([...noteData, { element: "", isDone: false}]);
+        setNoteData([...noteData, { element: "", isDone: false }]);
     }
 
     return (
@@ -138,19 +138,19 @@ function NotesPage() {
                             <div id="error">{isNotesId.errorMsg}</div>
                             <div id="msg">{msg}</div>
                             <Loader isLoading={isApiLoading} />
-                            
+
                             <div id="elementBox" className={isNotesId.condition ? null : 'noteIdNotFound'}>
                                 {
                                     noteData.map(function (item, index) {
                                         return (
                                             notesType === false ?
-                                                <textarea 
-                                                    id="notesArea" 
-                                                    key={index} 
+                                                <textarea
+                                                    id="notesArea"
+                                                    key={index}
                                                     value={item.element}
                                                     onChange={(e) => handleTodoText(index, e)}
                                                 >
-                                                        
+
                                                 </textarea>
                                                 :
                                                 notesType === true ?
@@ -164,14 +164,14 @@ function NotesPage() {
                                                         <input
                                                             type="text"
                                                             id={index}
-                                                            className={item?.isDone? "todosIsDone todos" : "todos"}
+                                                            className={item?.isDone ? "todosIsDone todos" : "todos"}
                                                             value={item.element}
                                                             onChange={(e) => handleTodoText(index, e)}
                                                         />
                                                         <img src={crossIcon} onClick={() => handleDeleteToDoBtnClick(index)} />
 
                                                     </div>
-                                                : null
+                                                    : null
 
                                         )
                                     })
