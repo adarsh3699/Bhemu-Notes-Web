@@ -132,6 +132,7 @@
     font-size: 13px;
     margin: 15px 0px;
     height: 78px;
+    white-space: pre-line;
     overflow: hidden;
 }
 
@@ -156,7 +157,7 @@
     }
 
     #content {
-        padding: unset;
+        padding-left: unset;
     }
 }
 
