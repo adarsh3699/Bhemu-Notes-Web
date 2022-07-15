@@ -81,7 +81,7 @@ function HomePage() {
                     <div id='homePage'>
                         <div className="navbar">
                             <div id="logo">
-                                <img src={logo} alt="" />
+                                <img src={logo} alt="" onClick={handleLogoutBtnClick} />
                                 <div id="name">Bhemu Notes</div>
                             </div>
                             <form id="bar" onSubmit={handleFormSubmit}>
@@ -125,8 +125,8 @@ function HomePage() {
 
                                             </div>
                                             <div className="date">
-                                                <div>09:40AM</div>
-                                                <div>10 July 2022</div>
+                                                <div>{new Date(list.insertedOn)?.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
+                                                <div>{new Date(list.insertedOn)?.toLocaleDateString(undefined, {day: '2-digit', month: 'long', year: 'numeric'})}</div>
                                             </div>
                                         </div>
                                     )
