@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
+import Modal from "../components/Modal";
 
-import "../css/home.css";
+import "../css/homePage.css";
+import "../css/notes.css"
 
 import logo from "../img/logo.jpeg"
+import deleteIcon from "../img/delete.png"
+import saveIcon from "../img/save.png"
+import crossIcon from "../img/cross.png"
+
 
 const myUserId = getLoggedUserId();
 
@@ -13,6 +19,11 @@ function HomePage() {
     const [msg, setMsg] = useState("");
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
+    const [isNoteOpen, setIsNoteOpen] = useState(false);
+    const [myNotesId, setMyNotesId] = useState("");
+    const [notesType, setNotesType] = useState(0);
+    const [notesTitle, setNotesTitle] = useState("");
+    const [noteData, setNoteData] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
     const [isApiLoading, setIsApiLoading] = useState(false);
@@ -46,11 +57,11 @@ function HomePage() {
 
     async function addNotes(type, notesTitle) {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?userId=" + myUserId, "post", (type === "todo" ? { notesType: true } : { notesTitle: notesTitle }));
+        const apiResp = await apiCall("notes?userId=" + myUserId, "post", ( {notesType: type, notesTitle: notesTitle}));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
-            handleNoteClick(apiResp.notesId)
+            handleNoteClick(apiResp?.notesId, type, notesTitle, [{}])
         } else {
             setMsg(apiResp.msg)
         }
@@ -58,20 +69,86 @@ function HomePage() {
 
     function handleFormSubmit(e) {
         e.preventDefault();
-        console.log(e.target.searchBox.value);
         const textInput = e.target.searchBox.value
-        addNotes("", textInput);
+        addNotes(false, textInput);
         e.target.reset()
     }
 
-    function handleNoteClick(noteId) {
-        window.open("/notes?id=" + noteId, '_blank').focus();
+    function handleNoteClick(noteId, type, title, Data) {
+        setMyNotesId(noteId)
+        setNotesType(type)
+        setNotesTitle(title)
+        setNoteData(Data)
+        setIsNoteOpen(true);
     }
 
     function handleLogoutBtnClick() {
         setLoggedUserId("");
         document.location.href = "/";
     }
+
+
+    function handleTitleChange(e) {
+        setNotesTitle(e.target.value)
+    }
+
+    async function handleSaveBtnClick() {
+        setIsApiLoading(true);
+        const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
+
+        if (apiResp.statusCode === 200) {
+            setFlag(!flag)
+            setIsApiLoading(false);
+            setMsg("Saved");
+            console.log("Notes Updated =>", apiResp.msg);
+        } else {
+            setMsg(apiResp.msg);
+        }
+    }
+
+    async function handleDeleteBtnClick() {
+        setIsApiLoading(true);
+        setIsNoteOpen(false)
+        const apiResp = await apiCall("notes?noteId=" + myNotesId, "delete");
+        if (apiResp.statusCode === 200) {
+            setFlag(!flag)
+            setIsApiLoading(false);
+            setMsg("Note Deleted");
+        } else {
+            setMsg(apiResp.msg);
+        }
+    }
+
+
+    //for todos
+    function handleCheckboxClick(index, isDone) {
+        const newToDos = noteData.map(function (toDo, i) {
+            return (i === index ? { ...toDo, isDone: isDone ? false : true } : toDo)
+        })
+        setNoteData(newToDos);
+    }
+
+    function handleTodoText(index, e) {
+        const newToDos = noteData.map(function (toDo, i) {
+            return (i === index ? { ...toDo, element: e.target.value } : toDo)
+        })
+
+        setNoteData(newToDos);
+    }
+
+    function handleDeleteToDoBtnClick(index) {
+        let newToDos = noteData.filter((data, i) => {
+            return (i !== index) ? data : null
+        });
+
+        setNoteData(newToDos);
+    }
+
+    function handleAddToDoBtnClick() {
+        setNoteData([...noteData, { element: "", isDone: false }]);
+    }
+
+
 
     return (
         <>
@@ -84,7 +161,7 @@ function HomePage() {
                                 <img src={logo} alt="" onClick={handleLogoutBtnClick} />
                                 <div id="name">Bhemu Notes</div>
                             </div>
-                            <form id="bar" onSubmit={handleFormSubmit}>
+                            <form onSubmit={handleFormSubmit}>
                                 <input type="text" id="searchBox" name='searchBox' placeholder="Add Notes" />
                             </form>
                             <div className="addNoteBtn" onClick={() => setActive(!isActive)}>Add Note</div>
@@ -93,8 +170,8 @@ function HomePage() {
                         {
                             isActive ?
                                 <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
-                                    <div id="addNotes" onClick={addNotes}>Note</div>
-                                    <div id="addTodos" onClick={() => addNotes('todo')}>ToDos</div>
+                                    <div onClick={()=>addNotes(false)}>Note</div>
+                                    <div onClick={() => addNotes(true)}>ToDos</div>
                                 </div>
                                 :
                                 null
@@ -107,7 +184,7 @@ function HomePage() {
                             {
                                 list.map(function (list) {
                                     return (
-                                        <div className="noteBox" key={list.notesId} onClick={() => handleNoteClick(list.notesId)}>
+                                        <div className="noteBox" key={list.notesId} onClick={() => handleNoteClick(list.notesId, list.notesType, list.notesTitle, list.notes)}>
                                             <div className="titleAndType">
                                                 <div className="noteTitle">{list.notesTitle}</div>
                                                 <div className="noteType">{list.notesType ? "Todo" : "Note"}</div>
@@ -126,13 +203,71 @@ function HomePage() {
                                             </div>
                                             <div className="date">
                                                 <div>{new Date(list.insertedOn)?.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
-                                                <div>{new Date(list.insertedOn)?.toLocaleDateString(undefined, {day: '2-digit', month: 'long', year: 'numeric'})}</div>
+                                                <div>{new Date(list.insertedOn)?.toLocaleDateString(undefined, { day: '2-digit', month: 'long', year: 'numeric' })}</div>
                                             </div>
                                         </div>
                                     )
                                 })
                             }
                         </div>
+                        {
+                            isNoteOpen ?
+                                <Modal
+                                    open={isNoteOpen}
+                                    closeOnOutsideClick={() => setIsNoteOpen(false)}
+                                    handleModalClose={() => setIsNoteOpen(false)}
+                                >
+                                    <div id="notesModelBar">
+                                        <input type="text" id="title" value={notesTitle} onChange={handleTitleChange} />
+                                        <div id="barImg">
+                                            <img src={deleteIcon} id="delete" onClick={handleDeleteBtnClick} />
+                                            <img src={saveIcon} id="saveIcon" onClick={handleSaveBtnClick} />
+                                            <div id='closeBtn' onClick={() => setIsNoteOpen(false)}>Close</div>
+                                        </div>
+                                    </div>
+
+                                    <div id="elementBox">
+                                        {
+                                            noteData.map(function (item, index) {
+                                                return (
+                                                    notesType === false ?
+                                                        <textarea
+                                                            id="notesArea"
+                                                            key={index}
+                                                            value={item.element}
+                                                            onChange={(e) => handleTodoText(index, e)}
+                                                        >
+                                                        </textarea>
+                                                        :
+                                                        notesType === true ?
+                                                            <div className="toDosBox" key={index} >
+
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={item?.isDone}
+                                                                    onChange={() => handleCheckboxClick(index, item.isDone)}
+                                                                />
+                                                                <input
+                                                                    type="text"
+                                                                    id={index}
+                                                                    className={item?.isDone ? "todosIsDone todos" : "todos"}
+                                                                    value={item.element}
+                                                                    onChange={(e) => handleTodoText(index, e)}
+                                                                />
+                                                                <img src={crossIcon} onClick={() => handleDeleteToDoBtnClick(index)} />
+
+                                                            </div>
+                                                            : null
+
+                                                )
+                                            })
+                                        }
+                                    </div>
+
+                                    {notesType === true ? <div id="addTodos" onClick={handleAddToDoBtnClick}>Add ToDos</div> : null}
+                                </Modal>
+                                : null
+                        }
 
 
                     </div>

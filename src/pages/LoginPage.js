@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
-import "../css/login.css";
+import "../css/loginPage.css";
 
 function LoginPage() {
     const [msg, setMsg] = useState("");

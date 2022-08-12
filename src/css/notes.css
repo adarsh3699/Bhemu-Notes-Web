@@ -6,10 +6,7 @@ img {
     display: none !important;
 }
 
-#bar {
-    position: fixed;
-    top: 0;
-    left: 0;
+#notesModelBar {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -17,6 +14,7 @@ img {
     border-bottom: 1px solid #f1f1f1b0;
     padding: 10px 0px;
     width: 100%;
+    border-radius: 8px 8px 0 0;
     z-index: 10;
 }
 
@@ -30,14 +28,25 @@ img {
 }
 
 #barImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-right: 20px;
+    font-size: 20px;
+    color: white;
 }
 
 #barImg img {
-height: 30px;
-margin-right: 8px;
-padding: 0 5px;
-cursor: pointer;
+    height: 30px;
+    margin-right: 8px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+#closeBtn {
+    margin-left: 30px;
+    padding: 3px 5px;
+    cursor: pointer;
 }
 
 #background {
@@ -55,20 +64,26 @@ cursor: pointer;
     font-weight: bold;
 }
 
+#alignElementBox {
+    display: flex;
+    justify-content: center;
+    background-color: red;
+}
+
 #elementBox {
-    background-color: rgba(24, 23, 23, 0.6);
-    margin: 15px auto;
-    width: 96%;
-    outline: auto;
+    margin: 15px 0;
+    width: 100%;
+    height: 88%;
 }
 
 #notesArea {
-    padding: 5px 8px;
+    position: absolute;
+    padding: 5px 15px;
     color: white;
     font-size: 18px;
-    resize: vertical;
-    width: calc(100% - 16px);
-    min-height: 80vh;
+    resize: unset;
+    width: calc(100% - 30px);
+    min-height: 88%;
     background: unset;
     border: unset;
     outline: unset;
@@ -77,17 +92,22 @@ cursor: pointer;
 .toDosBox {
     display: flex;
     align-items: center;
+    background-color: rgba(24, 23, 23, 0.6);
     border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    margin: 0 15px;
 }
 
-.toDosBox:first-child {
-    border-top: unset;
+.toDosBox:last-child {
+    border-bottom: 1px solid #ccc;
 }
 
 .toDosBox img {
     height: 22px !important;
     padding: 6px;
 }
+
 .todos {
     color: white;
     font-size: 18px;
@@ -112,12 +132,12 @@ cursor: pointer;
 .toDosCheckbox {
     cursor: pointer;
     background-color: aqua;
-    width: 17px; 
+    width: 17px;
     height: 17px;
 }
 
 #addTodos {
-    margin-top: 20px;
+    margin: 20px 0;
     margin-left: 2%;
     padding: 5px;
     background-color: rgba(24, 23, 23, 0.6);
@@ -135,6 +155,24 @@ cursor: pointer;
 }
 
 /* ...............................mWeb............................. */
+@media screen and (max-width: 768px) {
+    #title {
+        font-size: 18px;
+        margin-left: 15px;
+    }
+
+    #closeBtn {
+        margin-left: 10px;
+    }
+
+    #notesArea{
+        font-size: 15px;
+    }
+
+    .todos {
+        font-size: 15px;
+    }
+}
 @media screen and (max-width: 480px) {
     #title {
         font-size: 18px;
@@ -143,11 +181,16 @@ cursor: pointer;
     }
 
     #barImg {
+        margin-right: 10px;
+    }
+
+    #closeBtn {
+        font-size: 15px;
         margin: unset;
     }
 
     #barImg img {
-        height: 27px;
+        height: 25px;
     }
 
     #barImg img:first-child {
@@ -155,20 +198,27 @@ cursor: pointer;
         margin-right: 5px;
     }
 
-    #notesArea {
-        font-size: 15px;
-    }
-
-    .todos {
+    #notesArea, .todos {
         font-size: 15px;
     }
 }
 
-@media screen and (max-width: 330px) {
+@media screen and (max-width: 400px) {
     #title {
-        font-size: 17px;
-        margin-left: 12px;
+        font-size: 16px;
         width: 200px;
+    }
+
+    #notesArea, .todos {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    #title {
+        font-size: 15px;
+        margin-left: 12px;
+        width: 180px;
     }
 
     #barImg img {
@@ -177,11 +227,7 @@ cursor: pointer;
         margin-right: 10px !important;
     }
 
-    #notesArea {
-        font-size: 14px;
-    }
-
-    .todos {
-        font-size: 14px;
+    #notesArea, .todos {
+        font-size: 13px;
     }
 }

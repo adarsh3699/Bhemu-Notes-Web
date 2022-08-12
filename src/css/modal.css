@@ -1,0 +1,43 @@
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(54, 54, 54, 0.95);
+    outline: unset;
+    width: 90%;
+    height: 90%;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+.close {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 3;
+    color: white;
+    font-size: 50px;
+    margin-top: -20px;
+    padding: 0 5px;
+}
+
+.modalContent {
+    overflow: auto;
+    height: 100%;
+}
+
+#backgroundDiv {
+    background-color: rgb(32, 32, 32);
+    height: 100vh;
+    overflow-y: auto;
+    color: white;
+}
+
+@media screen and (max-width: 400px) {
+    .modal {
+        width: 92%;
+        height: 80%;
+    }
+}

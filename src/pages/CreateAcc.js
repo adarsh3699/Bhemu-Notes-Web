@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 
-import "../css/login.css";
+import "../css/loginPage.css";
 
 document.title = "Bhemu Notes | Create Your Account";
 
