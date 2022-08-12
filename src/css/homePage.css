@@ -206,3 +206,9 @@
         width: 200px;
     }
 }
+
+@media screen and (max-width: 370px) {
+    .noteBox{
+        height: 150px;
+    }
+}
