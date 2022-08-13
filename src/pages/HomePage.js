@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
 import Modal from "../components/Modal";
+import Button from '@mui/material/Button';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
 
 import "../css/homePage.css";
 import "../css/notes.css"
@@ -57,7 +63,7 @@ function HomePage() {
 
     async function addNotes(type, notesTitle) {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?userId=" + myUserId, "post", ( {notesType: type, notesTitle: notesTitle}));
+        const apiResp = await apiCall("notes?userId=" + myUserId, "post", ({ notesType: type, notesTitle: notesTitle }));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
             console.log("Notes Added");
@@ -170,8 +176,8 @@ function HomePage() {
                         {
                             isActive ?
                                 <div id="option" className={isActive ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
-                                    <div onClick={()=>addNotes(false)}>Note</div>
-                                    <div onClick={() => addNotes(true)}>ToDos</div>
+                                    <div onClick={() => addNotes(false, "Enter Notes Title")}>Note</div>
+                                    <div onClick={() => addNotes(true, "Enter Notes Title")}>ToDos</div>
                                 </div>
                                 :
                                 null
@@ -220,9 +226,33 @@ function HomePage() {
                                     <div id="notesModelBar">
                                         <input type="text" id="title" value={notesTitle} onChange={handleTitleChange} />
                                         <div id="barImg">
-                                            <img src={deleteIcon} id="delete" onClick={handleDeleteBtnClick} />
-                                            <img src={saveIcon} id="saveIcon" onClick={handleSaveBtnClick} />
-                                            <div id='closeBtn' onClick={() => setIsNoteOpen(false)}>Close</div>
+                                            {/* <img src={deleteIcon} id="delete" onClick={handleDeleteBtnClick} />
+                                            <img src={saveIcon} id="saveIcon" onClick={handleSaveBtnClick} /> */}
+
+                                            <IconButton
+                                                id="deleteBtn"
+                                                color="inherit"
+                                                aria-label="delete"
+                                                size="large"
+                                                onClick={handleDeleteBtnClick}>
+                                                <DeleteIcon fontSize="inherit" />
+                                            </IconButton>
+
+                                            <IconButton
+                                                id="saveBtn"
+                                                color="inherit"
+                                                aria-label="save"
+                                                size="large"
+                                                onClick={handleSaveBtnClick}>
+                                                <SaveIcon fontSize="inherit" />
+                                            </IconButton>
+
+                                            <Button
+                                                id='closeBtn'
+                                                color="inherit"
+                                                variant="text"
+                                                onClick={() => setIsNoteOpen(false)}
+                                            >Close</Button>
                                         </div>
                                     </div>
 
@@ -254,8 +284,9 @@ function HomePage() {
                                                                     value={item.element}
                                                                     onChange={(e) => handleTodoText(index, e)}
                                                                 />
-                                                                <img src={crossIcon} onClick={() => handleDeleteToDoBtnClick(index)} />
-
+                                                                <IconButton sx={{ color: "#F1F1F1" }} aria-label="delete" onClick={() => handleDeleteToDoBtnClick(index)} size="large">
+                                                                    <CloseIcon fontSize="inherit" />
+                                                                </IconButton>
                                                             </div>
                                                             : null
 
