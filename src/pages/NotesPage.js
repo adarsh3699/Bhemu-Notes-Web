@@ -21,48 +21,48 @@ function NotesPage() {
     const [msg, setMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isApiLoading, setIsApiLoading] = useState(false);
-    // useEffect(function getDataFromUrl() {
-    //     if (!myUserId) {
-    //         document.location.href = "/";
-    //         return;
-    //     }
+    useEffect(function getDataFromUrl() {
+        if (!myUserId) {
+            document.location.href = "/";
+            return;
+        }
 
-    //     try {
-    //         var url = document.location.href,
-    //             params = url.split('?')[1].split('&'),
-    //             notes = {}, tmp;
-    //         for (var i = 0, l = params.length; i < l; i++) {
-    //             tmp = params[i].split('=');
-    //             notes[tmp[0]] = tmp[1];
-    //         }
-    //         myNotesId = notes.id;
-    //         if (notes.id === "" || myNotesId === "undefined") {
-    //             setIsNotesId({ condition: false, errorMsg: "Note not found (404)" });
-    //         }
-    //     } catch {
-    //         setIsNotesId({ condition: false, errorMsg: "Note not found (404)" });
-    //     }
-    //     setIsLoading(false);
-    // }, [])
+        try {
+            var url = document.location.href,
+                params = url.split('?')[1].split('&'),
+                notes = {}, tmp;
+            for (var i = 0, l = params.length; i < l; i++) {
+                tmp = params[i].split('=');
+                notes[tmp[0]] = tmp[1];
+            }
+            myNotesId = notes.id;
+            if (notes.id === "" || myNotesId === "undefined") {
+                setIsNotesId({ condition: false, errorMsg: "Note not found (404)" });
+            }
+        } catch {
+            setIsNotesId({ condition: false, errorMsg: "Note not found (404)" });
+        }
+        setIsLoading(false);
+    }, [])
 
-    // useEffect(() => {
-    //     (async function () {
-    //         if (myNotesId && myNotesId !== "undefined") {
-    //             setIsApiLoading(true);
-    //             const apiResp = await apiCall("notes/" + myNotesId)
-    //             if (apiResp.statusCode === 200) {
-    //                 setIsApiLoading(false);
-    //                 setNotesType(apiResp.data?.notesType)
-    //                 setNotesTitle(apiResp.data?.notesTitle);
-    //                 setNoteData(apiResp.data.notes);
-    //                 document.title = apiResp.data?.notesTitle;
-    //             } else {
-    //                 setIsApiLoading(false);
-    //                 setMsg(apiResp.msg);
-    //             }
-    //         }
-    //     })();
-    // }, []);
+    useEffect(() => {
+        (async function () {
+            if (myNotesId && myNotesId !== "undefined") {
+                setIsApiLoading(true);
+                const apiResp = await apiCall("notes/" + myNotesId)
+                if (apiResp.statusCode === 200) {
+                    setIsApiLoading(false);
+                    setNotesType(apiResp.data?.notesType)
+                    setNotesTitle(apiResp.data?.notesTitle);
+                    setNoteData(apiResp.data.notes);
+                    document.title = apiResp.data?.notesTitle;
+                } else {
+                    setIsApiLoading(false);
+                    setMsg(apiResp.msg);
+                }
+            }
+        })();
+    }, []);
 
     function handleTitleChange(e) {
         setNotesTitle(e.target.value)

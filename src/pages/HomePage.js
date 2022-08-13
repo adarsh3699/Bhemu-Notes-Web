@@ -226,9 +226,6 @@ function HomePage() {
                                     <div id="notesModelBar">
                                         <input type="text" id="title" value={notesTitle} onChange={handleTitleChange} />
                                         <div id="barImg">
-                                            {/* <img src={deleteIcon} id="delete" onClick={handleDeleteBtnClick} />
-                                            <img src={saveIcon} id="saveIcon" onClick={handleSaveBtnClick} /> */}
-
                                             <IconButton
                                                 id="deleteBtn"
                                                 color="inherit"

@@ -31,7 +31,7 @@ function Routes() {
                     <Route exact path="/home" element={<HomePage />} />
                     <Route exact path="/notes" element={<NotesPage />} />
                     
-                    <Route path="*" element={<div>page not found</div>} />
+                    <Route path="*" element={<center><h1>Page not Found</h1></center>} />
                 </Switch>
             </Suspense>
         </BrowserRouter>
