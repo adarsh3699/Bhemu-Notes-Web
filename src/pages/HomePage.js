@@ -13,9 +13,6 @@ import "../css/homePage.css";
 import "../css/notes.css"
 
 import logo from "../img/logo.jpeg"
-import deleteIcon from "../img/delete.png"
-import saveIcon from "../img/save.png"
-import crossIcon from "../img/cross.png"
 
 
 const myUserId = getLoggedUserId();
@@ -100,6 +97,7 @@ function HomePage() {
 
     async function handleSaveBtnClick() {
         setIsApiLoading(true);
+        setIsNoteOpen(false)
         const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
 
         if (apiResp.statusCode === 200) {
@@ -126,7 +124,7 @@ function HomePage() {
     }
 
 
-    //for todos
+    //For Todo's
     function handleCheckboxClick(index, isDone) {
         const newToDos = noteData.map(function (toDo, i) {
             return (i === index ? { ...toDo, isDone: isDone ? false : true } : toDo)

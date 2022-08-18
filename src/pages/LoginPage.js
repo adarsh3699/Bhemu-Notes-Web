@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
+
 import "../css/loginPage.css";
+import logo from "../img/logoBig.png"
 
 function LoginPage() {
     const [msg, setMsg] = useState("");
@@ -51,7 +53,8 @@ function LoginPage() {
                     :
                     <div id="background">
                         <div id="wrapper">
-                            <div id='Title'>Login</div>
+                            <img id='myLogo' src={logo} />
+                            <div id='Title'>Bhemu Notes</div>
                             <form id="form" onSubmit={handleFormSubmit}>
                                 <input type="email" name='email' placeholder="Email" id="userName" />
                                 <br />

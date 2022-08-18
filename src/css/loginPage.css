@@ -3,20 +3,25 @@ a {
 }
 
 #background {
-    background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);
+    background: #242526;
     overflow: hidden;
     width: 100%;
     min-height: 100vh;
 }
 
 #wrapper {
-    background-color: rgba(26, 25, 25, 0.65);
+    background-color: #2A2B2D;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     border-radius: 5px;
     text-align: center;
     padding: 50px 0;
     margin: 12vh auto;
     width: 70%;
+}
+
+#myLogo {
+    margin-top: -20px;
+    height: 150px;
 }
 
 #Title {
@@ -142,7 +147,7 @@ hr {
 @media screen and (max-width: 700px) {
 
     #wrapper {
-        margin: 15vh auto;
+        margin: 7vh auto;
         width: 95%;
     }
 }
@@ -150,7 +155,8 @@ hr {
 @media screen and (max-width: 475px) {
     input {
         width: 90%;
-        height: 36px;
+        font-size: 15px;
+        height: 35px;
     }
 
     hr {
