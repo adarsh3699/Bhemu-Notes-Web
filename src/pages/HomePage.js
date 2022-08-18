@@ -266,8 +266,8 @@ function HomePage() {
                                                         :
                                                         notesType === true ?
                                                             <div className="toDosBox" key={index} >
-
                                                                 <input
+                                                                style={{marginLeft: "10px"}}
                                                                     type="checkbox"
                                                                     checked={item?.isDone}
                                                                     onChange={() => handleCheckboxClick(index, item.isDone)}

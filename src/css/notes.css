@@ -103,11 +103,6 @@ img {
     border-bottom: 1px solid #ccc;
 }
 
-.toDosBox img {
-    height: 22px !important;
-    padding: 6px;
-}
-
 .todos {
     color: white;
     font-size: 18px;
