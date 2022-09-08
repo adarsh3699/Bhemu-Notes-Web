@@ -132,12 +132,19 @@ function HomePage() {
         setNoteData(newToDos);
     }
 
-    function handleTodoText(index, e) {
+    function handleTextChange(index, e) {
         const newToDos = noteData.map(function (toDo, i) {
             return (i === index ? { ...toDo, element: e.target.value } : toDo)
         })
 
         setNoteData(newToDos);
+    }
+
+    function handleEnterClick(index) {
+        const tempData = [...noteData];
+        tempData.splice(index + 1, 0, { element: "", isDone: false })
+        setNoteData(tempData)
+        document.getElementById(index + 1).focus();
     }
 
     function handleDeleteToDoBtnClick(index) {
@@ -222,7 +229,7 @@ function HomePage() {
                                     handleModalClose={() => setIsNoteOpen(false)}
                                 >
                                     <div id="notesModelBar">
-                                        <input type="text" id="title" value={notesTitle} onChange={handleTitleChange} />
+                                        <input type="text" id="title" autoComplete="off" value={notesTitle} onChange={handleTitleChange} />
                                         <div id="barImg">
                                             <IconButton
                                                 id="deleteBtn"
@@ -255,19 +262,20 @@ function HomePage() {
                                         {
                                             noteData.map(function (item, index) {
                                                 return (
-                                                    notesType === false ?
+                                                    notesType === false ? //type notes
                                                         <textarea
                                                             id="notesArea"
                                                             key={index}
                                                             value={item.element}
-                                                            onChange={(e) => handleTodoText(index, e)}
+                                                            onChange={(e) => handleTextChange(index, e)}
                                                         >
                                                         </textarea>
                                                         :
-                                                        notesType === true ?
+                                                        notesType === true ? //type todo
+
                                                             <div className="toDosBox" key={index} >
                                                                 <input
-                                                                style={{marginLeft: "10px"}}
+                                                                    style={{ marginLeft: "10px" }}
                                                                     type="checkbox"
                                                                     checked={item?.isDone}
                                                                     onChange={() => handleCheckboxClick(index, item.isDone)}
@@ -277,9 +285,11 @@ function HomePage() {
                                                                     id={index}
                                                                     className={item?.isDone ? "todosIsDone todos" : "todos"}
                                                                     value={item.element}
-                                                                    onChange={(e) => handleTodoText(index, e)}
+                                                                    autoComplete="off"
+                                                                    onChange={(e) => handleTextChange(index, e)}
+                                                                    onKeyDown={(e) => e.key === "Enter" ? handleEnterClick(index, e) : null}
                                                                 />
-                                                                <IconButton sx={{ color: "#F1F1F1" }} aria-label="delete" onClick={() => handleDeleteToDoBtnClick(index)} size="large">
+                                                                <IconButton sx={{ color: "#F1F1F1", padding: " 0 5px 0 0" }} aria-label="delete" onClick={() => handleDeleteToDoBtnClick(index)} size="large">
                                                                     <CloseIcon fontSize="inherit" />
                                                                 </IconButton>
                                                             </div>

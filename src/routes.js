@@ -9,7 +9,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
 const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const NotesPage = lazy(() => import('./pages/NotesPage'));
+const NotesPage = lazy(() => import('./pages/ShearNotesPage'));
 
 function Routes() {
     return (
