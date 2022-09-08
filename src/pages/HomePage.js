@@ -144,7 +144,9 @@ function HomePage() {
         const tempData = [...noteData];
         tempData.splice(index + 1, 0, { element: "", isDone: false })
         setNoteData(tempData)
-        document.getElementById(index + 1).focus();
+        if (noteData.length - 1 !== index) {
+            document.getElementById(index + 1).focus();
+        }
     }
 
     function handleDeleteToDoBtnClick(index) {
@@ -287,6 +289,7 @@ function HomePage() {
                                                                     value={item.element}
                                                                     autoComplete="off"
                                                                     onChange={(e) => handleTextChange(index, e)}
+                                                                    // autoFocus={noteData.length - 1 === index ? true : false}
                                                                     onKeyDown={(e) => e.key === "Enter" ? handleEnterClick(index, e) : null}
                                                                 />
                                                                 <IconButton sx={{ color: "#F1F1F1", padding: " 0 5px 0 0" }} aria-label="delete" onClick={() => handleDeleteToDoBtnClick(index)} size="large">
