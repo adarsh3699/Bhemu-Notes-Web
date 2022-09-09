@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
 
@@ -19,7 +19,7 @@ function LoginPage() {
         }
     }, []);
 
-    async function handleFormSubmit(e) {
+    const handleUserLogin = useCallback(async (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
@@ -44,7 +44,7 @@ function LoginPage() {
         } else {
             setMsg("Please Enter Your Email and Password")
         }
-    }
+    }, [])
 
     return (
         <>
@@ -53,9 +53,9 @@ function LoginPage() {
                     :
                     <div id="background">
                         <div id="wrapper">
-                            <img id='myLogo' src={logo} />
+                            <img id='myLogo' src={logo} alt="" />
                             <div id='Title'>Bhemu Notes</div>
-                            <form id="form" onSubmit={handleFormSubmit}>
+                            <form id="form" onSubmit={handleUserLogin}>
                                 <input type="email" name='email' placeholder="Email" id="userName" />
                                 <br />
                                 <input type="password" name='password' placeholder="Password" id="password" />

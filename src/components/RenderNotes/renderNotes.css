@@ -1,0 +1,92 @@
+#content {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 40px;
+    padding-bottom: 90px;
+}
+
+.noteBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgb(238, 83, 109);
+    color: white;
+    width: 370px;
+    height: 160px;
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin: 20px;
+}
+
+.titleAndType {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    align-items: center;
+}
+
+.noteTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.noteType {
+    background: rgb(53, 52, 52);
+    padding: 7px 13px;
+    border-radius: 10px;
+    color: rgb(231, 102, 145);
+    font-size: 14px;
+}
+
+.noteContent {
+    font-size: 13px;
+    margin: 15px 0px;
+    height: 78px;
+    white-space: pre-line;
+    overflow: hidden;
+}
+
+.todoDisplay {
+    margin-left: 1em;
+    display: list-item;
+}
+
+.date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* ...............M-Web................ */
+
+@media screen and (max-width: 945px) {
+    #content {
+        padding-left: unset;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .noteBox {
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .noteBox {
+        width: 37%;
+    }
+}
+
+@media screen and (max-width: 615px) {
+    .noteBox {
+        width: calc(90% - 40px);
+        margin: 8px auto;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .noteBox {
+        height: 150px;
+    }
+}

@@ -22,15 +22,14 @@ function CreateAcc() {
 
                 const apiResp = await apiCall("auth/signUp", "post", { email, password });
                 if (apiResp.statusCode === 200) {
-                    setIsApiLoading(false);
                     setMsg(apiResp.msg)
                     document.location.href = "/";
                 } else {
-                    setIsApiLoading(false);
                     setMsg(apiResp.msg)
                 }
+                setIsApiLoading(false);
             } else {
-                setMsg("Passwords didn't match. Try again.")
+                setMsg("Passwords didn't match.")
             }
         } else {
             setMsg("Please enter all data.")

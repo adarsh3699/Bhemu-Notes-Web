@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 
@@ -19,11 +19,11 @@ function ForgetPasswordPage() {
     const [isPassApiLoading, setIsPassApiLoading] = useState(false);
     const [showChangePassForm, setShowChangePassForm] = useState(false);
 
-    function handleEmailValue(e) {
+    const handleEmailValue = useCallback((e) => {
         setEmailValsg(e.target.value);
-    }
+    }, [])
 
-    async function handleSendOtpBtnClick(e) {
+    const handleSendOtpBtnClick = useCallback(async (e) => {
         e.preventDefault();
 
         if (emailVal) {
@@ -33,7 +33,6 @@ function ForgetPasswordPage() {
                 setShowChangePassForm(true)
                 setOtpMsg(apiResp.msg);
                 setEncryptedOtp(apiResp.otp)
-                console.log(apiResp.otp);
             } else {
                 setOtpMsg(apiResp.msg)
             }
@@ -41,9 +40,9 @@ function ForgetPasswordPage() {
         } else {
             setOtpMsg("Please Enter Your Email")
         }
-    }
+    }, [emailVal])
 
-    async function handleConfirmPasswordClick(e) {
+    const handleConfirmPasswordClick = useCallback(async (e) => {
         e.preventDefault();
 
         setIsPassApiLoading(true);
@@ -59,11 +58,11 @@ function ForgetPasswordPage() {
             } else {
                 setPassMsg(apiResp.msg)
             }
-            setIsPassApiLoading(false)
         } else {
             setPassMsg("Password does not match")
         }
-    }
+        setIsPassApiLoading(false)
+    }, [emailVal, encryptedOtp])
 
     return (
         <div id="background">

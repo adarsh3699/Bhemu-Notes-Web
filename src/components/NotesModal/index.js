@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Modal from '@mui/material/Modal';
 
-import styles from '../css/modal.css';
+import styles from './notesModal.css';
 
 function ModalWrapper({
     open,
@@ -18,7 +18,7 @@ function ModalWrapper({
             <div className={["modal", containerClassName].join("")}>
                 {/* <div className={["close", closeBtnClassName].join("")} onClick={handleModalClose} ></div> */}
                 <div className={styles.modalContent}>{children}</div>
-                
+
             </div>
         </Modal>
     );

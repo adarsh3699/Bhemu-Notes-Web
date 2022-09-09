@@ -1,0 +1,113 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 12px 0;
+    background-color: rgb(30, 30, 30);
+    border-bottom: 1px solid #f1f1f1b0;
+    width: 100%;
+}
+
+#logo {
+    display: flex;
+    align-items: center;
+}
+
+#logo img {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: 2px solid white;
+    margin: 0 10px 0 30px;
+}
+
+#name {
+    font-size: 14px;
+    font-weight: 550;
+}
+
+#searchBox {
+    width: 550px;
+    height: 25px;
+    background: rgb(73, 73, 73);
+    padding-left: 10px;
+    color: rgb(226, 226, 226);
+    border: 1px solid grey;
+    border-radius: 3px;
+    font-weight: 550;
+}
+
+.addNoteBtn {
+    background: rgb(59, 134, 77);
+    margin-right: 20px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 550;
+    user-select: none;
+}
+
+#option {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    width: 90.69px;
+    background-color: rgb(110, 110, 95);
+    border: solid black 1px;
+    font-size: 17px;
+    text-align: center;
+    border-radius: 7px;
+    user-select: none;
+}
+
+#option div {
+    padding: 10px;
+}
+
+#option div:first-child {
+    border-bottom: solid black 1px;
+}
+
+
+@media screen and (max-width: 945px) {
+    #searchBox {
+        width: 400px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    #searchBox {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 615px) {
+    #name {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 530px) {
+
+    #logo img {
+        margin-left: 10px;
+    }
+
+    .addNoteBtn {
+        margin-right: 10px;
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+
+    #option {
+        right: 10px;
+    }
+
+    #searchBox {
+        width: 200px;
+    }
+}
