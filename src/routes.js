@@ -9,7 +9,6 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
 const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const NotesPage = lazy(() => import('./pages/ShearNotesPage'));
 
 function Routes() {
     return (
@@ -29,7 +28,6 @@ function Routes() {
                     <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
                     <Route exact path="/register" element={<CreateAcc />} />
                     <Route exact path="/home" element={<HomePage />} />
-                    <Route exact path="/notes" element={<NotesPage />} />
                     
                     <Route path="*" element={<center><h1>Page not Found</h1></center>} />
                 </Switch>

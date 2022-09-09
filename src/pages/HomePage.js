@@ -2,17 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
 import NotesModal from "../components/NotesModal/";
-import Button from '@mui/material/Button';
+
 import NavBar from '../components/NavBar/';
 import RenderNotes from '../components/RenderNotes/';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
-
 import "../css/homePage.css";
-import "../css/notes.css"
 
 
 const myUserId = getLoggedUserId();
@@ -193,82 +187,18 @@ function HomePage() {
                                     open={isNoteOpen}
                                     closeOnOutsideClick={() => setIsNoteOpen(false)}
                                     handleModalClose={() => setIsNoteOpen(false)}
-                                >
-                                    <div id="notesModelBar">
-                                        <input type="text" id="title" autoComplete="off" value={notesTitle} onChange={handleTitleChange} />
-                                        <div id="barImg">
-                                            <IconButton
-                                                id="deleteBtn"
-                                                color="inherit"
-                                                aria-label="delete"
-                                                size="large"
-                                                onClick={handleDeleteBtnClick}>
-                                                <DeleteIcon fontSize="inherit" />
-                                            </IconButton>
-
-                                            <IconButton
-                                                id="saveBtn"
-                                                color="inherit"
-                                                aria-label="save"
-                                                size="large"
-                                                onClick={handleSaveBtnClick}>
-                                                <SaveIcon fontSize="inherit" />
-                                            </IconButton>
-
-                                            <Button
-                                                id='closeBtn'
-                                                color="inherit"
-                                                variant="text"
-                                                onClick={() => setIsNoteOpen(false)}
-                                            >Close</Button>
-                                        </div>
-                                    </div>
-
-                                    <div id="elementBox">
-                                        {
-                                            noteData.map(function (item, index) {
-                                                return (
-                                                    notesType === false ? //type notes
-                                                        <textarea
-                                                            id="notesArea"
-                                                            key={index}
-                                                            value={item.element}
-                                                            onChange={(e) => handleTextChange(index, e)}
-                                                        >
-                                                        </textarea>
-                                                        :
-                                                        notesType === true ? //type todo
-
-                                                            <div className="toDosBox" key={index} >
-                                                                <input
-                                                                    style={{ marginLeft: "10px" }}
-                                                                    type="checkbox"
-                                                                    checked={item?.isDone}
-                                                                    onChange={() => handleCheckboxClick(index, item.isDone)}
-                                                                />
-                                                                <input
-                                                                    type="text"
-                                                                    id={index}
-                                                                    className={item?.isDone ? "todosIsDone todos" : "todos"}
-                                                                    value={item.element}
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => handleTextChange(index, e)}
-                                                                    // autoFocus={noteData.length - 1 === index ? true : false}
-                                                                    onKeyDown={(e) => e.key === "Enter" ? handleEnterClick(index, e) : null}
-                                                                />
-                                                                <IconButton sx={{ color: "#F1F1F1", padding: " 0 5px 0 0" }} aria-label="delete" onClick={() => handleDeleteToDoBtnClick(index)} size="large">
-                                                                    <CloseIcon fontSize="inherit" />
-                                                                </IconButton>
-                                                            </div>
-                                                            : null
-
-                                                )
-                                            })
-                                        }
-                                    </div>
-
-                                    {notesType === true ? <div id="addTodos" onClick={handleAddToDoBtnClick}>Add ToDos</div> : null}
-                                </NotesModal>
+                                    notesTitle={notesTitle}
+                                    handleTitleChange={handleTitleChange}
+                                    handleDeleteBtnClick={handleDeleteBtnClick}
+                                    handleSaveBtnClick={handleSaveBtnClick}
+                                    noteData={noteData}
+                                    notesType={notesType}
+                                    handleTextChange={handleTextChange}
+                                    handleCheckboxClick={handleCheckboxClick}
+                                    handleEnterClick={handleEnterClick}
+                                    handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                    handleAddToDoBtnClick={handleAddToDoBtnClick}
+                                />
                                 : null
                         }
 
