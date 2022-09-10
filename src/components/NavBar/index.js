@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 
 import "./files/navBar.css"
 
 import logo from "./files/logo.jpeg"
 
 function NavBar({
-    handleAddNotesInputbox, handleLogoutBtnClick, addNotes, isOptionVisible, handleOptionVisibility
-}) {
+    handleAddNotesInputbox, handleLogoutBtnClick, addNotes }) {
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleNotesClick = () => {
+        addNotes(false, "Enter Notes Title")
+        setAnchorEl(null);
+    };
+
+    const handleTodoClick = () => {
+        addNotes(true, "Enter Notes Title")
+        setAnchorEl(null);
+    };
 
     return (
         <>
@@ -19,18 +38,31 @@ function NavBar({
                 <form onSubmit={handleAddNotesInputbox}>
                     <input type="text" id="searchBox" name='searchBox' placeholder="Add Notes" />
                 </form>
-                <div className="addNoteBtn" onClick={handleOptionVisibility}>Add Note</div>
-            </div>
+                <Button
+                    className="addNoteBtn"
+                    variant="contained"
+                    color="success"
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                >Add Note</Button>
 
-            {
-                isOptionVisible ?
-                    <div id="option" className={isOptionVisible ? 'showOption' : null} onClick={(e) => e.stopPropagation()} >
-                        <div onClick={() => addNotes(false, "Enter Notes Title")}>Note</div>
-                        <div onClick={() => addNotes(true, "Enter Notes Title")}>ToDos</div>
-                    </div>
-                    :
-                    null
-            }
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={() => setAnchorEl(null)}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                    <MenuItem onClick={handleNotesClick}>Notes</MenuItem>
+                    <MenuItem onClick={handleTodoClick}>ToDos</MenuItem>
+                </Menu>
+
+            </div>
         </>
     );
 }

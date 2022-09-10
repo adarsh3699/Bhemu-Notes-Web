@@ -42,36 +42,17 @@
 }
 
 .addNoteBtn {
-    background: rgb(59, 134, 77);
-    margin-right: 20px;
-    padding: 7px 12px;
-    border-radius: 7px;
-    font-size: 15px;
-    font-weight: 550;
-    user-select: none;
+    margin-right: 20px !important;
+    padding: 4px 11px !important;
+    border-radius: 7px !important;
+    font-weight: 550 !important;
 }
 
-#option {
-    position: fixed;
-    top: 50px;
-    right: 20px;
+.css-6hp17o-MuiList-root-MuiMenu-list {
     width: 90.69px;
-    background-color: rgb(110, 110, 95);
-    border: solid black 1px;
+    background-color: #d1d1d1;
     font-size: 17px;
-    text-align: center;
-    border-radius: 7px;
-    user-select: none;
 }
-
-#option div {
-    padding: 10px;
-}
-
-#option div:first-child {
-    border-bottom: solid black 1px;
-}
-
 
 @media screen and (max-width: 945px) {
     #searchBox {
@@ -98,13 +79,9 @@
     }
 
     .addNoteBtn {
-        margin-right: 10px;
-        padding: 7px 8px;
-        font-size: 12px;
-    }
-
-    #option {
-        right: 10px;
+        margin-right: 10px !important;
+        padding: 5px 7px !important;
+        font-size: 11px !important;
     }
 
     #searchBox {

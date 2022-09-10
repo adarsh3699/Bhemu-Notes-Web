@@ -13,7 +13,6 @@ import "../css/homePage.css";
 const myUserId = getLoggedUserId();
 
 function HomePage() {
-    const [isOptionVisible, setisOptionVisible] = useState(false);
     const [msg, setMsg] = useState("");
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
@@ -95,10 +94,6 @@ function HomePage() {
         addNotes(false, textInput);
         e.target.reset()
     }, [addNotes])
-
-    const handleOptionVisibility = useCallback(() => {
-        setisOptionVisible(!isOptionVisible);
-    }, [setisOptionVisible, isOptionVisible])
 
     const handleLogoutBtnClick = useCallback(() => {
         setLoggedUserId("");
@@ -204,8 +199,6 @@ function HomePage() {
                             handleAddNotesInputbox={handleAddNotesInputbox}
                             handleLogoutBtnClick={handleLogoutBtnClick}
                             addNotes={addNotes}
-                            isOptionVisible={isOptionVisible}
-                            handleOptionVisibility={handleOptionVisibility}
                         />
 
                         <div id="msg" >{msg}</div>
