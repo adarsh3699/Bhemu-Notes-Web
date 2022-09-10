@@ -53,6 +53,23 @@ function HomePage() {
         })();
     }, [flag]);
 
+    useEffect(function () {
+        document.addEventListener("keydown", (e) => {
+            if (e.key === 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                e.preventDefault();
+            }
+        }, true);
+
+        // //component did un-mount
+        return function () {
+            document.removeEventListener("keydown", (e) => {
+                if (e.key === 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                    e.preventDefault();
+                }
+            }, true);
+        }
+    }, []);
+
     const handleNoteOpening = useCallback((noteId, type, title, Data) => {
         setMyNotesId(noteId)
         setNotesType(type)
@@ -66,7 +83,6 @@ function HomePage() {
         const apiResp = await apiCall("notes?userId=" + myUserId, "post", ({ notesType: type, notesTitle: notesTitle }));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
-            console.log("Notes Added");
             handleNoteOpening(apiResp?.notesId, type, notesTitle, [{}])
         } else {
             setMsg(apiResp.msg)
@@ -102,7 +118,6 @@ function HomePage() {
             if (apiResp.statusCode === 200) {
                 setFlag(!flag)
                 setMsg("Saved");
-                console.log("Notes Updated =>", apiResp.msg);
             } else {
                 setMsg(apiResp.msg);
             }
@@ -162,15 +177,8 @@ function HomePage() {
     }, [noteData])
 
     //function to handle when "ctrl + s" is pressed
-    document.addEventListener("keydown", (e) => {
-        if (e.key === 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-            e.preventDefault();
-        }
-    });
-
     const handleShortcutKeyPress = useCallback(() => {
         if (isNotesModalOpen) {
-            console.log("Saved with shortcuts");
             handleSaveBtnClick()
         }
     }, [handleSaveBtnClick, isNotesModalOpen])
