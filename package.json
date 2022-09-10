@@ -1,7 +1,12 @@
 {
   "name": "notes-react",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "private": true,
+  "author": {
+    "email": "adarsh3699@gmail.com",
+    "name": "Adarsh Suman",
+    "url": "https://bhemu.me"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
@@ -9,6 +14,7 @@
     "@mui/material": "^5.10.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-hot-keys": "^2.7.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "universal-cookie": "^4.0.4"

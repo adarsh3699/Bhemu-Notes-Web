@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
 import NotesModal from "../components/NotesModal/";
+import Hotkeys from 'react-hot-keys';
 
 import NavBar from '../components/NavBar/';
 import RenderNotes from '../components/RenderNotes/';
@@ -16,7 +17,7 @@ function HomePage() {
     const [msg, setMsg] = useState("");
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
-    const [isNoteOpen, setIsNoteOpen] = useState(false);
+    const [isNotesModalOpen, setisNotesModalOpen] = useState(false);
     const [myNotesId, setMyNotesId] = useState("");
     const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState("");
@@ -57,8 +58,8 @@ function HomePage() {
         setNotesType(type)
         setNotesTitle(title)
         setNoteData(Data)
-        setIsNoteOpen(true);
-    }, [setMyNotesId, setNotesType, setNotesTitle, setNoteData, setIsNoteOpen]);
+        setisNotesModalOpen(true);
+    }, [setMyNotesId, setNotesType, setNotesTitle, setNoteData, setisNotesModalOpen]);
 
     const addNotes = useCallback(async (type, notesTitle) => {
         setIsApiLoading(true);
@@ -93,31 +94,34 @@ function HomePage() {
     }, [setNotesTitle])
 
     const handleSaveBtnClick = useCallback(async () => {
-        setIsApiLoading(true);
-        setIsNoteOpen(false)
-        const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
+        if (isNotesModalOpen) {
+            setIsApiLoading(true);
+            setisNotesModalOpen(false);
 
-        if (apiResp.statusCode === 200) {
-            setFlag(!flag)
+            const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
+            if (apiResp.statusCode === 200) {
+                setFlag(!flag)
+                setMsg("Saved");
+                console.log("Notes Updated =>", apiResp.msg);
+            } else {
+                setMsg(apiResp.msg);
+            }
             setIsApiLoading(false);
-            setMsg("Saved");
-            console.log("Notes Updated =>", apiResp.msg);
-        } else {
-            setMsg(apiResp.msg);
         }
-    }, [flag, myNotesId, noteData, notesTitle])
+    }, [flag, isNotesModalOpen, myNotesId, noteData, notesTitle])
 
     const handleDeleteBtnClick = useCallback(async () => {
         setIsApiLoading(true);
-        setIsNoteOpen(false)
+        setisNotesModalOpen(false);
+
         const apiResp = await apiCall("notes?noteId=" + myNotesId, "delete");
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
-            setIsApiLoading(false);
             setMsg("Note Deleted");
         } else {
             setMsg(apiResp.msg);
         }
+        setIsApiLoading(false);
     }, [flag, myNotesId])
 
     //For Todo's
@@ -157,10 +161,33 @@ function HomePage() {
         setNoteData([...noteData, { element: "", isDone: false }]);
     }, [noteData])
 
+    //function to handle when "ctrl + s" is pressed
+    document.addEventListener("keydown", (e) => {
+        if (e.key === 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+        }
+    });
 
+    const handleShortcutKeyPress = useCallback(() => {
+        if (isNotesModalOpen) {
+            console.log("Saved with shortcuts");
+            handleSaveBtnClick()
+        }
+    }, [handleSaveBtnClick, isNotesModalOpen])
+
+    const handleNotesModalClosing = useCallback(() => {
+        setisNotesModalOpen(false);
+    }, [])
 
     return (
-        <>
+        <Hotkeys
+            keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
+            onKeyDown={handleShortcutKeyPress}
+            // onKeyUp={onKeyUp}
+            filter={(event) => {
+                return true; //to enable shortcut key inside input, textarea and select too
+            }}
+        >
             {
                 isLoading ? null
                     :
@@ -182,17 +209,19 @@ function HomePage() {
                         />
 
                         {
-                            isNoteOpen ?
+                            isNotesModalOpen ?
                                 <NotesModal
-                                    open={isNoteOpen}
-                                    closeOnOutsideClick={() => setIsNoteOpen(false)}
-                                    handleModalClose={() => setIsNoteOpen(false)}
+                                    open={isNotesModalOpen}
+                                    closeOnOutsideClick={handleNotesModalClosing}
+                                    handleModalClose={handleNotesModalClosing}
+
                                     notesTitle={notesTitle}
                                     handleTitleChange={handleTitleChange}
                                     handleDeleteBtnClick={handleDeleteBtnClick}
                                     handleSaveBtnClick={handleSaveBtnClick}
                                     noteData={noteData}
                                     notesType={notesType}
+
                                     handleTextChange={handleTextChange}
                                     handleCheckboxClick={handleCheckboxClick}
                                     handleEnterClick={handleEnterClick}
@@ -205,7 +234,7 @@ function HomePage() {
 
                     </div>
             }
-        </>
+        </Hotkeys>
     )
 }
 
