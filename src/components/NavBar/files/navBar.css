@@ -48,10 +48,14 @@
     font-weight: 550 !important;
 }
 
-.css-6hp17o-MuiList-root-MuiMenu-list {
-    width: 95px !important;
-    background-color: #d1d1d1 !important;
-    font-size: 17px !important;
+.MuiMenu-paper{
+    margin-top: 2px;
+}
+
+.MuiMenu-list {
+    width: 95px;
+    background-color: #d1d1d1;
+    font-size: 17px;
 }
 
 @media screen and (max-width: 945px) {
