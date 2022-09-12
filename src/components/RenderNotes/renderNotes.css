@@ -85,8 +85,12 @@
     }
 }
 
-@media screen and (max-width: 370px) {
+@media screen and (max-width: 375px) {
     .noteBox {
-        height: 150px;
+        height: unset;
+    }
+    
+    .noteContent {
+        margin: 5px 0 15px 0; 
     }
 }

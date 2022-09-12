@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
-import NotesModal from "../components/NotesModal/";
+import NotesModal from "../components/NotesModal/NotesModal";
 import Hotkeys from 'react-hot-keys';
+import ConfirmationDialog from "../components/ConfirmationDialog/ConfirmationDialog";
 
 import NavBar from '../components/NavBar/';
-import RenderNotes from '../components/RenderNotes/';
+import RenderNotes from '../components/RenderNotes/RenderNotes';
 
 import "../css/homePage.css";
 
@@ -16,13 +17,16 @@ function HomePage() {
     const [msg, setMsg] = useState("");
     const [list, setList] = useState([]);
     const [flag, setFlag] = useState(false);
-    const [isNotesModalOpen, setisNotesModalOpen] = useState(false);
+
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+    const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
     const [myNotesId, setMyNotesId] = useState("");
     const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState("");
     const [noteData, setNoteData] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isSaveApiLoading, setIsSaveApiLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
@@ -74,8 +78,8 @@ function HomePage() {
         setNotesType(type)
         setNotesTitle(title)
         setNoteData(Data)
-        setisNotesModalOpen(true);
-    }, [setMyNotesId, setNotesType, setNotesTitle, setNoteData, setisNotesModalOpen]);
+        setIsNotesModalOpen(true);
+    }, [setMyNotesId, setNotesType, setNotesTitle, setNoteData, setIsNotesModalOpen]);
 
     const addNotes = useCallback(async (type, notesTitle) => {
         setIsApiLoading(true);
@@ -106,23 +110,22 @@ function HomePage() {
 
     const handleSaveBtnClick = useCallback(async () => {
         if (isNotesModalOpen) {
-            setIsApiLoading(true);
-            setisNotesModalOpen(false);
+            setIsSaveApiLoading(true);
 
             const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
             if (apiResp.statusCode === 200) {
                 setFlag(!flag)
-                setMsg("Saved");
             } else {
                 setMsg(apiResp.msg);
             }
-            setIsApiLoading(false);
+            setIsSaveApiLoading(false);
         }
     }, [flag, isNotesModalOpen, myNotesId, noteData, notesTitle])
 
     const handleDeleteBtnClick = useCallback(async () => {
         setIsApiLoading(true);
-        setisNotesModalOpen(false);
+        setIsNotesModalOpen(false);
+        setIsConfirmationDialogOpen(false);
 
         const apiResp = await apiCall("notes?noteId=" + myNotesId, "delete");
         if (apiResp.statusCode === 200) {
@@ -179,21 +182,32 @@ function HomePage() {
     }, [handleSaveBtnClick, isNotesModalOpen])
 
     const handleNotesModalClosing = useCallback(() => {
-        setisNotesModalOpen(false);
+        setIsNotesModalOpen(false);
     }, [])
 
     return (
-        <Hotkeys
-            keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
-            onKeyDown={handleShortcutKeyPress}
-            // onKeyUp={onKeyUp}
-            filter={(event) => {
-                return true; //to enable shortcut key inside input, textarea and select too
-            }}
-        >
+        <>
             {
-                isLoading ? null
-                    :
+                !isLoading &&
+                <>
+                    <Hotkeys
+                        keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
+                        onKeyDown={handleShortcutKeyPress}
+                        // onKeyUp={onKeyUp}
+                        filter={(event) => {
+                            return true; //to enable shortcut key inside input, textarea and select too
+                        }}
+                    />
+                    {
+                        isConfirmationDialogOpen &&
+                        <ConfirmationDialog
+                            title="Are You Sure?"
+                            message="You can't undo this action."
+                            isOpen={isConfirmationDialogOpen}
+                            onCancel={() => setIsConfirmationDialogOpen(false)}
+                            onYesClick={handleDeleteBtnClick}
+                        />}
+
                     <div id='homePage'>
                         <NavBar
                             handleAddNotesInputbox={handleAddNotesInputbox}
@@ -210,32 +224,34 @@ function HomePage() {
                         />
 
                         {
-                            isNotesModalOpen ?
-                                <NotesModal
-                                    open={isNotesModalOpen}
-                                    closeOnOutsideClick={handleNotesModalClosing}
-                                    handleModalClose={handleNotesModalClosing}
+                            isNotesModalOpen &&
+                            <NotesModal
+                                open={isNotesModalOpen}
+                                isSaveApiLoading={isSaveApiLoading}
+                                closeOnOutsideClick={handleNotesModalClosing}
+                                handleModalClose={handleNotesModalClosing}
+                                toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
 
-                                    notesTitle={notesTitle}
-                                    handleTitleChange={handleTitleChange}
-                                    handleDeleteBtnClick={handleDeleteBtnClick}
-                                    handleSaveBtnClick={handleSaveBtnClick}
-                                    noteData={noteData}
-                                    notesType={notesType}
+                                notesTitle={notesTitle}
+                                handleTitleChange={handleTitleChange}
+                                handleDeleteBtnClick={handleDeleteBtnClick}
+                                handleSaveBtnClick={handleSaveBtnClick}
+                                noteData={noteData}
+                                notesType={notesType}
 
-                                    handleTextChange={handleTextChange}
-                                    handleCheckboxClick={handleCheckboxClick}
-                                    handleEnterClick={handleEnterClick}
-                                    handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                    handleAddToDoBtnClick={handleAddToDoBtnClick}
-                                />
-                                : null
+                                handleTextChange={handleTextChange}
+                                handleCheckboxClick={handleCheckboxClick}
+                                handleEnterClick={handleEnterClick}
+                                handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                handleAddToDoBtnClick={handleAddToDoBtnClick}
+                            />
                         }
 
 
                     </div>
+                </>
             }
-        </Hotkeys>
+        </>
     )
 }
 
