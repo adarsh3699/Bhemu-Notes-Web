@@ -21,7 +21,7 @@ function ConfirmationDialog({ title, message, isOpen, onCancel, onYesClick }) {
             <DialogActions style={{ display: "flex}", justifyContent: "space-around", margin: "0 12px 12px 12px" }}>
                 <Button
                     variant='contained'
-                    color='error'
+                    color='primary'
                     size='medium'
                     fullWidth={true}
                     onClick={onCancel}
@@ -29,7 +29,7 @@ function ConfirmationDialog({ title, message, isOpen, onCancel, onYesClick }) {
 
                 <Button
                     variant='contained'
-                    color='primary'
+                    color='error'
                     size='medium'
                     fullWidth={true}
                     onClick={onYesClick}
