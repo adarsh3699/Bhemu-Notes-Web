@@ -105,6 +105,8 @@ function ModalWrapper({
                                     <textarea
                                         id="notesArea"
                                         key={index}
+                                        placeholder="Take a note..."
+                                        autoFocus={item.element ? false : true}
                                         value={item.element}
                                         onChange={(e) => handleTextChange(index, e)}
                                     >

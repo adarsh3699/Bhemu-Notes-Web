@@ -18,9 +18,15 @@ function RenderNotes({ list, handleNoteOpening }) {
                                 {
                                     list.notesType ?
                                         <div>
-                                            <div className={list.notes[0]?.element ? "todoDisplay" : null}>{list.notes[0]?.element}</div><br />
-                                            <div className={list.notes[1]?.element ? "todoDisplay" : null}>{list.notes[1]?.element}</div><br />
-                                            <div className={list.notes[2]?.element ? "todoDisplay" : null}>{list.notes[2]?.element}</div>
+                                            {
+                                                list.notes.length === 1 && list.notes[0]?.element === "" ?
+                                                    "Empty......." :
+                                                    <>
+                                                        <div className={list.notes[0]?.element ? "todoDisplay" : null}>{list.notes[0]?.element}</div><br />
+                                                        <div className={list.notes[1]?.element ? "todoDisplay" : null}>{list.notes[1]?.element}</div><br />
+                                                        <div className={list.notes[2]?.element ? "todoDisplay" : null}>{list.notes[2]?.element}</div>
+                                                    </>
+                                            }
                                         </div>
                                         : <div>{list.notes[0].element ? list.notes[0].element : "Empty......."}</div>
                                 }

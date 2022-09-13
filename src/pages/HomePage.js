@@ -73,11 +73,11 @@ function HomePage() {
         }
     }, []);
 
-    const handleNoteOpening = useCallback((noteId, type, title, Data) => {
+    const handleNoteOpening = useCallback((noteId, type, title, data) => {
         setMyNotesId(noteId)
         setNotesType(type)
         setNotesTitle(title)
-        setNoteData(Data)
+        setNoteData(data)
         setIsNotesModalOpen(true);
     }, [setMyNotesId, setNotesType, setNotesTitle, setNoteData, setIsNotesModalOpen]);
 
@@ -86,10 +86,11 @@ function HomePage() {
         const apiResp = await apiCall("notes?userId=" + myUserId, "post", ({ notesType: type, notesTitle: notesTitle }));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
-            handleNoteOpening(apiResp?.notesId, type, notesTitle, [{}])
+            handleNoteOpening(apiResp?.notesId, type, notesTitle, [{ "element": "", "isDone": false }])
         } else {
             setMsg(apiResp.msg)
         }
+        setIsApiLoading(false)
     }, [setFlag, flag, handleNoteOpening]);
 
     const handleAddNotesInputbox = useCallback((e) => {
@@ -117,6 +118,7 @@ function HomePage() {
                 setFlag(!flag)
             } else {
                 setMsg(apiResp.msg);
+                setIsNotesModalOpen(false)
             }
             setIsSaveApiLoading(false);
         }
