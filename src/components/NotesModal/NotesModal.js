@@ -2,23 +2,11 @@ import React from 'react';
 import Modal from '@mui/material/Modal';
 
 import { IconButton, Button } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
+import NotesModalBar from './NotesModalBar/NotesModalBar';
 import CloseIcon from '@mui/icons-material/Close';
 
-import CircularProgress from '@mui/material/CircularProgress';
+import "./notesModal.css"
 
-import styles from './notesModal.css';
-
-function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return { width, height };
-}
-let loaderTop = 11;
-
-if (getWindowDimensions().width <= 375) {
-    loaderTop = 4;
-}
 
 function ModalWrapper({
     open,
@@ -44,60 +32,17 @@ function ModalWrapper({
     return (
         <Modal open={open} onClose={closeOnOutsideClick ? handleModalClose : null}>
             <div className={["modal", containerClassName].join("")}>
-                <div className={styles.modalContent}>
-                    <div id="notesModelBar">
-                        <input type="text" id="title" autoComplete="off" value={notesTitle} onChange={handleTitleChange} />
-                        <div id="barImg">
-                            <IconButton
-                                id="deleteBtn"
-                                color="inherit"
-                                aria-label="delete"
-                                size="large"
-                                onClick={toggleConfirmationDialogClosing}
-                            >
-                                <DeleteIcon fontSize="inherit" />
-                            </IconButton>
 
-                            <div style={{ position: 'relative' }}>
-                                <IconButton
-                                    id="saveBtn"
-                                    color="inherit"
-                                    aria-label="save"
-                                    size="large"
-                                    onClick={handleSaveBtnClick}>
-                                    {
-                                        isSaveApiLoading ?
-                                            <div style={{ height: "28px", width: "28px" }}></div>
-                                            :
-                                            <SaveIcon fontSize="inherit" />
-                                    }
-                                </IconButton>
-
-                                {isSaveApiLoading && (
-                                    <CircularProgress
-                                        size={30}
-                                        sx={{
-                                            position: 'absolute',
-                                            top: loaderTop,
-                                            left: 11,
-                                            zIndex: 1,
-                                        }}
-                                    />
-                                )}
-                            </div>
-
-                            <Button
-                                id='closeBtn'
-                                color="inherit"
-                                variant="text"
-                                onClick={handleModalClose}
-                            >Close</Button>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div id="elementBox">
+                <NotesModalBar
+                    handleModalClose={handleModalClose}
+                    isSaveApiLoading={isSaveApiLoading}
+                    notesTitle={notesTitle}
+                    handleTitleChange={handleTitleChange}
+                    toggleConfirmationDialogClosing={toggleConfirmationDialogClosing}
+                    handleSaveBtnClick={handleSaveBtnClick}
+                />
+                
+                <div id='elementBox'>
                     {
                         noteData.map(function (item, index) {
                             return (
@@ -127,6 +72,7 @@ function ModalWrapper({
                                                 className={item?.isDone ? "todosIsDone todosInputBox" : "todosInputBox"}
                                                 value={item.element || ""}
                                                 autoComplete="off"
+                                                spellcheck="false"
                                                 onChange={(e) => handleTextChange(index, e)}
                                                 // autoFocus={noteData.length - 1 === index ? true : false}
                                                 onKeyDown={(e) => e.key === "Enter" ? handleEnterClick(index, e) : null}
