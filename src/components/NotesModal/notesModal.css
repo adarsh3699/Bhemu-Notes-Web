@@ -8,73 +8,25 @@
     width: 90%;
     height: 90%;
     border-radius: 8px;
-    /* padding: 5px; */
-}
-
-.modalContent {
-    height: 100%;
-}
-
-@media screen and (max-width: 400px) {
-    .modal {
-        width: 92%;
-        height: 80%;
-    }
-}
-
-/* ...............modalContent................. */
-
-#notesModelBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgb(30, 30, 30);
-    border-bottom: 1px solid #f1f1f1b0;
-    padding: 5px 0px;
-    width: 100%;
-    border-radius: 8px 8px 0 0;
-    z-index: 10;
-}
-
-#title {
-    font-size: 20px;
-    margin-left: 20px;
-    color: white;
-    background-color: unset;
-    border: unset;
-    width: 300px;
-}
-
-#barImg {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 20px;
-    font-size: 20px;
-    color: white;
-}
-
-#closeBtn {
-    margin-left: 30px;
-    padding: 3px 5px;
-    cursor: pointer;
+    overflow: hidden;
 }
 
 #elementBox {
-    overflow: auto;
-    margin: 10px 0;
+    /* background-color: rgba(102, 51, 153, 0.506); */
+    padding: 10px 0;
     width: 100%;
-    height: 88%;
+    overflow: auto;
+    height: 88%
 }
 
+/* ...............modalContent................. */
 #notesArea {
-    position: absolute;
     padding: 5px 15px;
     color: white;
     font-size: 18px;
     resize: unset;
     width: calc(100% - 30px);
-    min-height: 88%;
+    min-height: 100%;
     background: unset;
     border: unset;
     outline: unset;
@@ -117,8 +69,7 @@
 
 
 #addTodos {
-    margin: 20px 0;
-    margin-left: 2%;
+    margin: 20px 15px;
     padding: 5px;
     background-color: rgba(24, 23, 23, 0.6);
     color: white;
@@ -130,15 +81,6 @@
 
 /* ...............................mWeb............................. */
 @media screen and (max-width: 768px) {
-    #title {
-        font-size: 18px;
-        margin-left: 15px;
-    }
-
-    #closeBtn {
-        margin-left: 10px;
-    }
-
     #notesArea {
         font-size: 15px;
     }
@@ -149,24 +91,6 @@
 }
 
 @media screen and (max-width: 480px) {
-    #title {
-        font-size: 18px;
-        margin-left: 15px;
-        width: 220px;
-    }
-
-    #barImg {
-        margin-right: 10px;
-    }
-
-    #deleteBtn {
-        margin-right: -10px;
-    }
-
-    #closeBtn {
-        font-size: 13px;
-        margin: unset;
-    }
 
     #notesArea,
     .todosInputBox {
@@ -175,14 +99,22 @@
 }
 
 @media screen and (max-width: 400px) {
-    #title {
-        font-size: 16px;
-        width: 200px;
+    .modal {
+        width: 95%;
+        height: 80%;
     }
 
     #notesArea,
     .todosInputBox {
         font-size: 14px;
+    }
+
+    .toDosBox {
+        margin: 0 10px;
+    }
+
+    #addTodos {
+        margin: 20px 10px;
     }
 }
 
@@ -199,24 +131,26 @@
         font-size: 11px;
     }
 
-    #title {
-        font-size: 14px;
-        margin-left: 12px;
-        width: 170px;
-    }
-
-    #deleteBtn {
-        padding: unset;
-        margin-right: 0px;
-    }
-
-    #saveBtn{
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-    
     #notesArea,
     .todosInputBox {
         font-size: 13px;
+    }
+}
+
+@media screen and (max-height: 650px) and (min-height: 500px) {
+    #elementBox {
+        height: 84%;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    #elementBox {
+        height: 80%;
+    }
+}
+
+@media screen and (max-height: 400px) {
+    .modal {
+        height: 95%;
     }
 }
