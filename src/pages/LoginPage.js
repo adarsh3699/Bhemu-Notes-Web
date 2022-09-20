@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { amber } from '@mui/material/colors';
 
 import "../css/loginPage.css";
 import logo from "../img/logoBig.png"
@@ -9,6 +12,7 @@ function LoginPage() {
     const [msg, setMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isApiLoading, setIsApiLoading] = useState(false);
+    const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
         if (getLoggedUserId()) {
@@ -18,6 +22,10 @@ function LoginPage() {
             setIsLoading(false);
         }
     }, []);
+
+    const handlePasswordVisibility = useCallback(() => {
+        setIspasswordVisible(!ispasswordVisible)
+    }, [ispasswordVisible])
 
     const handleUserLogin = useCallback(async (e) => {
         e.preventDefault();
@@ -49,30 +57,44 @@ function LoginPage() {
     return (
         <>
             {
-                isLoading ? null
-                    :
-                    <div id="background">
-                        <div id="wrapper">
-                            <img id='myLogo' src={logo} alt="" />
-                            <div id='Title'>Bhemu Notes</div>
-                            <form id="form" onSubmit={handleUserLogin}>
-                                <input type="email" name='email' placeholder="Email" id="userName" />
-                                <br />
-                                <input type="password" name='password' placeholder="Password" id="password" />
-                                <br />
-                                <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
+                !isLoading &&
+                <div id="background">
+                    <div id="wrapper">
+                        <img id='myLogo' src={logo} alt="" />
+                        <div id='Title'>Bhemu Notes</div>
+                        <form className="form" onSubmit={handleUserLogin}>
+                            <input type="email" name='email' placeholder="Email" disabled={isApiLoading} className="inputBottomMargin" />
+                            <input type={ispasswordVisible ? "text" : "password"} name='password' placeholder="Password" disabled={isApiLoading} className="" />
 
-                                <div id="msg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
-                                <Loader isLoading={isApiLoading} />
-                                <a href="/forget-password" id='forgotPass'>Forgotten Password</a>
-                            </form>
-                            <hr />
+                            <FormControlLabel
+                                id='showPassword'
+                                control={
+                                    <Checkbox
+                                        onClick={handlePasswordVisibility}
+                                        sx={{
+                                            color: amber[800],
+                                            '&.Mui-checked': {
+                                                color: amber[600],
+                                            }
+                                        }}
+                                    />}
+                                label="Show password"
+                            />
 
-                            <a href="/register">
-                                <div id="createAcc">Create New Account</div>
-                            </a>
-                        </div>
+                            <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
+                        </form>
+
+                        <div id="msg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
+                        <Loader isLoading={isApiLoading} />
+                        <a href="/forget-password" id='forgotPass'>Forgotten Password</a>
+
+                        <hr />
+
+                        <a href="/register">
+                            <div id="createAcc">Create New Account</div>
+                        </a>
                     </div>
+                </div>
             }
         </>
     )

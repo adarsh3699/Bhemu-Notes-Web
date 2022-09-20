@@ -68,23 +68,23 @@ function ForgetPasswordPage() {
         <div id="background">
             <div id="wrapper">
                 <div id='Title'>Forget Password</div>
-                <form onSubmit={handleSendOtpBtnClick} style={showChangePassForm ? { display: "none" } : { display: "block" }} >
-                    <input type="email" className="email" onChange={handleEmailValue} value={emailVal} placeholder="Email" />
-                    <br />
+                <form className='form' onSubmit={handleSendOtpBtnClick} style={showChangePassForm ? { display: "none" } : { display: "block" }}  >
+                    <input type="email" className="inputBottomMargin" onChange={handleEmailValue} value={emailVal} placeholder="Email" />
+
                     <button id='createAcc' style={{ marginTop: "unset" }}>Send OTP</button>
-                    <br />
+
                     <div className="red" >{otpMsg}</div>
                     <Loader isLoading={isOTPApiLoading} />
                     <br />
                 </form>
 
-                <form className="form" style={showChangePassForm ? { display: "block" } : { display: "none" }} onSubmit={handleConfirmPasswordClick}>
-                    <input type="number" name='otp' required placeholder="Enter OTP" className="email" />
-                    <br />
-                    <input type="password" name='password' required pattern="().{8,}" placeholder="New Password (Min 8 digit)" className="password" />
-                    <br />
-                    <input type="password" name='confPassword' required pattern="().{8,}" placeholder="Confirm Password (Min 8 digit)" className="password" />
-                    <br />
+                <form className="form" style={showChangePassForm ? null : { display: "none" }} onSubmit={handleConfirmPasswordClick}>
+                    <input type="number" name='otp' required placeholder="Enter OTP" className="inputBottomMargin" />
+
+                    <input type="password" name='password' required pattern="().{8,}" placeholder="New Password (Min 8 digit)" className="inputBottomMargin" />
+
+                    <input type="password" name='confPassword' required pattern="().{8,}" placeholder="Confirm Password (Min 8 digit)" className="inputBottomMargin" />
+
                     <button id="login" className={isPassApiLoading ? "isLogin" : ""}>Confirm Password</button>
                     <div className="red" style={isPassApiLoading ? { marginBottom: "unset" } : {}} >{passMsg}</div>
                     <Loader isLoading={isPassApiLoading} />

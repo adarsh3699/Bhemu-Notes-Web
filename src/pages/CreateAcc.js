@@ -41,16 +41,15 @@ function CreateAcc() {
             <div id="wrapper">
                 <div id='Title'>Create Your Account</div>
 
-                <form id="form" onSubmit={handleFormSubmit}>
-                    <input type="email" name='email' placeholder="Email" id="newUserName" />
-                    <br />
-                    <input type="Password" name='password' placeholder="Password (8 digit)" id="newPassword" pattern="().{8,}" />
-                    <br />
-                    <input type="Password" name='confPassword' placeholder="Confirm Password (8 digit)" id="confirmPass" pattern="().{8,}" />
-                    <br />
+                <form className="form" onSubmit={handleFormSubmit}>
+                    <input type="email" name='email' placeholder="Email" className='inputBottomMargin' />
+
+                    <input type="Password" name='password' placeholder="Password (8 digit)" pattern="().{8,}" className='inputBottomMargin' />
+
+                    <input type="Password" name='confPassword' placeholder="Confirm Password (8 digit)" pattern="().{8,}" className='inputBottomMargin' />
+
                     <button id="signup" className={isApiLoading ? "isSignup" : ""} >Sign Up</button>
                     <div id="updateMsg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
-
                 </form>
 
                 <Loader isLoading={isApiLoading} />

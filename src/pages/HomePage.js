@@ -132,7 +132,6 @@ function HomePage() {
         const apiResp = await apiCall("notes?noteId=" + myNotesId, "delete");
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
-            setMsg("Note Deleted");
         } else {
             setMsg(apiResp.msg);
         }
