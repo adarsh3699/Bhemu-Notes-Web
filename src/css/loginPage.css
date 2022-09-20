@@ -15,7 +15,7 @@ a {
     border-radius: 5px;
     text-align: center;
     padding: 50px 0;
-    margin: 12vh auto;
+    margin: 9vh auto 0;
     width: 70%;
 }
 
@@ -169,8 +169,7 @@ hr {
     }
 
     #wrapper {
-        margin-top: 7vh;
-        margin-bottom: 0;
+        margin: 7vh auto 0;
         width: 95%;
     }
 }

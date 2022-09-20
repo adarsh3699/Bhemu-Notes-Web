@@ -72,7 +72,7 @@ function LoginPage() {
                                     <Checkbox
                                         onClick={handlePasswordVisibility}
                                         sx={{
-                                            color: amber[800],
+                                            color: amber[400],
                                             '&.Mui-checked': {
                                                 color: amber[600],
                                             }
