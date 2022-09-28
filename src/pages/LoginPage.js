@@ -4,6 +4,7 @@ import Loader from "../components/Loader";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
+import GoogleLogin from 'react-google-login';
 
 import "../css/loginPage.css";
 import logo from "../img/logoBig.png"
@@ -13,6 +14,10 @@ function LoginPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isApiLoading, setIsApiLoading] = useState(false);
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
+
+    const responseGoogle = (response) => {
+        console.log(response);
+    }
 
     useEffect(() => {
         if (getLoggedUserId()) {
@@ -83,6 +88,14 @@ function LoginPage() {
 
                             <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
                         </form>
+
+                        <GoogleLogin
+                            clientId="146676384322-57he6hcbbiqcv8afbt9mf2o9ntdff6no.apps.googleusercontent.com"
+                            buttonText="Login"
+                            onSuccess={responseGoogle}
+                            onFailure={responseGoogle}
+                            cookiePolicy={'single_host_origin'}
+                        />
 
                         <div id="msg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
                         <Loader isLoading={isApiLoading} />
