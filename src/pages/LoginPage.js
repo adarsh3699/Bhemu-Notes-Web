@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
-import GoogleLogin from 'react-google-login';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import {useDispatch} from 'react-redux';
+import {signinGoogle, signin} from "../redux/actions/auth";
 
 import "../css/loginPage.css";
 import logo from "../img/logoBig.png"
@@ -15,9 +18,9 @@ function LoginPage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
-    const responseGoogle = (response) => {
-        console.log(response);
-    }
+    const navigate = useNavigate ()
+    const dispatch = useDispatch()
+
 
     useEffect(() => {
         if (getLoggedUserId()) {
@@ -59,6 +62,24 @@ function LoginPage() {
         }
     }, [])
 
+    function handleGoogleLoginSuccess(tokenResponse) {
+        console.log(tokenResponse);
+        const accessToken = tokenResponse.access_token;
+
+        dispatch(signinGoogle(accessToken,navigate))
+    }
+    const login = useGoogleLogin({onSuccess: handleGoogleLoginSuccess});
+
+    function handleSubmit(e){
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        e.preventDefault();
+        if(email !== "" && password !== ""){
+            dispatch(signin({email,password}, navigate))
+        }
+
+    }
+
     return (
         <>
             {
@@ -87,15 +108,10 @@ function LoginPage() {
                             />
 
                             <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
+                            <button onClick={() => login()}>google</button>
                         </form>
 
-                        <GoogleLogin
-                            clientId="146676384322-57he6hcbbiqcv8afbt9mf2o9ntdff6no.apps.googleusercontent.com"
-                            buttonText="Login"
-                            onSuccess={responseGoogle}
-                            onFailure={responseGoogle}
-                            cookiePolicy={'single_host_origin'}
-                        />
+
 
                         <div id="msg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
                         <Loader isLoading={isApiLoading} />

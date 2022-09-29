@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 
+import {Link,useNavigate} from "react-router-dom"
+
+import {useGoogleLogin} from '@react-oauth/google';
+import {useDispatch} from 'react-redux';
+import {signup, signupGoogle} from "../redux/actions/auth";
+
 import "../css/loginPage.css";
 
 document.title = "Bhemu Notes | Create Your Account";
@@ -9,6 +15,9 @@ document.title = "Bhemu Notes | Create Your Account";
 function CreateAcc() {
     const [msg, setMsg] = useState("");
     const [isApiLoading, setIsApiLoading] = useState(false);
+
+    const nagivate = useNavigate();
+    const dispatch = useDispatch();
 
     async function handleFormSubmit(e) {
         e.preventDefault();
@@ -36,6 +45,15 @@ function CreateAcc() {
         }
     }
 
+    function handleGoogleLoginSuccess(tokenResponse) {
+
+        const accessToken = tokenResponse.access_token;
+
+        dispatch(signupGoogle(accessToken,nagivate))
+    }
+
+    const login = useGoogleLogin({onSuccess: handleGoogleLoginSuccess});
+
     return (
         <div id="background">
             <div id="wrapper">
@@ -50,6 +68,7 @@ function CreateAcc() {
 
                     <button id="signup" className={isApiLoading ? "isSignup" : ""} >Sign Up</button>
                     <div id="updateMsg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
+                    <button onClick={() => login()}>google</button>
                 </form>
 
                 <Loader isLoading={isApiLoading} />

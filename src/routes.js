@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes as Switch, Route } from 'react-router-dom';
+import { Routes as Switch, Route } from 'react-router-dom';
 // import LoginPage from './pages/LoginPage';
 // import HomePage from "./pages/HomePage";
 // import NotesPage from "./pages/NotesPage"
@@ -12,27 +12,25 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 
 function Routes() {
     return (
-        <BrowserRouter>
-            <Suspense fallback={
-                <>
-                    <div id='loadingScreen'>
-                        Loading
-                        <div id='loadingIcon'>
-                            <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                        </div>
+        <Suspense fallback={
+            <>
+                <div id='loadingScreen'>
+                    Loading
+                    <div id='loadingIcon'>
+                        <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                     </div>
-                </>
-            }>
-                <Switch>
-                    <Route exact path="/" element={<LoginPage />} />
-                    <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
-                    <Route exact path="/register" element={<CreateAcc />} />
-                    <Route exact path="/home" element={<HomePage />} />
-                    
-                    <Route path="*" element={<center><h1>Page not Found</h1></center>} />
-                </Switch>
-            </Suspense>
-        </BrowserRouter>
+                </div>
+            </>
+        }>
+            <Switch>
+                <Route exact path="/" element={<LoginPage />} />
+                <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
+                <Route exact path="/register" element={<CreateAcc />} />
+                <Route exact path="/home" element={<HomePage />} />
+
+                <Route path="*" element={<center><h1>Page not Found</h1></center>} />
+            </Switch>
+        </Suspense>
     );
 }
 
