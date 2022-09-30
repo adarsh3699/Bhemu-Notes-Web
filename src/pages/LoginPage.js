@@ -17,9 +17,8 @@ function LoginPage() {
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
-        // localStorage.setItem('user_info', JSON.stringify({ ...action?.data }));
-        if(localStorage.getItem("user_info")){
-            const authorization = JSON.parse(localStorage.getItem("user_info")).token
+        if (localStorage.getItem("user_info")) {
+            const authorization = JSON.parse(localStorage.getItem("user_info")).jwt
             console.log(authorization);
             document.location.href = "/home";
         } else {
@@ -58,15 +57,16 @@ function LoginPage() {
         }
     }, [])
 
-    async function handleGoogleLoginSuccess(tokenResponse) {
-        console.log(tokenResponse);
-        const accessToken = tokenResponse.access_token;
+    const login = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            console.log(tokenResponse);
+            const accessToken = tokenResponse.access_token;
 
-        const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
-        console.log(apiResp);
-    }
-
-    const login = useGoogleLogin({onSuccess: handleGoogleLoginSuccess});
+            const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
+            localStorage.setItem('user_info', JSON.stringify({ ...apiResp }));
+            document.location.href = "/home";
+        }
+    });
 
     return (
         <>
