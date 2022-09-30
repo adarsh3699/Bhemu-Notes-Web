@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
-import { useNavigate } from "react-router-dom";
+import { apiCall, setLoggedUserId } from "../utils";
 import Loader from "../components/Loader";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
-import {useDispatch} from 'react-redux';
-import {signinGoogle, signin} from "../redux/actions/auth";
+import { useGoogleLogin } from '@react-oauth/google';
 
 import "../css/loginPage.css";
 import logo from "../img/logoBig.png"
+
 
 function LoginPage() {
     const [msg, setMsg] = useState("");
@@ -18,14 +16,12 @@ function LoginPage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
-    const navigate = useNavigate ()
-    const dispatch = useDispatch()
-
-
     useEffect(() => {
-        if (getLoggedUserId()) {
+        // localStorage.setItem('user_info', JSON.stringify({ ...action?.data }));
+        if(localStorage.getItem("user_info")){
+            const authorization = JSON.parse(localStorage.getItem("user_info")).token
+            console.log(authorization);
             document.location.href = "/home";
-            return;
         } else {
             setIsLoading(false);
         }
@@ -42,7 +38,7 @@ function LoginPage() {
 
         if (email !== "" && password !== "") {
             setIsApiLoading(true);
-            const apiResp = await apiCall("auth/login", "post", { email, password });
+            const apiResp = await apiCall("users/signin", "post", { email, password });
 
             if (apiResp.statusCode === 200) {
                 const userId = apiResp?.data[0]?._id;
@@ -54,7 +50,7 @@ function LoginPage() {
                     setMsg("Please Check Your Email or Password")
                 }
             } else {
-                setMsg(apiResp.msg)
+                setMsg(apiResp.message)
             }
             setIsApiLoading(false);
         } else {
@@ -62,23 +58,15 @@ function LoginPage() {
         }
     }, [])
 
-    function handleGoogleLoginSuccess(tokenResponse) {
+    async function handleGoogleLoginSuccess(tokenResponse) {
         console.log(tokenResponse);
         const accessToken = tokenResponse.access_token;
 
-        dispatch(signinGoogle(accessToken,navigate))
+        const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
+        console.log(apiResp);
     }
+
     const login = useGoogleLogin({onSuccess: handleGoogleLoginSuccess});
-
-    function handleSubmit(e){
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        e.preventDefault();
-        if(email !== "" && password !== ""){
-            dispatch(signin({email,password}, navigate))
-        }
-
-    }
 
     return (
         <>
@@ -108,7 +96,7 @@ function LoginPage() {
                             />
 
                             <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
-                            <button onClick={() => login()}>google</button>
+                            <button onClick={login}>google</button>
                         </form>
 
 

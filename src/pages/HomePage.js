@@ -29,15 +29,15 @@ function HomePage() {
     const [isSaveApiLoading, setIsSaveApiLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
 
-    useEffect(() => {
-        if (!myUserId) {
-            document.location.href = "/";
-            return;
-        } else {
-            setIsLoading(false);
-            document.title = "Bhemu Notes"
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!myUserId) {
+    //         document.location.href = "/";
+    //         return;
+    //     } else {
+    //         setIsLoading(false);
+    //         document.title = "Bhemu Notes"
+    //     }
+    // }, []);
 
     useEffect(() => {
         (async function () {
