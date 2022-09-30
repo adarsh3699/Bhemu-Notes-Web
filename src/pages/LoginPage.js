@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall, setLoggedUserId } from "../utils";
+import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -40,14 +40,22 @@ function LoginPage() {
             const apiResp = await apiCall("users/signin", "post", { email, password });
 
             if (apiResp.statusCode === 200) {
-                const userId = apiResp?.data[0]?._id;
-                if (userId) {
-                    setLoggedUserId(userId)
-                    document.location.href = "/home";
-                    return;
-                } else {
-                    setMsg("Please Check Your Email or Password")
-                }
+                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+                localStorage.setItem('user_info', JSON.stringify(userInfo));
+
+
+
+                // const token = apiResp.jwt;
+
+                // var base64Url = token.split('.')[1];
+                // var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                // var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                // }).join(''));
+                // const extractToken =  JSON.parse(jsonPayload);
+
+                // console.log(extractToken);
+
             } else {
                 setMsg(apiResp.message)
             }
@@ -63,8 +71,11 @@ function LoginPage() {
             const accessToken = tokenResponse.access_token;
 
             const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
-            localStorage.setItem('user_info', JSON.stringify({ ...apiResp }));
-            document.location.href = "/home";
+
+            const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+            localStorage.setItem('user_info', JSON.stringify(userInfo));
+
+            // document.location.href = "/home";
         }
     });
 

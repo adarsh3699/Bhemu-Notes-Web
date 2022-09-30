@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
+import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 import NotesModal from "../components/NotesModal/NotesModal";
 import Hotkeys from 'react-hot-keys';
@@ -29,7 +29,17 @@ function HomePage() {
 
     useEffect(() => {
         if (localStorage.getItem("user_info")) {
-            setMyUserId(JSON.parse(localStorage.getItem("user_info"))?.result?._id)
+                const token = JSON.parse(localStorage.getItem("user_info")).jwt
+                
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                
+                const extractToken =  JSON.parse(jsonPayload);
+                setMyUserId(extractToken.id)
+                
 
             setIsLoading(false);
             document.title = "Bhemu Notes"

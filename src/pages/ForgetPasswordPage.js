@@ -28,7 +28,7 @@ function ForgetPasswordPage() {
 
         if (emailVal) {
             setIsOTPApiLoading(true);
-            const apiResp = await apiCall("auth/forget-password", "post", { email: emailVal });
+            const apiResp = await apiCall("users/forget-password", "post", { email: emailVal });
             if (apiResp.statusCode === 200) {
                 setShowChangePassForm(true)
                 setOtpMsg(apiResp.msg);
@@ -51,7 +51,7 @@ function ForgetPasswordPage() {
         const confPassword = e.target.confPassword.value;
 
         if (password === confPassword) {
-            const apiResp = await apiCall("auth/change-password", "POST", { email: emailVal, password, encryptedOtp, otp });
+            const apiResp = await apiCall("users/change-password", "POST", { email: emailVal, password, encryptedOtp, otp });
             if (apiResp.statusCode === 200) {
                 setPassMsg(apiResp.msg)
                 // document.location.href = "/";
