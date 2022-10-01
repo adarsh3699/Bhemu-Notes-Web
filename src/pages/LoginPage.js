@@ -8,6 +8,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 
 import "../css/loginPage.css";
 import logo from "../img/logoBig.png"
+import googleLogo from "../img/google.svg"
 
 
 function LoginPage() {
@@ -42,22 +43,9 @@ function LoginPage() {
             if (apiResp.statusCode === 200) {
                 const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
                 localStorage.setItem('user_info', JSON.stringify(userInfo));
-
-
-
-                // const token = apiResp.jwt;
-
-                // var base64Url = token.split('.')[1];
-                // var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                // var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-                //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                // }).join(''));
-                // const extractToken =  JSON.parse(jsonPayload);
-
-                // console.log(extractToken);
-
+                document.location.href = "/home";
             } else {
-                setMsg(apiResp.message)
+                setMsg(apiResp.msg)
             }
             setIsApiLoading(false);
         } else {
@@ -67,15 +55,19 @@ function LoginPage() {
 
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
-            console.log(tokenResponse);
             const accessToken = tokenResponse.access_token;
 
             const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
+            if (apiResp.statusCode === 200) {
+                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+                localStorage.setItem('user_info', JSON.stringify(userInfo));
 
-            const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-            localStorage.setItem('user_info', JSON.stringify(userInfo));
+                document.location.href = "/home";
+            } else {
+                setMsg(apiResp.msg)
+            }
 
-            // document.location.href = "/home";
+
         }
     });
 
@@ -107,7 +99,6 @@ function LoginPage() {
                             />
 
                             <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
-                            <button onClick={login}>google</button>
                         </form>
 
 
@@ -117,7 +108,10 @@ function LoginPage() {
                         <a href="/forget-password" id='forgotPass'>Forgotten Password</a>
 
                         <hr />
-
+                        <div onClick={login} id="googleBtn">
+                            <img id='googleLogo' src={googleLogo} />
+                            <div id='googleBtnName'>Sign in with Google</div>
+                        </div>
                         <a href="/register">
                             <div id="createAcc">Create New Account</div>
                         </a>

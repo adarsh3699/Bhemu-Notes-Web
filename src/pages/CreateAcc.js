@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { apiCall } from "../utils";
 import Loader from "../components/Loader";
-import { useGoogleLogin } from '@react-oauth/google';
 
 import "../css/loginPage.css";
 
@@ -43,17 +42,6 @@ function CreateAcc() {
         }
     }
 
-
-
-    const login = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            const accessToken = tokenResponse.access_token;
-
-            const apiResp = await apiCall("users/signup", "post", { googleAccessToken: accessToken });
-            console.log(apiResp);
-        }
-    });
-
     return (
         <div id="background">
             <div id="wrapper">
@@ -72,7 +60,6 @@ function CreateAcc() {
 
                     <button id="signup" className={isApiLoading ? "isSignup" : ""} >Sign Up</button>
                     <div id="updateMsg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
-                    <button onClick={login}>google</button>
                 </form>
 
                 <Loader isLoading={isApiLoading} />

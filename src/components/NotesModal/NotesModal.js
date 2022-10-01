@@ -72,7 +72,7 @@ function ModalWrapper({
                                                 className={item?.isDone ? "todosIsDone todosInputBox" : "todosInputBox"}
                                                 value={item.element || ""}
                                                 autoComplete="off"
-                                                spellcheck="false"
+                                                spellCheck="false"
                                                 onChange={(e) => handleTextChange(index, e)}
                                                 // autoFocus={noteData.length - 1 === index ? true : false}
                                                 onKeyDown={(e) => e.key === "Enter" ? handleEnterClick(index, e) : null}
