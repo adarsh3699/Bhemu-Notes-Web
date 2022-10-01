@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
+import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
+import { useGoogleLogin } from '@react-oauth/google';
 
 import "../css/loginPage.css";
 import logo from "../img/logoBig.png"
+import googleLogo from "../img/google.svg"
+
 
 function LoginPage() {
     const [msg, setMsg] = useState("");
@@ -15,9 +18,10 @@ function LoginPage() {
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
-        if (getLoggedUserId()) {
+        if (localStorage.getItem("user_info")) {
+            const authorization = JSON.parse(localStorage.getItem("user_info")).jwt
+            console.log(authorization);
             document.location.href = "/home";
-            return;
         } else {
             setIsLoading(false);
         }
@@ -34,17 +38,12 @@ function LoginPage() {
 
         if (email !== "" && password !== "") {
             setIsApiLoading(true);
-            const apiResp = await apiCall("auth/login", "post", { email, password });
+            const apiResp = await apiCall("users/signin", "post", { email, password });
 
             if (apiResp.statusCode === 200) {
-                const userId = apiResp?.data[0]?._id;
-                if (userId) {
-                    setLoggedUserId(userId)
-                    document.location.href = "/home";
-                    return;
-                } else {
-                    setMsg("Please Check Your Email or Password")
-                }
+                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+                localStorage.setItem('user_info', JSON.stringify(userInfo));
+                document.location.href = "/home";
             } else {
                 setMsg(apiResp.msg)
             }
@@ -53,6 +52,24 @@ function LoginPage() {
             setMsg("Please Enter Your Email and Password")
         }
     }, [])
+
+    const login = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            const accessToken = tokenResponse.access_token;
+
+            const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
+            if (apiResp.statusCode === 200) {
+                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+                localStorage.setItem('user_info', JSON.stringify(userInfo));
+
+                document.location.href = "/home";
+            } else {
+                setMsg(apiResp.msg)
+            }
+
+
+        }
+    });
 
     return (
         <>
@@ -84,12 +101,17 @@ function LoginPage() {
                             <button id="login" className={isApiLoading ? "isLogin" : ""} >Login</button>
                         </form>
 
+
+
                         <div id="msg" className="red" style={isApiLoading ? { marginBottom: "0px" } : {}}> {msg} </div>
                         <Loader isLoading={isApiLoading} />
                         <a href="/forget-password" id='forgotPass'>Forgotten Password</a>
 
                         <hr />
-
+                        <div onClick={login} id="googleBtn">
+                            <img id='googleLogo' src={googleLogo} />
+                            <div id='googleBtnName'>Sign in with Google</div>
+                        </div>
                         <a href="/register">
                             <div id="createAcc">Create New Account</div>
                         </a>

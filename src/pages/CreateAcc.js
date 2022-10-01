@@ -12,15 +12,21 @@ function CreateAcc() {
 
     async function handleFormSubmit(e) {
         e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        const confPassword = e.target.confPassword.value;
+        const { fName, lName, email, password, confPassword } = e.target;
 
-        if (email !== "" && password !== "" && confPassword !== "") {
-            if (password === confPassword) {
+        const userData = {
+            firstName: fName.value,
+            lastName: lName.value,
+            email: email.value,
+            password: password.value,
+            confirmPassword: confPassword.value
+        }
+
+        if (userData.email !== "" && userData.password !== "" && userData.confirmPassword !== "") {
+            if (userData.password === userData.confirmPassword) {
                 setIsApiLoading(true);
 
-                const apiResp = await apiCall("auth/signUp", "post", { email, password });
+                const apiResp = await apiCall("users/signup", "post", userData);
                 if (apiResp.statusCode === 200) {
                     setMsg(apiResp.msg)
                     document.location.href = "/";
@@ -42,6 +48,10 @@ function CreateAcc() {
                 <div id='Title'>Create Your Account</div>
 
                 <form className="form" onSubmit={handleFormSubmit}>
+                    <input type="tet" name='fName' placeholder="First Name" className='inputBottomMargin' />
+
+                    <input type="tet" name='lName' placeholder="Last Name" className='inputBottomMargin' />
+
                     <input type="email" name='email' placeholder="Email" className='inputBottomMargin' />
 
                     <input type="Password" name='password' placeholder="Password (8 digit)" pattern="().{8,}" className='inputBottomMargin' />

@@ -33,8 +33,8 @@ function RenderNotes({ list, handleNoteOpening }) {
 
                             </div>
                             <div className="date">
-                                <div>{new Date(list.insertedOn)?.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
-                                <div>{new Date(list.insertedOn)?.toLocaleDateString(undefined, { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+                                <div>{new Date(list.updatedOn)?.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
+                                <div>{new Date(list.updatedOn)?.toLocaleDateString(undefined, { day: '2-digit', month: 'long', year: 'numeric' })}</div>
                             </div>
                         </div>
                     )

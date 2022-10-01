@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall, getLoggedUserId, setLoggedUserId } from "../utils";
+import { apiCall } from "../utils";
 import Loader from "../components/Loader";
 import NotesModal from "../components/NotesModal/NotesModal";
 import Hotkeys from 'react-hot-keys';
@@ -10,9 +10,6 @@ import RenderNotes from '../components/RenderNotes/RenderNotes';
 
 import "../css/homePage.css";
 
-
-const myUserId = getLoggedUserId();
-
 function HomePage() {
     const [msg, setMsg] = useState("");
     const [list, setList] = useState([]);
@@ -20,6 +17,7 @@ function HomePage() {
 
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+    const [myUserId, setMyUserId] = useState("");
     const [myNotesId, setMyNotesId] = useState("");
     const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState("");
@@ -30,12 +28,24 @@ function HomePage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
-        if (!myUserId) {
-            document.location.href = "/";
-            return;
-        } else {
+        if (localStorage.getItem("user_info")) {
+                const token = JSON.parse(localStorage.getItem("user_info")).jwt
+                
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                
+                const extractToken =  JSON.parse(jsonPayload);
+                setMyUserId(extractToken.id)
+                
+
             setIsLoading(false);
             document.title = "Bhemu Notes"
+
+        } else {
+            document.location.href = "/";
         }
     }, []);
 
@@ -54,7 +64,7 @@ function HomePage() {
                 }
             }
         })();
-    }, [flag]);
+    }, [flag, myUserId]);
 
     useEffect(function () {
         document.addEventListener("keydown", (e) => {
@@ -91,7 +101,7 @@ function HomePage() {
             setMsg(apiResp.msg)
         }
         setIsApiLoading(false)
-    }, [setFlag, flag, handleNoteOpening]);
+    }, [myUserId, flag, handleNoteOpening]);
 
     const handleAddNotesInputbox = useCallback((e) => {
         e.preventDefault();
@@ -101,7 +111,7 @@ function HomePage() {
     }, [addNotes])
 
     const handleLogoutBtnClick = useCallback(() => {
-        setLoggedUserId("");
+        localStorage.clear();
         document.location.href = "/";
     }, [])
 
