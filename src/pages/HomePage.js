@@ -29,20 +29,24 @@ function HomePage() {
 
     useEffect(() => {
         if (localStorage.getItem("user_info")) {
+            try {
                 const token = JSON.parse(localStorage.getItem("user_info")).jwt
-                
+
                 var base64Url = token.split('.')[1];
                 var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
                     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                 }).join(''));
-                
-                const extractToken =  JSON.parse(jsonPayload);
-                setMyUserId(extractToken.id)
-                
 
-            setIsLoading(false);
-            document.title = "Bhemu Notes"
+                const extractToken = JSON.parse(jsonPayload);
+                setMyUserId(extractToken.userId)
+
+
+                setIsLoading(false);
+                document.title = "Bhemu Notes"
+            } catch (err) {
+                console.log(err);
+            }
 
         } else {
             document.location.href = "/";

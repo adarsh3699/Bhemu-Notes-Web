@@ -19,7 +19,7 @@ function LoginPage() {
 
     useEffect(() => {
         if (localStorage.getItem("user_info")) {
-            const authorization = JSON.parse(localStorage.getItem("user_info")).jwt
+            const authorization = JSON.parse(localStorage.getItem("user_info"))?.jwt
             console.log(authorization);
             document.location.href = "/home";
         } else {
@@ -56,7 +56,7 @@ function LoginPage() {
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             const accessToken = tokenResponse.access_token;
-
+            setIsApiLoading(true);
             const apiResp = await apiCall("users/signin", "post", { googleAccessToken: accessToken });
             if (apiResp.statusCode === 200) {
                 const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
@@ -66,7 +66,7 @@ function LoginPage() {
             } else {
                 setMsg(apiResp.msg)
             }
-
+            setIsApiLoading(false);
 
         }
     });
@@ -109,7 +109,7 @@ function LoginPage() {
 
                         <hr />
                         <div onClick={login} id="googleBtn">
-                            <img id='googleLogo' src={googleLogo} />
+                            <img id='googleLogo' src={googleLogo} alt="" />
                             <div id='googleBtnName'>Sign in with Google</div>
                         </div>
                         <a href="/register">
