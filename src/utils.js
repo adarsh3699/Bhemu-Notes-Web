@@ -19,14 +19,14 @@ async function apiCall(endpoint, method, body) {
 
         if (method === "GET" || method === undefined) {
             apiCallResp = await fetch(apiUrl, {
-                headers: { 'Authorization': "Bearer " + `${authorization}` }
+                headers: { 'Authorization': "Bearer " + authorization }
             });
         } else {
             apiCallResp = await fetch(apiUrl, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + `${authorization}`
+                    'Authorization': "Bearer " + authorization
                 },
                 body: JSON.stringify(body)
             });
