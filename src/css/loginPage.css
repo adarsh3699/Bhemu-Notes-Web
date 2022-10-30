@@ -13,7 +13,7 @@ a {
 }
 
 #wrapper {
-    background-color: #2A2B2D;
+    background-color: #2a2b2d;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     border-radius: 5px;
     text-align: center;
@@ -74,7 +74,7 @@ hr {
 }
 
 #login {
-    background-color: #0091EA;
+    background-color: #0091ea;
     color: white;
     font-weight: 700;
     font-size: 105%;
@@ -145,8 +145,8 @@ hr {
     user-select: none;
 }
 
-#googleBtn:hover { 
-    box-shadow: 0px 0px 10px 0px rgba(4,50,170,0.7);
+#googleBtn:hover {
+    box-shadow: 0px 0px 10px 0px rgba(4, 50, 170, 0.7);
 }
 
 #googleLogo {
@@ -217,7 +217,7 @@ hr {
         width: 95%;
     }
 
-    #login, 
+    #login,
     #createAcc {
         width: 50%;
     }

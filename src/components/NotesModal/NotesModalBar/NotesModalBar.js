@@ -5,7 +5,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
-import "./notesModalBar.css"
+import './notesModalBar.css';
 
 function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -17,18 +17,14 @@ if (getWindowDimensions().width <= 375) {
     loaderTop = 4;
 }
 
-
 function NotesModalBar({
     notesTitle,
     handleTitleChange,
     toggleConfirmationDialogClosing,
     handleSaveBtnClick,
     isSaveBtnLoading,
-    handleModalClose
+    handleModalClose,
 }) {
-
-
-
     return (
         <div id="notesModelBar">
             <input type="text" id="title" autoComplete="off" value={notesTitle} onChange={handleTitleChange} />
@@ -49,13 +45,13 @@ function NotesModalBar({
                         color="inherit"
                         aria-label="save"
                         size="large"
-                        onClick={handleSaveBtnClick}>
-                        {
-                            isSaveBtnLoading ?
-                                <div style={{ height: "28px", width: "28px" }}></div>
-                                :
-                                <SaveIcon fontSize="inherit" />
-                        }
+                        onClick={handleSaveBtnClick}
+                    >
+                        {isSaveBtnLoading ? (
+                            <div style={{ height: '28px', width: '28px' }}></div>
+                        ) : (
+                            <SaveIcon fontSize="inherit" />
+                        )}
                     </IconButton>
 
                     {isSaveBtnLoading && (
@@ -71,12 +67,9 @@ function NotesModalBar({
                     )}
                 </div>
 
-                <Button
-                    id='closeBtn'
-                    color="inherit"
-                    variant="text"
-                    onClick={handleModalClose}
-                >Close</Button>
+                <Button id="closeBtn" color="inherit" variant="text" onClick={handleModalClose}>
+                    Close
+                </Button>
             </div>
         </div>
     );

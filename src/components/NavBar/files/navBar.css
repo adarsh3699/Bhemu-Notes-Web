@@ -48,7 +48,7 @@
     font-weight: 550 !important;
 }
 
-.MuiMenu-paper{
+.MuiMenu-paper {
     margin-top: 2px;
 }
 
@@ -77,7 +77,6 @@
 }
 
 @media screen and (max-width: 530px) {
-
     #logo img {
         margin-left: 10px;
     }

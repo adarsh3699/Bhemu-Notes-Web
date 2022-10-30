@@ -12,23 +12,45 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 
 function Routes() {
     return (
-        <Suspense fallback={
-            <>
-                <div id='loadingScreen'>
-                    Loading
-                    <div id='loadingIcon'>
-                        <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <Suspense
+            fallback={
+                <>
+                    <div id="loadingScreen">
+                        Loading
+                        <div id="loadingIcon">
+                            <div className="lds-spinner">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </>
-        }>
+                </>
+            }
+        >
             <Switch>
                 <Route exact path="/" element={<LoginPage />} />
                 <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
                 <Route exact path="/register" element={<CreateAcc />} />
                 <Route exact path="/home" element={<HomePage />} />
 
-                <Route path="*" element={<center><h1>Page not Found</h1></center>} />
+                <Route
+                    path="*"
+                    element={
+                        <center>
+                            <h1>Page not Found</h1>
+                        </center>
+                    }
+                />
             </Switch>
         </Suspense>
     );

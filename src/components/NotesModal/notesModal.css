@@ -16,7 +16,7 @@
     padding: 10px 0;
     width: 100%;
     overflow: auto;
-    height: 88%
+    height: 88%;
 }
 
 /* ...............modalContent................. */
@@ -67,7 +67,6 @@
     text-decoration-thickness: 2px;
 }
 
-
 #addTodos {
     margin: 20px 15px;
     padding: 5px;
@@ -91,7 +90,6 @@
 }
 
 @media screen and (max-width: 480px) {
-
     #notesArea,
     .todosInputBox {
         font-size: 15px;
@@ -119,7 +117,6 @@
 }
 
 @media screen and (max-width: 375px) {
-
     #searchBox {
         font-size: 13px;
         height: 23px;
