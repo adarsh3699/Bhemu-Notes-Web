@@ -1,0 +1,9 @@
+.ProfilePictureTitle {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.ProfilePictureImg {
+    border-radius: 2px;
+    height: 120px;
+}

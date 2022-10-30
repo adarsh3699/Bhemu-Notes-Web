@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall } from '../utils';
+
 import Loader from '../components/Loader';
-import NotesModal from '../components/NotesModal/NotesModal';
-import Hotkeys from 'react-hot-keys';
+import NotesModal from '../components/homePage/NotesModal/NotesModal';
+import NavBar from '../components/homePage/NavBar/';
+import RenderNotes from '../components/homePage/RenderNotes/RenderNotes';
 import ConfirmationDialog from '../components/ConfirmationDialog/ConfirmationDialog';
 
-import NavBar from '../components/NavBar/';
-import RenderNotes from '../components/RenderNotes/RenderNotes';
+import Hotkeys from 'react-hot-keys';
 
 import '../css/homePage.css';
 

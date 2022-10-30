@@ -9,6 +9,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
 const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 const HomePage = lazy(() => import('./pages/HomePage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 function Routes() {
     return (
@@ -39,9 +40,10 @@ function Routes() {
         >
             <Switch>
                 <Route exact path="/" element={<LoginPage />} />
-                <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
                 <Route exact path="/register" element={<CreateAcc />} />
+                <Route exact path="/forget-password" element={<ForgetPasswordPage />} />
                 <Route exact path="/home" element={<HomePage />} />
+                <Route exact path="/settings" element={<SettingsPage />} />
 
                 <Route
                     path="*"
