@@ -12,19 +12,18 @@ import "../css/homePage.css";
 
 function HomePage() {
     const [msg, setMsg] = useState("");
-    const [list, setList] = useState([]);
+    const [allNotes, setAllNotes] = useState([]);
     const [flag, setFlag] = useState(false);
 
-    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-    const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-    const [myUserId, setMyUserId] = useState("");
     const [myNotesId, setMyNotesId] = useState("");
     const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState("");
-    const [noteData, setNoteData] = useState([]);
+    const [openedNoteData, setOpenedNoteData] = useState([]);
 
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+    const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [isSaveApiLoading, setIsSaveApiLoading] = useState(false);
+    const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
@@ -38,8 +37,7 @@ function HomePage() {
                     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                 }).join(''));
 
-                const extractToken = JSON.parse(jsonPayload);
-                setMyUserId(extractToken.userId)
+                // const extractToken = JSON.parse(jsonPayload);
 
 
                 setIsLoading(false);
@@ -55,12 +53,12 @@ function HomePage() {
 
     useEffect(() => {
         (async function () {
-            if (myUserId) {
+            if (localStorage.getItem("user_info")) {
                 setIsApiLoading(true);
-                const apiResp = await apiCall("notes?userId=" + myUserId);
+                const apiResp = await apiCall("notes");
                 if (apiResp.statusCode === 200) {
                     setIsApiLoading(false);
-                    setList(apiResp.data)
+                    setAllNotes(apiResp.data)
 
                 } else {
                     setIsApiLoading(false);
@@ -68,7 +66,7 @@ function HomePage() {
                 }
             }
         })();
-    }, [flag, myUserId]);
+    }, [flag]);
 
     useEffect(function () {
         document.addEventListener("keydown", (e) => {
@@ -91,21 +89,25 @@ function HomePage() {
         setMyNotesId(noteId)
         setNotesType(type)
         setNotesTitle(title)
-        setNoteData(data)
+        setOpenedNoteData(data)
         setIsNotesModalOpen(true);
-    }, [setMyNotesId, setNotesType, setNotesTitle, setNoteData, setIsNotesModalOpen]);
+    }, [setMyNotesId, setNotesType, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]);
 
     const addNotes = useCallback(async (type, notesTitle) => {
         setIsApiLoading(true);
-        const apiResp = await apiCall("notes?userId=" + myUserId, "post", ({ notesType: type, notesTitle: notesTitle }));
+        const newNoteData = [{ "element": "", "isDone": false }];
+        const newNotesTitle = notesTitle ? notesTitle : "Enter Notes Title"
+        const newNoteType = type ? type : false
+
+        const apiResp = await apiCall("notes", "post", ({ notesType: newNoteType, notesTitle: newNotesTitle, noteData: newNoteData }));
         if (apiResp.statusCode === 200) {
             setFlag(!flag)
-            handleNoteOpening(apiResp?.notesId, type, notesTitle, [{ "element": "", "isDone": false }])
+            handleNoteOpening(apiResp?.notesId, type, notesTitle, newNoteData)
         } else {
             setMsg(apiResp.msg)
         }
         setIsApiLoading(false)
-    }, [myUserId, flag, handleNoteOpening]);
+    }, [flag, handleNoteOpening]);
 
     const handleAddNotesInputbox = useCallback((e) => {
         e.preventDefault();
@@ -125,18 +127,18 @@ function HomePage() {
 
     const handleSaveBtnClick = useCallback(async () => {
         if (isNotesModalOpen) {
-            setIsSaveApiLoading(true);
+            setIsSaveBtnLoading(true);
 
-            const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotes: noteData });
+            const apiResp = await apiCall("notes?notesId=" + myNotesId, "put", { notesTitle, newNotesData: openedNoteData });
             if (apiResp.statusCode === 200) {
                 setFlag(!flag)
             } else {
                 setMsg(apiResp.msg);
                 setIsNotesModalOpen(false)
             }
-            setIsSaveApiLoading(false);
+            setIsSaveBtnLoading(false);
         }
-    }, [flag, isNotesModalOpen, myNotesId, noteData, notesTitle])
+    }, [flag, isNotesModalOpen, myNotesId, openedNoteData, notesTitle])
 
     const handleDeleteBtnClick = useCallback(async () => {
         setIsApiLoading(true);
@@ -154,40 +156,40 @@ function HomePage() {
 
     //For Todo's
     const handleCheckboxClick = useCallback((index, isDone) => {
-        const newToDos = noteData.map(function (toDo, i) {
+        const newToDos = openedNoteData.map(function (toDo, i) {
             return (i === index ? { ...toDo, isDone: isDone ? false : true } : toDo)
         })
-        setNoteData(newToDos);
-    }, [noteData])
+        setOpenedNoteData(newToDos);
+    }, [openedNoteData])
 
     const handleTextChange = useCallback((index, e) => {
-        const newToDos = noteData.map(function (toDo, i) {
+        const newToDos = openedNoteData.map(function (toDo, i) {
             return (i === index ? { ...toDo, element: e.target.value } : toDo)
         })
 
-        setNoteData(newToDos);
-    }, [noteData])
+        setOpenedNoteData(newToDos);
+    }, [openedNoteData])
 
     const handleEnterClick = useCallback((index) => {
-        const tempData = [...noteData];
+        const tempData = [...openedNoteData];
         tempData.splice(index + 1, 0, { element: "", isDone: false })
-        setNoteData(tempData)
-        if (noteData.length - 1 !== index) {
+        setOpenedNoteData(tempData)
+        if (openedNoteData.length - 1 !== index) {
             document.getElementById(index + 1).focus();
         }
-    }, [noteData])
+    }, [openedNoteData])
 
     const handleDeleteToDoBtnClick = useCallback((index) => {
-        let newToDos = noteData.filter((data, i) => {
+        let newToDos = openedNoteData.filter((data, i) => {
             return (i !== index) ? data : null
         });
 
-        setNoteData(newToDos);
-    }, [noteData])
+        setOpenedNoteData(newToDos);
+    }, [openedNoteData])
 
     const handleAddToDoBtnClick = useCallback(() => {
-        setNoteData([...noteData, { element: "", isDone: false }]);
-    }, [noteData])
+        setOpenedNoteData([...openedNoteData, { element: "", isDone: false }]);
+    }, [openedNoteData])
 
     //function to handle when "ctrl + s" is pressed
     const handleShortcutKeyPress = useCallback(() => {
@@ -234,7 +236,7 @@ function HomePage() {
                         <Loader isLoading={isApiLoading} />
 
                         <RenderNotes
-                            list={list}
+                            allNotes={allNotes}
                             handleNoteOpening={handleNoteOpening}
                         />
 
@@ -242,7 +244,7 @@ function HomePage() {
                             isNotesModalOpen &&
                             <NotesModal
                                 open={isNotesModalOpen}
-                                isSaveApiLoading={isSaveApiLoading}
+                                isSaveBtnLoading={isSaveBtnLoading}
                                 closeOnOutsideClick={handleNotesModalClosing}
                                 handleModalClose={handleNotesModalClosing}
                                 toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
@@ -251,7 +253,7 @@ function HomePage() {
                                 handleTitleChange={handleTitleChange}
                                 handleDeleteBtnClick={handleDeleteBtnClick}
                                 handleSaveBtnClick={handleSaveBtnClick}
-                                noteData={noteData}
+                                openedNoteData={openedNoteData}
                                 notesType={notesType}
 
                                 handleTextChange={handleTextChange}

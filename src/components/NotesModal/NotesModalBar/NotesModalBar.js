@@ -23,7 +23,7 @@ function NotesModalBar({
     handleTitleChange,
     toggleConfirmationDialogClosing,
     handleSaveBtnClick,
-    isSaveApiLoading,
+    isSaveBtnLoading,
     handleModalClose
 }) {
 
@@ -51,14 +51,14 @@ function NotesModalBar({
                         size="large"
                         onClick={handleSaveBtnClick}>
                         {
-                            isSaveApiLoading ?
+                            isSaveBtnLoading ?
                                 <div style={{ height: "28px", width: "28px" }}></div>
                                 :
                                 <SaveIcon fontSize="inherit" />
                         }
                     </IconButton>
 
-                    {isSaveApiLoading && (
+                    {isSaveBtnLoading && (
                         <CircularProgress
                             size={30}
                             sx={{

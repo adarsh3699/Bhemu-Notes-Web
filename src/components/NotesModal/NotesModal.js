@@ -10,7 +10,7 @@ import "./notesModal.css"
 
 function ModalWrapper({
     open,
-    isSaveApiLoading,
+    isSaveBtnLoading,
     closeOnOutsideClick = true,
     containerClassName,
     handleModalClose,
@@ -20,7 +20,7 @@ function ModalWrapper({
     toggleConfirmationDialogClosing,
     handleSaveBtnClick,
 
-    noteData,
+    openedNoteData,
     notesType,
     handleTextChange,
     handleCheckboxClick,
@@ -35,7 +35,7 @@ function ModalWrapper({
 
                 <NotesModalBar
                     handleModalClose={handleModalClose}
-                    isSaveApiLoading={isSaveApiLoading}
+                    isSaveBtnLoading={isSaveBtnLoading}
                     notesTitle={notesTitle}
                     handleTitleChange={handleTitleChange}
                     toggleConfirmationDialogClosing={toggleConfirmationDialogClosing}
@@ -44,7 +44,7 @@ function ModalWrapper({
                 
                 <div id='elementBox'>
                     {
-                        noteData.map(function (item, index) {
+                        openedNoteData.map(function (item, index) {
                             return (
                                 notesType === false ? //type notes
                                     <textarea
