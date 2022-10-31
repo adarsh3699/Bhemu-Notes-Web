@@ -28,7 +28,7 @@ function HomePage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
-        if (localStorage.getItem('user_info')) {
+        if (JSON.parse(localStorage.getItem('user_info')).jwt) {
             try {
                 const token = JSON.parse(localStorage.getItem('user_info')).jwt;
 
@@ -142,8 +142,8 @@ function HomePage() {
     );
 
     const handleLogoutBtnClick = useCallback(() => {
-        localStorage.clear();
-        document.location.href = '/';
+        // localStorage.clear();
+        document.location.href = '/settings';
     }, []);
 
     const handleTitleChange = useCallback(
