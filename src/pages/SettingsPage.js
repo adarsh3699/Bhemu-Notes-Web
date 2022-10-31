@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
 import AboutSettings from '../components/settingsPage/aboutSettings/AboutSettings';
+import AccountSettings from '../components/settingsPage/accountSettings/AccountSettings';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -10,6 +11,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
+
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import '../css/settingsPage.css';
 
@@ -21,16 +27,26 @@ const darkTheme = createTheme({
     },
 });
 
+const settingsDrawerMenu = [
+    { name: 'Profile', icon: <AccountBoxIcon /> },
+    { name: 'Account', icon: <SettingsIcon /> },
+    { name: 'About', icon: <InfoIcon /> },
+    { name: 'Log Out', icon: <LogoutIcon /> },
+];
+
 const drawerWidth = 240;
 
-const userDetails = JSON.parse(localStorage.getItem('user_info'))?.details;
-
 function SettingsPage() {
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [selectedMenu, setSelectedMenu] = useState('Profile');
 
-    const handleDrawerToggle = () => {
+    const handleDrawerToggle = useCallback(() => {
         setMobileOpen(!mobileOpen);
-    };
+    }, [mobileOpen]);
+
+    const handleSelectedMenu = useCallback((menuName) => {
+        setSelectedMenu(menuName);
+    }, []);
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -64,13 +80,23 @@ function SettingsPage() {
                     drawerWidth={drawerWidth}
                     handleDrawerToggle={handleDrawerToggle}
                     mobileOpen={mobileOpen}
+                    settingsDrawerMenu={settingsDrawerMenu}
+                    selectedMenu={selectedMenu}
+                    handleSelectedMenu={handleSelectedMenu}
                 />
 
                 {/* content */}
-                <Box component="main" sx={{ flexGrow: 1, p: 5, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, py: 5, pl: 10, pr: 5, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                >
                     <Toolbar />
                     <div>
-                        <AboutSettings />
+                        {selectedMenu === 'Profile' ? (
+                            <AboutSettings />
+                        ) : selectedMenu === 'Account' ? (
+                            <AccountSettings />
+                        ) : null}
                     </div>
                 </Box>
             </Box>

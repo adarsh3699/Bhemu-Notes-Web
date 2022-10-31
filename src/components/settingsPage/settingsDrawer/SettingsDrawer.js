@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 
-function SettingsDrawer({ drawerWidth, mobileOpen, handleDrawerToggle }, props) {
+function SettingsDrawer(
+    { drawerWidth, mobileOpen, handleDrawerToggle, settingsDrawerMenu, selectedMenu, handleSelectedMenu },
+    props
+) {
     const { window } = props;
 
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -28,22 +29,16 @@ function SettingsDrawer({ drawerWidth, mobileOpen, handleDrawerToggle }, props) 
             </Toolbar>
             <Divider />
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
+                {settingsDrawerMenu.map((item, index) => (
+                    <ListItem
+                        key={index}
+                        disablePadding
+                        selected={selectedMenu === item?.name ? true : false}
+                        onClick={() => handleSelectedMenu(item?.name)}
+                    >
+                        <ListItemButton sx={{ py: 1.7, pl: 4 }}>
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.name} />
                         </ListItemButton>
                     </ListItem>
                 ))}
