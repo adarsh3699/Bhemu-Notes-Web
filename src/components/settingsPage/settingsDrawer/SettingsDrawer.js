@@ -11,9 +11,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function SettingsDrawer(
-    { drawerWidth, mobileOpen, handleDrawerToggle, settingsDrawerMenu, selectedMenu, handleSelectedMenu },
+    { drawerWidth, mobileOpen, handleDrawerToggle, settingsDrawerMenu, handleSelectedMenu },
     props
 ) {
     const { window } = props;
@@ -22,7 +24,16 @@ function SettingsDrawer(
 
     const drawer = (
         <div>
-            <Toolbar>
+            <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2, ml: 0, display: { sm: 'none' } }}
+                >
+                    <MenuIcon />
+                </IconButton>
                 <Typography variant="h6" noWrap component="div">
                     Bhemu Notes
                 </Typography>
@@ -33,8 +44,8 @@ function SettingsDrawer(
                     <ListItem
                         key={index}
                         disablePadding
-                        selected={selectedMenu === item?.name ? true : false}
-                        onClick={() => handleSelectedMenu(item?.name)}
+                        selected={item.isSelected}
+                        onClick={() => handleSelectedMenu(item?.name, index)}
                     >
                         <ListItemButton sx={{ py: 1.7, pl: 4 }}>
                             <ListItemIcon>{item.icon}</ListItemIcon>

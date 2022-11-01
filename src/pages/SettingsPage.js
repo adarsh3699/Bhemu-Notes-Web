@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
-import AboutSettings from '../components/settingsPage/aboutSettings/AboutSettings';
+import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
 import AccountSettings from '../components/settingsPage/accountSettings/AccountSettings';
+import AboutSettings from '../components/settingsPage/aboutSettings/AboutSettings';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,6 +17,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
 
 import '../css/settingsPage.css';
 
@@ -27,26 +29,40 @@ const darkTheme = createTheme({
     },
 });
 
-const settingsDrawerMenu = [
-    { name: 'Profile', icon: <AccountBoxIcon /> },
-    { name: 'Account', icon: <SettingsIcon /> },
-    { name: 'About', icon: <InfoIcon /> },
-    { name: 'Log Out', icon: <LogoutIcon /> },
-];
 
 const drawerWidth = 240;
 
 function SettingsPage() {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [selectedMenu, setSelectedMenu] = useState('Profile');
+    const [settingsDrawerMenu, setSettingsDrawerMenu] = useState([
+        { name: 'Profile', isSelected: true, icon: <AccountBoxIcon />, page: <ProfileSettings /> },
+        { name: 'Account', isSelected: false, icon: <SettingsIcon />, page: <AccountSettings /> },
+        { name: 'About', isSelected: false, icon: <InfoIcon />, page: <AboutSettings /> },
+        { name: 'Log Out', isSelected: false, icon: <LogoutIcon />, page: undefined },
+    ]);
 
     const handleDrawerToggle = useCallback(() => {
         setMobileOpen(!mobileOpen);
     }, [mobileOpen]);
 
-    const handleSelectedMenu = useCallback((menuName) => {
-        setSelectedMenu(menuName);
-    }, []);
+    const handleSelectedMenu = useCallback(
+        (menuName, index) => {
+            if (menuName === 'Log Out') {
+                localStorage.clear();
+                document.location.href = '/';
+                return;
+            }
+
+            const newSettingsDrawerMenu = settingsDrawerMenu.map(function (items, i) {
+                return i === index
+                    ? { ...items, isSelected: settingsDrawerMenu.i === menuName ? false : true }
+                    : { ...items, isSelected: false };
+            });
+
+            setSettingsDrawerMenu(newSettingsDrawerMenu);
+        },
+        [settingsDrawerMenu]
+    );
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -59,19 +75,29 @@ function SettingsPage() {
                         background: '#1e1e1e',
                     }}
                 >
-                    <Toolbar>
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+                        <div className="settingsMenu">
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                edge="start"
+                                onClick={handleDrawerToggle}
+                                sx={{ mr: 2, ml: 0, display: { sm: 'none' } }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+
+                            <Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
+                                Settings
+                            </Typography>
+                        </div>
                         <IconButton
                             color="inherit"
-                            aria-label="open drawer"
-                            edge="start"
-                            onClick={handleDrawerToggle}
-                            sx={{ mr: 2, display: { sm: 'none' } }}
+                            aria-label="delete"
+                            onClick={() => (document.location.href = '/home')}
                         >
-                            <MenuIcon />
+                            <CloseIcon />
                         </IconButton>
-                        <Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
-                            Settings
-                        </Typography>
                     </Toolbar>
                     <Divider />
                 </AppBar>
@@ -81,23 +107,16 @@ function SettingsPage() {
                     handleDrawerToggle={handleDrawerToggle}
                     mobileOpen={mobileOpen}
                     settingsDrawerMenu={settingsDrawerMenu}
-                    selectedMenu={selectedMenu}
                     handleSelectedMenu={handleSelectedMenu}
                 />
 
                 {/* content */}
-                <Box
-                    component="main"
-                    sx={{ flexGrow: 1, py: 5, pl: 10, pr: 5, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-                >
+                <Box component="main" sx={{ flexGrow: 1, py: 5, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
                     <Toolbar />
-                    <div>
-                        {selectedMenu === 'Profile' ? (
-                            <AboutSettings />
-                        ) : selectedMenu === 'Account' ? (
-                            <AccountSettings />
-                        ) : null}
-                    </div>
+
+                    {settingsDrawerMenu.map((item, index) => (
+                        <div key={index}>{item?.isSelected ? item?.page : null}</div>
+                    ))}
                 </Box>
             </Box>
         </ThemeProvider>
