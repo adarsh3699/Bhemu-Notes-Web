@@ -17,7 +17,7 @@ function LoginPage() {
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
-        if (localStorage.getItem('user_info')) {
+        if (JSON.parse(localStorage.getItem('user_info'))?.jwt) {
             const authorization = JSON.parse(localStorage.getItem('user_info'))?.jwt;
             console.log(authorization);
             document.location.href = '/home';
