@@ -18,7 +18,7 @@ function AboutSettings() {
 
     const handleUserDetailsChange = useCallback(
         (e) => {
-            setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
+            setUserDetails({ ...userDetails, [e.target.name]: e.target.value.trim() });
         },
         [userDetails, setUserDetails]
     );
@@ -26,18 +26,22 @@ function AboutSettings() {
     const handleProfileSubmit = useCallback(
         async (e) => {
             e.preventDefault();
-            setIsSaveBtnLoading(true);
-            const apiResp = await apiCall('settings/update_profile', 'POST', userDetails);
+            if (userDetails.firstName.trim() && userDetails.lastName.trim()) {
+                setIsSaveBtnLoading(true);
+                const apiResp = await apiCall('settings/update_profile', 'POST', userDetails);
 
-            if (apiResp.statusCode === 200) {
-                if (apiResp?.details) {
-                    const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                    localStorage.setItem('user_info', JSON.stringify(userInfo));
+                if (apiResp.statusCode === 200) {
+                    if (apiResp?.details) {
+                        const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+                        localStorage.setItem('user_info', JSON.stringify(userInfo));
+                    }
+                } else {
+                    // setMsg(apiResp.msg);
                 }
+                setIsSaveBtnLoading(false);
             } else {
                 // setMsg(apiResp.msg);
             }
-            setIsSaveBtnLoading(false);
         },
         [userDetails]
     );
@@ -54,7 +58,7 @@ function AboutSettings() {
                     <div className="userNameTitle">User Name →</div>
                     <div className="userName">
                         <input
-                            className="firstNameInput"
+                            className="firstNameInput profileSettingsInput"
                             type="text"
                             name="firstName"
                             placeholder="First Name"
@@ -62,6 +66,7 @@ function AboutSettings() {
                             onChange={handleUserDetailsChange}
                         />
                         <input
+                            className="profileSettingsInput"
                             type="text"
                             name="lastName"
                             placeholder="Last Name"
