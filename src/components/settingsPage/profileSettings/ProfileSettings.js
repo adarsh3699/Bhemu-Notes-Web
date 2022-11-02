@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { apiCall } from '../../../utils';
 import myLogo from '../../../img/logo.jpeg';
 import Button from '@mui/material/Button';
@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import './profileSettings.css';
 
-const jwtDetails = JSON.parse(localStorage.getItem('user_info'))?.details;
+const jwtDetails = JSON.parse(localStorage.getItem('user_details'));
 
 function AboutSettings() {
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -15,26 +15,6 @@ function AboutSettings() {
         lastName: jwtDetails?.lastName,
         profilePicture: jwtDetails?.profilePicture,
     });
-
-    // useEffect(() => {
-    //     (async function () {
-    //         try {
-    //             const profilePicture = await userDetails?.profilePicture;
-    //             const splitedProfilePicture = profilePicture.split("=")
-
-    //             const bigProfilePicture = splitedProfilePicture[0] + "=s120-c"
-
-    //             const url = new URL(bigProfilePicture);
-
-    //             console.log(url);
-
-    //             setBigProfilePicture(bigProfilePicture)
-
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     })();
-    // }, [userDetails?.profilePicture]);
 
     const handleUserDetailsChange = useCallback(
         (e) => {
@@ -71,11 +51,6 @@ function AboutSettings() {
                 </div>
 
                 <form className="userDetails" onSubmit={handleProfileSubmit} encType="multipart/form-data">
-                    {/* <input
-                        type="file"
-                        name='profilePicture'
-                        onChange={handleUserDetailsChange}
-                    /> */}
                     <div className="userNameTitle">User Name →</div>
                     <div className="userName">
                         <input

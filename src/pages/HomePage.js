@@ -28,46 +28,25 @@ function HomePage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
-        if (JSON.parse(localStorage.getItem('user_info')).jwt) {
-            try {
-                const token = JSON.parse(localStorage.getItem('user_info')).jwt;
-
-                var base64Url = token.split('.')[1];
-                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                var jsonPayload = decodeURIComponent(
-                    window
-                        .atob(base64)
-                        .split('')
-                        .map(function (c) {
-                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                        })
-                        .join('')
-                );
-
-                // const extractToken = JSON.parse(jsonPayload);
-
-                setIsLoading(false);
-                document.title = 'Bhemu Notes';
-            } catch (err) {
-                console.log(err);
-            }
+        if (localStorage.getItem('JWT_token') && localStorage.getItem('user_details')) {
+            setIsLoading(false);
+            document.title = 'Bhemu Notes';
         } else {
             document.location.href = '/';
+            localStorage.clear();
         }
     }, []);
 
     useEffect(() => {
         (async function () {
-            if (localStorage.getItem('user_info')) {
-                setIsApiLoading(true);
-                const apiResp = await apiCall('notes');
-                if (apiResp.statusCode === 200) {
-                    setIsApiLoading(false);
-                    setAllNotes(apiResp.data);
-                } else {
-                    setIsApiLoading(false);
-                    setMsg(apiResp.msg);
-                }
+            setIsApiLoading(true);
+            const apiResp = await apiCall('notes');
+            if (apiResp.statusCode === 200) {
+                setIsApiLoading(false);
+                setAllNotes(apiResp.data);
+            } else {
+                setIsApiLoading(false);
+                setMsg(apiResp.msg);
             }
         })();
     }, [flag]);

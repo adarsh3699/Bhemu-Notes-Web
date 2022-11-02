@@ -17,12 +17,30 @@ function LoginPage() {
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
-        if (JSON.parse(localStorage.getItem('user_info'))?.jwt) {
-            const authorization = JSON.parse(localStorage.getItem('user_info'))?.jwt;
-            console.log(authorization);
+        if (localStorage.getItem('JWT_token') && localStorage.getItem('user_details')) {
             document.location.href = '/home';
         } else {
             setIsLoading(false);
+            localStorage.clear();
+        }
+    }, []);
+
+    const extractJwtToken = useCallback((token) => {
+        try {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(
+                window
+                    .atob(base64)
+                    .split('')
+                    .map(function (c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    })
+                    .join('')
+            );
+            return JSON.parse(jsonPayload);
+        } catch (err) {
+            console.log(err);
         }
     }, []);
 
@@ -30,37 +48,46 @@ function LoginPage() {
         setIspasswordVisible(!ispasswordVisible);
     }, [ispasswordVisible]);
 
-    const handleUserLogin = useCallback(async (e) => {
-        e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
+    const handleUserLogin = useCallback(
+        async (e) => {
+            e.preventDefault();
+            setMsg('');
+            const email = e.target.email.value;
+            const password = e.target.password.value;
 
-        if (email !== '' && password !== '') {
-            setIsApiLoading(true);
-            const apiResp = await apiCall('users/signin', 'post', { email, password });
+            if (email !== '' && password !== '') {
+                setIsApiLoading(true);
+                const apiResp = await apiCall('users/signin', 'post', { email, password });
 
-            if (apiResp.statusCode === 200) {
-                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                localStorage.setItem('user_info', JSON.stringify(userInfo));
-                document.location.href = '/home';
+                if (apiResp.statusCode === 200) {
+                    const extractedToken = extractJwtToken(apiResp.jwt);
+                    const userDetails = { ...apiResp.details, email: extractedToken?.email };
+
+                    localStorage.setItem('user_details', JSON.stringify(userDetails));
+                    localStorage.setItem('JWT_token', apiResp.jwt);
+                    document.location.href = '/home';
+                } else {
+                    setMsg(apiResp.msg);
+                }
+                setIsApiLoading(false);
             } else {
-                setMsg(apiResp.msg);
+                setMsg('Please Enter Your Email and Password');
             }
-            setIsApiLoading(false);
-        } else {
-            setMsg('Please Enter Your Email and Password');
-        }
-    }, []);
+        },
+        [extractJwtToken]
+    );
 
-    const login = useGoogleLogin({
+    const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             const accessToken = tokenResponse.access_token;
             setIsApiLoading(true);
             const apiResp = await apiCall('users/signin', 'post', { googleAccessToken: accessToken });
             if (apiResp.statusCode === 200) {
-                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                localStorage.setItem('user_info', JSON.stringify(userInfo));
+                const extractedToken = extractJwtToken(apiResp.jwt);
+                const userDetails = { ...apiResp.details, email: extractedToken?.email };
 
+                localStorage.setItem('user_details', JSON.stringify(userDetails));
+                localStorage.setItem('JWT_token', apiResp.jwt);
                 document.location.href = '/home';
             } else {
                 setMsg(apiResp.msg);
@@ -123,7 +150,7 @@ function LoginPage() {
                         </a>
 
                         <hr />
-                        <div onClick={login} id="googleBtn">
+                        <div onClick={googleLogin} id="googleBtn">
                             <img id="googleLogo" src={googleLogo} alt="" />
                             <div id="googleBtnName">Sign in with Google</div>
                         </div>

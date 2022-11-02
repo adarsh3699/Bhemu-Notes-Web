@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
 import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
 import AccountSettings from '../components/settingsPage/accountSettings/AccountSettings';
@@ -29,7 +29,6 @@ const darkTheme = createTheme({
     },
 });
 
-
 const drawerWidth = 240;
 
 function SettingsPage() {
@@ -40,6 +39,14 @@ function SettingsPage() {
         { name: 'About', isSelected: false, icon: <InfoIcon />, page: <AboutSettings /> },
         { name: 'Log Out', isSelected: false, icon: <LogoutIcon />, page: undefined },
     ]);
+
+    useEffect(() => {
+        if (localStorage.getItem('JWT_token') && localStorage.getItem('user_details')) {
+        } else {
+            document.location.href = '/';
+            localStorage.clear();
+        }
+    }, []);
 
     const handleDrawerToggle = useCallback(() => {
         setMobileOpen(!mobileOpen);

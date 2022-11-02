@@ -15,7 +15,7 @@ async function apiCall(endpoint, method, body) {
     const apiUrl = apiBaseUrl + endpoint;
     try {
         let apiCallResp;
-        const authorization = JSON.parse(localStorage.getItem('user_info'))?.jwt;
+        const authorization = localStorage.getItem('JWT_token');
 
         if (method === 'GET' || method === undefined) {
             apiCallResp = await fetch(apiUrl, {
