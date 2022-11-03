@@ -5,17 +5,20 @@ import { apiCall, extractEncryptedToken } from '../../../utils';
 import './accountSettings.css';
 
 const userDetails = JSON.parse(localStorage.getItem('user_details'));
-const encryptedLoginInfo = localStorage.getItem('login_info');
 
 function AccountSettings() {
+    const [encryptedLoginInfo, setEncryptedLoginInfo] = useState(localStorage.getItem('login_info'));
     const [loginInfo, setLoginInfo] = useState({});
-    const [createPasswordMsg, setCreatePasswordMsg] = useState('Msg');
+    const [createPasswordMsg, setCreatePasswordMsg] = useState('');
     const [createedPasswordData, setCreateedPasswordData] = useState({ password: '', confPassword: '' });
 
     useEffect(() => {
         const extractedLoginInfo = extractEncryptedToken(encryptedLoginInfo);
         setLoginInfo(extractedLoginInfo);
-    }, []);
+        if (extractedLoginInfo.linkWithPassword && createPasswordMsg === '') {
+            setCreatePasswordMsg("Your Account is Already link with a Password")
+        }
+    }, [encryptedLoginInfo, createPasswordMsg]);
 
     const handleCreatePasswordInputChange = useCallback(
         (e) => {
@@ -26,12 +29,21 @@ function AccountSettings() {
 
     const handleCreatePasswordBtn = useCallback(
         async (e) => {
-            const toSend = { ...createedPasswordData, loginInfo: encryptedLoginInfo };
-            const apiResp = await apiCall('settings/create_password', 'POST', toSend);
-            console.log(apiResp);
-        },
-        [createedPasswordData]
-    );
+            if (!loginInfo.linkWithPassword) {
+                const toSend = { ...createedPasswordData, loginInfo: encryptedLoginInfo };
+                const apiResp = await apiCall('settings/create_password', 'POST', toSend);
+
+                if (apiResp.statusCode === 200) {
+                    if (apiResp?.loginInfo) {
+                        setCreatePasswordMsg(apiResp.msg);
+                        localStorage.setItem('login_info', apiResp.loginInfo);
+                        setEncryptedLoginInfo(apiResp.loginInfo)
+                    }
+                } else {
+                    setCreatePasswordMsg(apiResp.msg);
+                }
+            }
+        }, [createedPasswordData, encryptedLoginInfo, loginInfo.linkWithPassword]);
 
     return (
         <div className="accountSettings">
@@ -80,7 +92,7 @@ function AccountSettings() {
                 </div>
 
                 <div className="createPasswordBtn">
-                <div className='createPasswordMsg'>{createPasswordMsg}</div>
+                    <div className='createPasswordMsg'>{createPasswordMsg}</div>
                     <Button
                         variant="contained"
                         color="success"

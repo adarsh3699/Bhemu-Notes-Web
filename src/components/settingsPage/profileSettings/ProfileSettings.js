@@ -32,8 +32,7 @@ function AboutSettings() {
 
                 if (apiResp.statusCode === 200) {
                     if (apiResp?.details) {
-                        const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                        localStorage.setItem('user_info', JSON.stringify(userInfo));
+                        localStorage.setItem('user_details', JSON.stringify(apiResp.details));
                     }
                 } else {
                     // setMsg(apiResp.msg);
