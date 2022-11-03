@@ -41,7 +41,11 @@ function SettingsPage() {
     ]);
 
     useEffect(() => {
-        if (localStorage.getItem('JWT_token') && localStorage.getItem('user_details')) {
+        if (
+            localStorage.getItem('JWT_token') &&
+            localStorage.getItem('user_details') &&
+            localStorage.getItem('login_info')
+        ) {
         } else {
             document.location.href = '/';
             localStorage.clear();

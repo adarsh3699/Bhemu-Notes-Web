@@ -31,7 +31,8 @@
     outline: unset;
 }
 
-.userFullName, .createPasswordInput1 {
+.userFullName,
+.createPasswordInput1 {
     margin-right: 10px;
 }
 

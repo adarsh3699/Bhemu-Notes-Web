@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall } from '../utils';
+import { apiCall, extractEncryptedToken } from '../utils';
 import Loader from '../components/Loader';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,7 +17,11 @@ function LoginPage() {
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
-        if (localStorage.getItem('JWT_token') && localStorage.getItem('user_details')) {
+        if (
+            localStorage.getItem('JWT_token') &&
+            localStorage.getItem('user_details') &&
+            localStorage.getItem('login_info')
+        ) {
             document.location.href = '/home';
         } else {
             setIsLoading(false);
@@ -25,69 +29,50 @@ function LoginPage() {
         }
     }, []);
 
-    const extractJwtToken = useCallback((token) => {
-        try {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            var jsonPayload = decodeURIComponent(
-                window
-                    .atob(base64)
-                    .split('')
-                    .map(function (c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    })
-                    .join('')
-            );
-            return JSON.parse(jsonPayload);
-        } catch (err) {
-            console.log(err);
-        }
-    }, []);
-
     const handlePasswordVisibility = useCallback(() => {
         setIspasswordVisible(!ispasswordVisible);
     }, [ispasswordVisible]);
 
-    const handleUserLogin = useCallback(
-        async (e) => {
-            e.preventDefault();
-            setMsg('');
-            const email = e.target.email.value;
-            const password = e.target.password.value;
+    const handleUserLogin = useCallback(async (e) => {
+        e.preventDefault();
+        setMsg('');
+        const email = e.target.email.value;
+        const password = e.target.password.value;
 
-            if (email !== '' && password !== '') {
-                setIsApiLoading(true);
-                const apiResp = await apiCall('users/signin', 'post', { email, password });
+        if (email !== '' && password !== '') {
+            setIsApiLoading(true);
+            const apiResp = await apiCall('auth/signin', 'post', { email, password });
 
-                if (apiResp.statusCode === 200) {
-                    const extractedToken = extractJwtToken(apiResp.jwt);
-                    const userDetails = { ...apiResp.details, email: extractedToken?.email };
+            if (apiResp.statusCode === 200) {
+                const extractedToken = extractEncryptedToken(apiResp.jwt);
+                const userDetails = { ...apiResp.details, email: extractedToken?.email };
 
-                    localStorage.setItem('user_details', JSON.stringify(userDetails));
-                    localStorage.setItem('JWT_token', apiResp.jwt);
-                    document.location.href = '/home';
-                } else {
-                    setMsg(apiResp.msg);
-                }
-                setIsApiLoading(false);
+                localStorage.setItem('user_details', JSON.stringify(userDetails));
+                localStorage.setItem('JWT_token', apiResp.jwt);
+                localStorage.setItem('login_info', apiResp.loginInfo);
+                document.location.href = '/home';
             } else {
-                setMsg('Please Enter Your Email and Password');
+                setMsg(apiResp.msg);
             }
-        },
-        [extractJwtToken]
-    );
+            setIsApiLoading(false);
+        } else {
+            setMsg('Please Enter Your Email and Password');
+        }
+    }, []);
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             const accessToken = tokenResponse.access_token;
             setIsApiLoading(true);
-            const apiResp = await apiCall('users/signin', 'post', { googleAccessToken: accessToken });
+            const apiResp = await apiCall('auth/signin/google', 'post', { googleAccessToken: accessToken });
             if (apiResp.statusCode === 200) {
-                const extractedToken = extractJwtToken(apiResp.jwt);
+                const extractedToken = extractEncryptedToken(apiResp.jwt);
+
                 const userDetails = { ...apiResp.details, email: extractedToken?.email };
 
                 localStorage.setItem('user_details', JSON.stringify(userDetails));
                 localStorage.setItem('JWT_token', apiResp.jwt);
+                localStorage.setItem('login_info', apiResp.loginInfo);
                 document.location.href = '/home';
             } else {
                 setMsg(apiResp.msg);

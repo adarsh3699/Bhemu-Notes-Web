@@ -28,7 +28,11 @@ function HomePage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
-        if (localStorage.getItem('JWT_token') && localStorage.getItem('user_details')) {
+        if (
+            localStorage.getItem('JWT_token') &&
+            localStorage.getItem('user_details') &&
+            localStorage.getItem('login_info')
+        ) {
             setIsLoading(false);
             document.title = 'Bhemu Notes';
         } else {
