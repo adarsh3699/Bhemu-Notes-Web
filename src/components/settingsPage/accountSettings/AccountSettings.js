@@ -8,7 +8,8 @@ const userDetails = JSON.parse(localStorage.getItem('user_details'));
 const encryptedLoginInfo = localStorage.getItem('login_info');
 
 function AccountSettings() {
-    const [loginInfo, setLoginInfo] = useState('');
+    const [loginInfo, setLoginInfo] = useState({});
+    const [createPasswordMsg, setCreatePasswordMsg] = useState('Msg');
     const [createedPasswordData, setCreateedPasswordData] = useState({ password: '', confPassword: '' });
 
     useEffect(() => {
@@ -79,6 +80,7 @@ function AccountSettings() {
                 </div>
 
                 <div className="createPasswordBtn">
+                <div className='createPasswordMsg'>{createPasswordMsg}</div>
                     <Button
                         variant="contained"
                         color="success"
