@@ -16,7 +16,7 @@ function AccountSettings() {
         const extractedLoginInfo = extractEncryptedToken(encryptedLoginInfo);
         setLoginInfo(extractedLoginInfo);
         if (extractedLoginInfo.linkWithPassword && createPasswordMsg === '') {
-            setCreatePasswordMsg("Your Account is Already link with a Password")
+            setCreatePasswordMsg('Your Account is Already link with a Password');
         }
     }, [encryptedLoginInfo, createPasswordMsg]);
 
@@ -37,7 +37,7 @@ function AccountSettings() {
                     if (apiResp?.loginInfo) {
                         setCreatePasswordMsg(apiResp.msg);
                         localStorage.setItem('login_info', apiResp.loginInfo);
-                        setEncryptedLoginInfo(apiResp.loginInfo)
+                        setEncryptedLoginInfo(apiResp.loginInfo);
                     }
                 } else {
                     setCreatePasswordMsg(apiResp.msg);
@@ -92,7 +92,7 @@ function AccountSettings() {
                 </div>
 
                 <div className="createPasswordBtn">
-                    <div className='createPasswordMsg'>{createPasswordMsg}</div>
+                    <div className="createPasswordMsg">{createPasswordMsg}</div>
                     <Button
                         variant="contained"
                         color="success"
