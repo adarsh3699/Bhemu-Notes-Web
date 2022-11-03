@@ -19,14 +19,14 @@ function CreateAcc() {
             lastName: lName.value,
             email: email.value,
             password: password.value,
-            confirmPassword: confPassword.value,
+            confPassword: confPassword.value,
         };
 
-        if (userData.email !== '' && userData.password !== '' && userData.confirmPassword !== '') {
-            if (userData.password === userData.confirmPassword) {
+        if (userData.email !== '' && userData.password !== '' && userData.confPassword !== '') {
+            if (userData.password === userData.confPassword) {
                 setIsApiLoading(true);
 
-                const apiResp = await apiCall('users/signup', 'post', userData);
+                const apiResp = await apiCall('auth/signup', 'post', userData);
                 if (apiResp.statusCode === 200) {
                     setMsg(apiResp.msg);
                     document.location.href = '/';

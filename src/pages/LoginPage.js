@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall } from '../utils';
+import { apiCall, extractEncryptedToken } from '../utils';
 import Loader from '../components/Loader';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,12 +17,15 @@ function LoginPage() {
     const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
     useEffect(() => {
-        if (JSON.parse(localStorage.getItem('user_info'))?.jwt) {
-            const authorization = JSON.parse(localStorage.getItem('user_info'))?.jwt;
-            console.log(authorization);
+        if (
+            localStorage.getItem('JWT_token') &&
+            localStorage.getItem('user_details') &&
+            localStorage.getItem('login_info')
+        ) {
             document.location.href = '/home';
         } else {
             setIsLoading(false);
+            localStorage.clear();
         }
     }, []);
 
@@ -32,16 +35,21 @@ function LoginPage() {
 
     const handleUserLogin = useCallback(async (e) => {
         e.preventDefault();
+        setMsg('');
         const email = e.target.email.value;
         const password = e.target.password.value;
 
         if (email !== '' && password !== '') {
             setIsApiLoading(true);
-            const apiResp = await apiCall('users/signin', 'post', { email, password });
+            const apiResp = await apiCall('auth/signin', 'post', { email, password });
 
             if (apiResp.statusCode === 200) {
-                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                localStorage.setItem('user_info', JSON.stringify(userInfo));
+                const extractedToken = extractEncryptedToken(apiResp.jwt);
+                const userDetails = { ...apiResp.details, email: extractedToken?.email };
+
+                localStorage.setItem('user_details', JSON.stringify(userDetails));
+                localStorage.setItem('JWT_token', apiResp.jwt);
+                localStorage.setItem('login_info', apiResp.loginInfo);
                 document.location.href = '/home';
             } else {
                 setMsg(apiResp.msg);
@@ -52,15 +60,19 @@ function LoginPage() {
         }
     }, []);
 
-    const login = useGoogleLogin({
+    const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             const accessToken = tokenResponse.access_token;
             setIsApiLoading(true);
-            const apiResp = await apiCall('users/signin', 'post', { googleAccessToken: accessToken });
+            const apiResp = await apiCall('auth/signin/google', 'post', { googleAccessToken: accessToken });
             if (apiResp.statusCode === 200) {
-                const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                localStorage.setItem('user_info', JSON.stringify(userInfo));
+                const extractedToken = extractEncryptedToken(apiResp.jwt);
 
+                const userDetails = { ...apiResp.details, email: extractedToken?.email };
+
+                localStorage.setItem('user_details', JSON.stringify(userDetails));
+                localStorage.setItem('JWT_token', apiResp.jwt);
+                localStorage.setItem('login_info', apiResp.loginInfo);
                 document.location.href = '/home';
             } else {
                 setMsg(apiResp.msg);
@@ -123,7 +135,7 @@ function LoginPage() {
                         </a>
 
                         <hr />
-                        <div onClick={login} id="googleBtn">
+                        <div onClick={googleLogin} id="googleBtn">
                             <img id="googleLogo" src={googleLogo} alt="" />
                             <div id="googleBtnName">Sign in with Google</div>
                         </div>

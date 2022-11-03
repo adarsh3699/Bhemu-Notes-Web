@@ -13,7 +13,6 @@
         "@mui/icons-material": "^5.8.4",
         "@mui/material": "^5.10.0",
         "@react-oauth/google": "^0.2.8",
-        "axios": "^0.27.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-google-login": "^5.2.2",

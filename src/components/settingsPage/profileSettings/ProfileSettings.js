@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { apiCall } from '../../../utils';
 import myLogo from '../../../img/logo.jpeg';
 import Button from '@mui/material/Button';
@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import './profileSettings.css';
 
-const jwtDetails = JSON.parse(localStorage.getItem('user_info'))?.details;
+const jwtDetails = JSON.parse(localStorage.getItem('user_details'));
 
 function AboutSettings() {
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -16,29 +16,9 @@ function AboutSettings() {
         profilePicture: jwtDetails?.profilePicture,
     });
 
-    // useEffect(() => {
-    //     (async function () {
-    //         try {
-    //             const profilePicture = await userDetails?.profilePicture;
-    //             const splitedProfilePicture = profilePicture.split("=")
-
-    //             const bigProfilePicture = splitedProfilePicture[0] + "=s120-c"
-
-    //             const url = new URL(bigProfilePicture);
-
-    //             console.log(url);
-
-    //             setBigProfilePicture(bigProfilePicture)
-
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     })();
-    // }, [userDetails?.profilePicture]);
-
     const handleUserDetailsChange = useCallback(
         (e) => {
-            setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
+            setUserDetails({ ...userDetails, [e.target.name]: e.target.value.trim() });
         },
         [userDetails, setUserDetails]
     );
@@ -46,18 +26,22 @@ function AboutSettings() {
     const handleProfileSubmit = useCallback(
         async (e) => {
             e.preventDefault();
-            setIsSaveBtnLoading(true);
-            const apiResp = await apiCall('settings/update_profile', 'POST', userDetails);
+            if (userDetails.firstName.trim() && userDetails.lastName.trim()) {
+                setIsSaveBtnLoading(true);
+                const apiResp = await apiCall('settings/update_profile', 'POST', userDetails);
 
-            if (apiResp.statusCode === 200) {
-                if (apiResp?.details) {
-                    const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
-                    localStorage.setItem('user_info', JSON.stringify(userInfo));
+                if (apiResp.statusCode === 200) {
+                    if (apiResp?.details) {
+                        const userInfo = { jwt: apiResp.jwt, details: apiResp.details };
+                        localStorage.setItem('user_info', JSON.stringify(userInfo));
+                    }
+                } else {
+                    // setMsg(apiResp.msg);
                 }
+                setIsSaveBtnLoading(false);
             } else {
                 // setMsg(apiResp.msg);
             }
-            setIsSaveBtnLoading(false);
         },
         [userDetails]
     );
@@ -71,15 +55,10 @@ function AboutSettings() {
                 </div>
 
                 <form className="userDetails" onSubmit={handleProfileSubmit} encType="multipart/form-data">
-                    {/* <input
-                        type="file"
-                        name='profilePicture'
-                        onChange={handleUserDetailsChange}
-                    /> */}
                     <div className="userNameTitle">User Name →</div>
                     <div className="userName">
                         <input
-                            className="firstNameInput"
+                            className="firstNameInput profileSettingsInput"
                             type="text"
                             name="firstName"
                             placeholder="First Name"
@@ -87,6 +66,7 @@ function AboutSettings() {
                             onChange={handleUserDetailsChange}
                         />
                         <input
+                            className="profileSettingsInput"
                             type="text"
                             name="lastName"
                             placeholder="Last Name"
