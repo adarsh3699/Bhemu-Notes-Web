@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall, extractEncryptedToken } from '../utils';
 import Loader from '../components/Loader';
+import GoogleLoginBtn from '../components/googleLoginBtn/GoogleLoginBtn';
+
+import { useGoogleLogin } from '@react-oauth/google';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
-import { useGoogleLogin } from '@react-oauth/google';
 
 import '../css/loginPage.css';
 import logo from '../img/logoBig.png';
-import googleLogo from '../img/google.svg';
 
 function LoginPage() {
     const [msg, setMsg] = useState('');
@@ -135,10 +136,7 @@ function LoginPage() {
                         </a>
 
                         <hr />
-                        <div onClick={googleLogin} id="googleBtn">
-                            <img id="googleLogo" src={googleLogo} alt="" />
-                            <div id="googleBtnName">Sign in with Google</div>
-                        </div>
+                        <GoogleLoginBtn onClickFunction={googleLogin} />
                         <a href="/register">
                             <div id="createAcc">Create New Account</div>
                         </a>

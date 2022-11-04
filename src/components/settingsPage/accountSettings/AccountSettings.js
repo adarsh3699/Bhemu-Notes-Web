@@ -1,6 +1,11 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
 import { apiCall, extractEncryptedToken } from '../../../utils';
+import GoogleLoginBtn from '../../googleLoginBtn/GoogleLoginBtn';
+import { useGoogleLogin } from '@react-oauth/google';
+
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import InfoIcon from '@mui/icons-material/Info';
 
 import './accountSettings.css';
 
@@ -11,13 +16,11 @@ function AccountSettings() {
     const [loginInfo, setLoginInfo] = useState({});
     const [createPasswordMsg, setCreatePasswordMsg] = useState('');
     const [createedPasswordData, setCreateedPasswordData] = useState({ password: '', confPassword: '' });
+    const [linkWithGoogleMSg, setLinkWithGoogleMSg] = useState('');
 
     useEffect(() => {
         const extractedLoginInfo = extractEncryptedToken(encryptedLoginInfo);
         setLoginInfo(extractedLoginInfo);
-        if (extractedLoginInfo.linkWithPassword && createPasswordMsg === '') {
-            setCreatePasswordMsg('Your Account is Already link with a Password');
-        }
     }, [encryptedLoginInfo, createPasswordMsg]);
 
     const handleCreatePasswordInputChange = useCallback(
@@ -35,15 +38,38 @@ function AccountSettings() {
 
                 if (apiResp.statusCode === 200) {
                     if (apiResp?.loginInfo) {
-                        setCreatePasswordMsg(apiResp.msg);
                         localStorage.setItem('login_info', apiResp.loginInfo);
                         setEncryptedLoginInfo(apiResp.loginInfo);
+                        setCreatePasswordMsg(apiResp.msg);
                     }
                 } else {
                     setCreatePasswordMsg(apiResp.msg);
                 }
             }
-        }, [createedPasswordData, encryptedLoginInfo, loginInfo.linkWithPassword]);
+        },
+        [createedPasswordData, encryptedLoginInfo, loginInfo.linkWithPassword]
+    );
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            const accessToken = tokenResponse.access_token;
+            const apiResp = await apiCall('settings/link_google', 'post', {
+                googleAccessToken: accessToken,
+                loginInfo: encryptedLoginInfo,
+            });
+
+            if (apiResp.statusCode === 200) {
+                setEncryptedLoginInfo(apiResp.loginInfo);
+                localStorage.setItem('login_info', apiResp.loginInfo);
+                setLinkWithGoogleMSg(apiResp.msg);
+            } else {
+                setLinkWithGoogleMSg(apiResp.msg);
+            }
+        },
+        onError: (e) => {
+            console.log('Login Failed', e);
+        },
+    });
 
     return (
         <div className="accountSettings">
@@ -70,8 +96,16 @@ function AccountSettings() {
                 </div>
             </div>
 
-            <div>
-                <div className="createPasswordTitle">Create a Password</div>
+            <div className="createPasswordSection">
+                <div className="createPasswordTitle">
+                    <div className="createPasswordText">Create a Password</div>
+
+                    {loginInfo.linkWithPassword ? (
+                        <Tooltip title="Your Account is Already link with a Password" arrow placement="top">
+                            <InfoIcon />
+                        </Tooltip>
+                    ) : null}
+                </div>
                 <div className="createPasswordArea" onSubmit={handleCreatePasswordBtn}>
                     <input
                         className="createPasswordInput createPasswordInput1 "
@@ -92,7 +126,7 @@ function AccountSettings() {
                 </div>
 
                 <div className="createPasswordBtn">
-                    <div className="createPasswordMsg">{createPasswordMsg}</div>
+                    <div className="createPasswordMsg createPasswordMsg1">{createPasswordMsg}</div>
                     <Button
                         variant="contained"
                         color="success"
@@ -105,6 +139,15 @@ function AccountSettings() {
                         Create
                         {/* {isSaveBtnLoading ? <CircularProgress size={30} /> : ' Save Changes'} */}
                     </Button>
+                    <div className="createPasswordMsg createPasswordMsg2">{createPasswordMsg}</div>
+                </div>
+            </div>
+
+            <div className="linkWithGoogleSection">
+                <div className="linkWithGoogleTitle">Link Your Google Account</div>
+                <div className="linkWithGoogleBtnMSg">
+                    <GoogleLoginBtn onClickFunction={googleLogin} sx={{ margin: '0 20px 0 0' }} />
+                    <div className="linkWithGoogleMSg">{linkWithGoogleMSg}</div>
                 </div>
             </div>
         </div>

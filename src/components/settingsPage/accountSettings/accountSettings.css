@@ -43,11 +43,21 @@
     border: #9e9e9e 2px solid;
 }
 
+.createPasswordSection {
+    margin-top: 50px;
+}
+
 .createPasswordTitle {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.createPasswordText {
     font-size: 20px;
     letter-spacing: 1px;
     font-weight: 600;
-    margin: 50px 0 20px 0;
+    margin-right: 5px;
 }
 
 .createPasswordArea {
@@ -78,6 +88,36 @@
     margin-top: -10px;
     padding-left: 5px;
     padding-right: 20px;
+    word-break: break-word;
+}
+
+.createPasswordMsg2 {
+    display: none;
+}
+
+.linkWithGoogleSection {
+    margin-top: 40px;
+}
+
+.linkWithGoogleTitle {
+    font-size: 20px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-right: 5px;
+    margin-bottom: 20px;
+}
+
+.linkWithGoogleBtnMSg {
+    display: flex;
+    align-items: center;
+}
+
+.linkWithGoogleMSg {
+    font-size: 25px;
+    color: red;
+    word-wrap: normal;
+    margin-right: 20px;
+    word-break: break-word;
 }
 
 @media screen and (max-width: 470px) {
@@ -118,7 +158,26 @@
     }
 
     .createPasswordBtn {
+        display: block;
         margin: 30px 0 0 0;
-        text-align: left;
+        align-items: center;
+    }
+
+    .createPasswordMsg1 {
+        display: none;
+    }
+
+    .createPasswordMsg2 {
+        margin-top: 10px;
+        display: block;
+        font-size: 20px;
+    }
+
+    .linkWithGoogleBtnMSg {
+        display: block;
+    }
+
+    .linkWithGoogleMSg {
+        margin-top: 10px;
     }
 }

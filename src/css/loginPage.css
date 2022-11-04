@@ -138,36 +138,6 @@ hr {
     background-color: #358026;
 }
 
-#googleBtn {
-    display: flex;
-    align-items: center;
-    width: 40%;
-    margin: auto;
-    background-color: rgb(9, 67, 162);
-    color: rgb(232, 230, 227);
-    border: 1px solid transparent;
-    user-select: none;
-}
-
-#googleBtn:hover {
-    box-shadow: 0px 0px 10px 0px rgba(4, 50, 170, 0.7);
-}
-
-#googleLogo {
-    height: 20px;
-    padding: 15px;
-    background-color: rgb(20, 20, 20);
-}
-
-#googleBtnName {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    font-size: 16px;
-    font-weight: 500;
-}
-
 #signup {
     user-select: none;
     background-color: #42b72a;
@@ -224,10 +194,6 @@ hr {
     #login,
     #createAcc {
         width: 50%;
-    }
-
-    #googleBtn {
-        width: 60%;
     }
 
     hr {
