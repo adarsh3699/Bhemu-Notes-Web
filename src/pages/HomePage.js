@@ -5,7 +5,7 @@ import Loader from '../components/Loader';
 import NotesModal from '../components/homePage/notesModal/NotesModal';
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotes from '../components/homePage/renderNotes/RenderNotes';
-import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialog';
+import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 
 import Hotkeys from 'react-hot-keys';
 
