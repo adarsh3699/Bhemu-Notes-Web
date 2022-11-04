@@ -6,7 +6,7 @@
     justify-content: space-between;
     align-items: center;
     color: white;
-    padding: 12px 0;
+    padding: 5px 0;
     background-color: #121212;
     border-width: 0;
     border-style: solid;
@@ -21,28 +21,25 @@
     align-items: center;
 }
 
-#logo img {
-    width: 30px;
-    height: 30px;
-    border-radius: 100%;
-    border: 2px solid white;
-    margin: 0 10px 0 30px;
+#iconMenuBtn {
+    margin: 0 10px 0 20px;
 }
 
 #name {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 550;
 }
 
 #searchBox {
     width: 550px;
-    height: 25px;
+    height: 30px;
     background: rgb(73, 73, 73);
     padding-left: 10px;
-    color: rgb(226, 226, 226);
+    color: white;
     border: 1px solid grey;
     border-radius: 3px;
     font-weight: 550;
+    outline-color: #121212;
 }
 
 .addNoteBtn {
@@ -50,16 +47,6 @@
     padding: 4px 11px !important;
     border-radius: 7px !important;
     font-weight: 550 !important;
-}
-
-.MuiMenu-paper {
-    margin-top: 2px;
-}
-
-.MuiMenu-list {
-    width: 95px;
-    background-color: #d1d1d1;
-    font-size: 17px;
 }
 
 @media screen and (max-width: 945px) {
@@ -81,8 +68,8 @@
 }
 
 @media screen and (max-width: 530px) {
-    #logo img {
-        margin-left: 10px;
+    #iconMenuBtn {
+        margin: 0 0 0 4px;
     }
 
     .addNoteBtn {

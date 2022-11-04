@@ -124,11 +124,6 @@ function HomePage() {
         [addNotes]
     );
 
-    const handleLogoutBtnClick = useCallback(() => {
-        // localStorage.clear();
-        document.location.href = '/settings';
-    }, []);
-
     const handleTitleChange = useCallback(
         (e) => {
             setNotesTitle(e.target.value);
@@ -251,11 +246,7 @@ function HomePage() {
                     )}
 
                     <div id="homePage">
-                        <NavBar
-                            handleAddNotesInputbox={handleAddNotesInputbox}
-                            handleLogoutBtnClick={handleLogoutBtnClick}
-                            addNotes={addNotes}
-                        />
+                        <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
 
                         <div id="msg">{msg}</div>
                         <Loader isLoading={isApiLoading} />

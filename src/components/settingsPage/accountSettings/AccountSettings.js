@@ -144,9 +144,20 @@ function AccountSettings() {
             </div>
 
             <div className="linkWithGoogleSection">
-                <div className="linkWithGoogleTitle">Link Your Google Account</div>
+                <div className="linkWithGoogleTitle">
+                    <div className="linkWithGoogleTitleText">Link Your Google Account</div>
+                    {loginInfo.linkWithPassword ? (
+                        <Tooltip title="Your Account is Already link with a Google" arrow placement="top">
+                            <InfoIcon />
+                        </Tooltip>
+                    ) : null}
+                </div>
                 <div className="linkWithGoogleBtnMSg">
-                    <GoogleLoginBtn onClickFunction={googleLogin} sx={{ margin: '0 20px 0 0' }} />
+                    <GoogleLoginBtn
+                        onClickFunction={loginInfo.linkWithGoogle === false ? googleLogin : null}
+                        sx={{ margin: '0 20px 0 0' }}
+                        disabled={loginInfo.linkWithGoogle}
+                    />
                     <div className="linkWithGoogleMSg">{linkWithGoogleMSg}</div>
                 </div>
             </div>

@@ -1,35 +1,152 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+
+import Logout from '@mui/icons-material/Logout';
+import Settings from '@mui/icons-material/Settings';
+import NotesIcon from '@mui/icons-material/Notes';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 import './files/navBar.css';
 
 import logo from './files/logo.jpeg';
 
-function NavBar({ handleAddNotesInputbox, handleDrawerToggle, addNotes }) {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
+function NavBar({ handleAddNotesInputbox, addNotes }) {
+    const [addNotesAnchorEl, setAddNotesAnchorEl] = useState(null);
+    const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
+    const isAddNotesMenuOpen = Boolean(addNotesAnchorEl);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
+
+    const toggleAddNotesMenu = (event) => {
+        setAddNotesAnchorEl(event.currentTarget);
     };
 
-    const handleNotesClick = () => {
-        addNotes(false, 'Enter Notes Title');
-        setAnchorEl(null);
+    const toggleSettingsMenu = (event) => {
+        setSettingMenuAddNotesAnchorEl(event.currentTarget);
     };
 
-    const handleTodoClick = () => {
-        addNotes(true, 'Enter Notes Title');
-        setAnchorEl(null);
-    };
+    const handleLogoutBtnClick = useCallback(() => {
+        localStorage.clear();
+        document.location.href = '/';
+    }, []);
 
     return (
         <>
+            {/* settings notes */}
+            <Menu
+                anchorEl={settingMenuAnchorEl}
+                id="account-menu"
+                open={isSettingsAnchorElopen}
+                onClose={() => setSettingMenuAddNotesAnchorEl(null)}
+                onClick={() => setSettingMenuAddNotesAnchorEl(null)}
+                PaperProps={{
+                    sx: {
+                        overflow: 'visible',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                        mt: 1,
+                        '& .MuiMenuItem-root': {
+                            height: 45,
+                        },
+                        '&:before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            left: 20,
+                            width: 10,
+                            height: 10,
+                            bgcolor: '#121212',
+                            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                        },
+                    },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+                <MenuItem onClick={() => (document.location.href = '/settings')}>
+                    <ListItemIcon>
+                        <Settings fontSize="small" />
+                    </ListItemIcon>
+                    Settings
+                </MenuItem>
+                <MenuItem onClick={handleLogoutBtnClick}>
+                    <ListItemIcon>
+                        <Logout fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                </MenuItem>
+            </Menu>
+
+            {/* add notes Munu */}
+            <Menu
+                id="basic-menu"
+                anchorEl={addNotesAnchorEl}
+                open={isAddNotesMenuOpen}
+                onClose={() => setAddNotesAnchorEl(null)}
+                onClick={() => setAddNotesAnchorEl(null)}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+                PaperProps={{
+                    sx: {
+                        overflow: 'visible',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                        mt: 1,
+                        '& .MuiMenuItem-root': {
+                            height: 45,
+                        },
+                        '&:before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            right: 25,
+                            width: 10,
+                            height: 10,
+                            bgcolor: '#121212',
+                            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                        },
+                    },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+                <MenuItem onClick={() => addNotes(false, 'Enter Notes Title')}>
+                    <ListItemIcon>
+                        <NotesIcon fontSize="small" />
+                    </ListItemIcon>
+                    Notes
+                </MenuItem>
+                <MenuItem onClick={() => addNotes(true, 'Enter Notes Title')}>
+                    <ListItemIcon>
+                        <FormatListBulletedIcon fontSize="small" />
+                    </ListItemIcon>
+                    ToDos
+                </MenuItem>
+            </Menu>
+
             <div className="navbar">
                 <div id="logo">
-                    <img src={logo} alt="" onClick={handleDrawerToggle} />
+                    <IconButton
+                        id="iconMenuBtn"
+                        color="inherit"
+                        aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+                        aria-haspopup="true"
+                        aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+                        onClick={toggleSettingsMenu}
+                    >
+                        <Avatar alt="Remy Sharp" src={logo} sx={{ width: 35, height: 35 }} />
+                    </IconButton>
                     <div id="name">Bhemu Notes</div>
                 </div>
                 <form onSubmit={handleAddNotesInputbox}>
@@ -40,26 +157,13 @@ function NavBar({ handleAddNotesInputbox, handleDrawerToggle, addNotes }) {
                     variant="contained"
                     color="success"
                     id="basic-button"
-                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-controls={isAddNotesMenuOpen ? 'basic-menu' : undefined}
                     aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
+                    aria-expanded={isAddNotesMenuOpen ? 'true' : undefined}
+                    onClick={toggleAddNotesMenu}
                 >
                     Add Note
                 </Button>
-
-                <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={() => setAnchorEl(null)}
-                    MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    <MenuItem onClick={handleNotesClick}>Notes</MenuItem>
-                    <MenuItem onClick={handleTodoClick}>ToDos</MenuItem>
-                </Menu>
             </div>
         </>
     );
