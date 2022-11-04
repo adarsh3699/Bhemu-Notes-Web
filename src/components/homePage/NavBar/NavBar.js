@@ -7,7 +7,7 @@ import './files/navBar.css';
 
 import logo from './files/logo.jpeg';
 
-function NavBar({ handleAddNotesInputbox, handleLogoutBtnClick, addNotes }) {
+function NavBar({ handleAddNotesInputbox, handleDrawerToggle, addNotes }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -29,7 +29,7 @@ function NavBar({ handleAddNotesInputbox, handleLogoutBtnClick, addNotes }) {
         <>
             <div className="navbar">
                 <div id="logo">
-                    <img src={logo} alt="" onClick={handleLogoutBtnClick} />
+                    <img src={logo} alt="" onClick={handleDrawerToggle} />
                     <div id="name">Bhemu Notes</div>
                 </div>
                 <form onSubmit={handleAddNotesInputbox}>

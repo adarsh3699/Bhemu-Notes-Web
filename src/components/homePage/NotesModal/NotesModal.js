@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from '@mui/material/Modal';
 
 import { IconButton } from '@mui/material';
-import NotesModalBar from './NotesModalBar/NotesModalBar';
+import NotesModalBar from './notesModalBar/NotesModalBar';
 import CloseIcon from '@mui/icons-material/Close';
 
 import './notesModal.css';
