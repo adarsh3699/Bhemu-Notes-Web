@@ -48,4 +48,8 @@
     #googleBtn {
         width: 250px;
     }
+
+    #disabledGoogleBtn {
+        width: 250px;
+    }
 }

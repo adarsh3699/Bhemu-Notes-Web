@@ -110,7 +110,7 @@ function SettingsPage() {
             />
 
             {/* content */}
-            <Box component="main" sx={{ flexGrow: 1, py: 5, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+            <Box component="main" sx={{ flexGrow: 1, pt: 5, pb: 10, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
                 <Toolbar />
 
                 {settingsDrawerMenu.map((item, index) => (

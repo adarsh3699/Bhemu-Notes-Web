@@ -14,8 +14,14 @@ const userDetails = JSON.parse(localStorage.getItem('user_details'));
 function AccountSettings() {
     const [encryptedLoginInfo, setEncryptedLoginInfo] = useState(localStorage.getItem('login_info'));
     const [loginInfo, setLoginInfo] = useState({});
-    const [createPasswordMsg, setCreatePasswordMsg] = useState('');
+    const [changePasswordData, setChangePasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confPassword: '',
+    });
+    const [changePasswordMsg, setChangePasswordMsg] = useState('');
     const [createedPasswordData, setCreateedPasswordData] = useState({ password: '', confPassword: '' });
+    const [createPasswordMsg, setCreatePasswordMsg] = useState('');
     const [linkWithGoogleMSg, setLinkWithGoogleMSg] = useState('');
 
     useEffect(() => {
@@ -31,8 +37,8 @@ function AccountSettings() {
     );
 
     const handleCreatePasswordBtn = useCallback(
-        async (e) => {
-            if (!loginInfo.linkWithPassword) {
+        async () => {
+            if (loginInfo.linkWithPassword === false) {
                 const toSend = { ...createedPasswordData, loginInfo: encryptedLoginInfo };
                 const apiResp = await apiCall('settings/create_password', 'POST', toSend);
 
@@ -49,6 +55,26 @@ function AccountSettings() {
         },
         [createedPasswordData, encryptedLoginInfo, loginInfo.linkWithPassword]
     );
+
+    const handleChangePasswordInputChange = useCallback(
+        (e) => {
+            setChangePasswordData({ ...changePasswordData, [e.target.name]: e.target.value.trim() });
+        },
+        [changePasswordData]
+    );
+
+    const handleChangePasswordBtn = useCallback(async () => {
+        if (loginInfo.linkWithPassword === true) {
+            const apiResp = await apiCall('settings/change_password', 'POST', changePasswordData);
+
+            console.log(apiResp);
+            if (apiResp.statusCode === 200) {
+                setChangePasswordMsg(apiResp?.msg);
+            } else {
+                setChangePasswordMsg(apiResp.msg);
+            }
+        }
+    }, [changePasswordData, loginInfo.linkWithPassword]);
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
@@ -80,7 +106,7 @@ function AccountSettings() {
                         className="userFullNameInput accountSettingsInput"
                         type="text"
                         placeholder="User Name"
-                        value={userDetails.firstName}
+                        value={userDetails.firstName + ' ' + userDetails.lastName}
                         readOnly
                     />
                 </div>
@@ -96,6 +122,54 @@ function AccountSettings() {
                 </div>
             </div>
 
+            <div className="changePasswordSection">
+                <div className="changePasswordTitle">Change Password</div>
+                <div>
+                    <input
+                        type="password"
+                        onChange={handleChangePasswordInputChange}
+                        name="currentPassword"
+                        placeholder="Current Password"
+                        className="changePasswordInput"
+                        disabled={!loginInfo.linkWithPassword}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        onChange={handleChangePasswordInputChange}
+                        name="newPassword"
+                        placeholder="New Password"
+                        className="changePasswordInput"
+                        disabled={!loginInfo.linkWithPassword}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        onChange={handleChangePasswordInputChange}
+                        name="confPassword"
+                        placeholder="Confirm Password"
+                        className="changePasswordInput"
+                        disabled={!loginInfo.linkWithPassword}
+                    />
+                </div>
+
+                <Button
+                    variant="contained"
+                    color="success"
+                    id="basic-button"
+                    aria-haspopup="true"
+                    onClick={handleChangePasswordBtn}
+                    disabled={!loginInfo.linkWithPassword}
+                    sx={{ fontWeight: 600, mt: 1.5, mb: 1.1, height: 40 }}
+                >
+                    Change Password
+                    {/* {isSaveBtnLoading ? <CircularProgress size={30} /> : ' Save Changes'} */}
+                </Button>
+                <div className="changePasswordMsg">{changePasswordMsg}</div>
+            </div>
+
             <div className="createPasswordSection">
                 <div className="createPasswordTitle">
                     <div className="createPasswordText">Create a Password</div>
@@ -109,7 +183,7 @@ function AccountSettings() {
                 <div className="createPasswordArea" onSubmit={handleCreatePasswordBtn}>
                     <input
                         className="createPasswordInput createPasswordInput1 "
-                        type="text"
+                        type="password"
                         name="password"
                         placeholder="Create a Password"
                         onChange={handleCreatePasswordInputChange}
@@ -117,7 +191,7 @@ function AccountSettings() {
                     />
                     <input
                         className="createPasswordInput"
-                        type="text"
+                        type="password"
                         name="confPassword"
                         placeholder="Confirm Password"
                         onChange={handleCreatePasswordInputChange}

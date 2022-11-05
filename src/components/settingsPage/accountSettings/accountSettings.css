@@ -6,7 +6,6 @@
     display: flex;
     align-items: center;
     width: 100%;
-    /* justify-content: space-around; */
 }
 
 .userFullName,
@@ -39,11 +38,14 @@
 .accountSettingsInput:hover,
 .accountSettingsInput:focus,
 .createPasswordInput:hover,
-.createPasswordInput:focus {
+.createPasswordInput:focus,
+.changePasswordInput:hover,
+.changePasswordInput:focus {
     border: #9e9e9e 2px solid;
 }
 
-.createPasswordSection {
+.createPasswordSection,
+.changePasswordSection {
     margin-top: 50px;
 }
 
@@ -53,8 +55,11 @@
     margin-bottom: 15px;
 }
 
-.createPasswordText {
-    font-size: 20px;
+.createPasswordText,
+.linkWithGoogleTitleText,
+.changePasswordTitle 
+{
+    font-size: 24px;
     letter-spacing: 1px;
     font-weight: 600;
     margin-right: 5px;
@@ -65,7 +70,8 @@
     align-items: center;
 }
 
-.createPasswordInput {
+.createPasswordInput,
+.changePasswordInput {
     font-size: 17px;
     box-shadow: 0 2px 4px rgba(192, 192, 192, 0.1);
     border: #2e2c2c 2px solid;
@@ -106,24 +112,26 @@
     margin-bottom: 20px;
 }
 
-.linkWithGoogleTitleText {
-    margin-right: 5px;
-    font-size: 20px;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
 .linkWithGoogleBtnMSg {
     display: flex;
     align-items: center;
 }
 
-.linkWithGoogleMSg {
+.linkWithGoogleMSg,
+.changePasswordMsg {
     font-size: 25px;
     color: red;
     word-wrap: normal;
     margin-right: 20px;
     word-break: break-word;
+}
+
+.changePasswordTitle {
+    margin-bottom: 20px;
+}
+
+.changePasswordInput {
+    margin-bottom: 10px;
 }
 
 @media screen and (max-width: 470px) {
@@ -149,11 +157,23 @@
         height: 35px;
     }
 
+    .createPasswordText,
+    .linkWithGoogleTitleText,
+    .changePasswordTitle 
+    {
+        font-size: 20px;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-right: 5px;
+    }
+
     .createPasswordArea {
         display: block;
     }
 
-    .createPasswordInput {
+    .createPasswordInput,
+    .changePasswordInput 
+    {
         font-size: 15px;
         height: 35px;
         width: calc(90% - 16px);
