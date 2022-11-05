@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall } from '../utils';
 
 import Loader from '../components/Loader';
-import NotesModal from '../components/homePage/notesModal1/NotesModal';
-import NavBar from '../components/homePage/navBar1/NavBar';
-import RenderNotes from '../components/homePage/renderNotes1/RenderNotes';
+import NotesModal from '../components/homePage/notesModal/NotesModal';
+import NavBar from '../components/homePage/navBar/NavBar';
+import RenderNotes from '../components/homePage/renderNotes/RenderNotes';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 
 import Hotkeys from 'react-hot-keys';
