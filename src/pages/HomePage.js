@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall } from '../utils';
 
 import Loader from '../components/Loader';
-import NotesModal from '../components/homePage/notesModal/NotesModalBox';
+import NotesModal from '../components/homePage/NotesModal/NotesModal';
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotes from '../components/homePage/renderNotes/RenderNotes';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
