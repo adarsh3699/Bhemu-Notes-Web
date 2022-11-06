@@ -6,6 +6,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import './accountSettings.css';
 
@@ -14,47 +15,28 @@ const userDetails = JSON.parse(localStorage.getItem('user_details'));
 function AccountSettings() {
     const [encryptedLoginInfo, setEncryptedLoginInfo] = useState(localStorage.getItem('login_info'));
     const [loginInfo, setLoginInfo] = useState({});
+
+    //change password
     const [changePasswordData, setChangePasswordData] = useState({
         currentPassword: '',
         newPassword: '',
         confPassword: '',
     });
     const [changePasswordMsg, setChangePasswordMsg] = useState('');
+    const [isChangePasswordBtnLoading, setIsChangePasswordBtnLoading] = useState(false);
+
+    //create password
     const [createedPasswordData, setCreateedPasswordData] = useState({ password: '', confPassword: '' });
     const [createPasswordMsg, setCreatePasswordMsg] = useState('');
+    const [isCreatePasswordBtnLoading, setIsCreatePasswordBtnLoading] = useState(false);
+
+    //link with google
     const [linkWithGoogleMSg, setLinkWithGoogleMSg] = useState('');
 
     useEffect(() => {
         const extractedLoginInfo = extractEncryptedToken(encryptedLoginInfo);
         setLoginInfo(extractedLoginInfo);
     }, [encryptedLoginInfo, createPasswordMsg]);
-
-    const handleCreatePasswordInputChange = useCallback(
-        (e) => {
-            setCreateedPasswordData({ ...createedPasswordData, [e.target.name]: e.target.value.trim() });
-        },
-        [createedPasswordData]
-    );
-
-    const handleCreatePasswordBtn = useCallback(
-        async () => {
-            if (loginInfo.linkWithPassword === false) {
-                const toSend = { ...createedPasswordData, loginInfo: encryptedLoginInfo };
-                const apiResp = await apiCall('settings/create_password', 'POST', toSend);
-
-                if (apiResp.statusCode === 200) {
-                    if (apiResp?.loginInfo) {
-                        localStorage.setItem('login_info', apiResp.loginInfo);
-                        setEncryptedLoginInfo(apiResp.loginInfo);
-                        setCreatePasswordMsg(apiResp.msg);
-                    }
-                } else {
-                    setCreatePasswordMsg(apiResp.msg);
-                }
-            }
-        },
-        [createedPasswordData, encryptedLoginInfo, loginInfo.linkWithPassword]
-    );
 
     const handleChangePasswordInputChange = useCallback(
         (e) => {
@@ -65,16 +47,43 @@ function AccountSettings() {
 
     const handleChangePasswordBtn = useCallback(async () => {
         if (loginInfo.linkWithPassword === true) {
+            setIsChangePasswordBtnLoading(true);
             const apiResp = await apiCall('settings/change_password', 'POST', changePasswordData);
 
-            console.log(apiResp);
             if (apiResp.statusCode === 200) {
                 setChangePasswordMsg(apiResp?.msg);
             } else {
                 setChangePasswordMsg(apiResp.msg);
             }
+            setIsChangePasswordBtnLoading(false);
         }
     }, [changePasswordData, loginInfo.linkWithPassword]);
+
+    const handleCreatePasswordInputChange = useCallback(
+        (e) => {
+            setCreateedPasswordData({ ...createedPasswordData, [e.target.name]: e.target.value.trim() });
+        },
+        [createedPasswordData]
+    );
+
+    const handleCreatePasswordBtn = useCallback(async () => {
+        if (loginInfo.linkWithPassword === false) {
+            setIsCreatePasswordBtnLoading(true);
+            const toSend = { ...createedPasswordData, loginInfo: encryptedLoginInfo };
+            const apiResp = await apiCall('settings/create_password', 'POST', toSend);
+
+            if (apiResp.statusCode === 200) {
+                if (apiResp?.loginInfo) {
+                    localStorage.setItem('login_info', apiResp.loginInfo);
+                    setEncryptedLoginInfo(apiResp.loginInfo);
+                    setCreatePasswordMsg(apiResp.msg);
+                }
+            } else {
+                setCreatePasswordMsg(apiResp.msg);
+            }
+            setIsCreatePasswordBtnLoading(false);
+        }
+    }, [createedPasswordData, encryptedLoginInfo, loginInfo.linkWithPassword]);
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
@@ -161,11 +170,10 @@ function AccountSettings() {
                     id="basic-button"
                     aria-haspopup="true"
                     onClick={handleChangePasswordBtn}
-                    disabled={!loginInfo.linkWithPassword}
-                    sx={{ fontWeight: 600, mt: 1.5, mb: 1.1, height: 40 }}
+                    disabled={!loginInfo.linkWithPassword || isChangePasswordBtnLoading}
+                    sx={{ fontWeight: 600, p: 0, mt: 1.5, mb: 1.1, height: 40, width: 185 }}
                 >
-                    Change Password
-                    {/* {isSaveBtnLoading ? <CircularProgress size={30} /> : ' Save Changes'} */}
+                    {isChangePasswordBtnLoading ? <CircularProgress size={30} /> : 'Change Password'}
                 </Button>
                 <div className="changePasswordMsg">{changePasswordMsg}</div>
             </div>
@@ -207,11 +215,10 @@ function AccountSettings() {
                         id="basic-button"
                         aria-haspopup="true"
                         onClick={handleCreatePasswordBtn}
-                        disabled={loginInfo.linkWithPassword}
+                        disabled={loginInfo.linkWithPassword || isCreatePasswordBtnLoading}
                         sx={{ fontWeight: 600, p: 0, height: 40, width: 140 }}
                     >
-                        Create
-                        {/* {isSaveBtnLoading ? <CircularProgress size={30} /> : ' Save Changes'} */}
+                        {isCreatePasswordBtnLoading ? <CircularProgress size={30} /> : ' Create'}
                     </Button>
                     <div className="createPasswordMsg createPasswordMsg2">{createPasswordMsg}</div>
                 </div>

@@ -7,6 +7,8 @@ import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotes from '../components/homePage/renderNotes/RenderNotes';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 
+import homePageSkeleton from '../img/homePageSkeleton.svg';
+
 import Hotkeys from 'react-hot-keys';
 
 import '../css/homePage.css';
@@ -251,7 +253,14 @@ function HomePage() {
                         <div id="msg">{msg}</div>
                         <Loader isLoading={isApiLoading} />
 
-                        <RenderNotes allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
+                        {allNotes.length === 0 ? (
+                            <div id="homePageSkeleton">
+                                <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
+                                <div id="homePageSkeletonText">Create your first note !</div>
+                            </div>
+                        ) : (
+                            <RenderNotes allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
+                        )}
 
                         {isNotesModalOpen && (
                             <NotesModal

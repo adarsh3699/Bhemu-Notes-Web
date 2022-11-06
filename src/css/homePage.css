@@ -11,3 +11,38 @@
     font-size: 18px;
     font-weight: bold;
 }
+
+#homePageSkeleton {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#homePageSkeletonImg {
+    height: 400px;
+}
+
+#homePageSkeletonText {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px #000;
+}
+
+@media screen and (max-width: 800px) {
+    #homePageSkeletonImg {
+        height: unset;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    #homePageSkeleton {
+        top: 40%;
+    }
+    #homePageSkeletonImg {
+        height: 200px;
+    }
+}
