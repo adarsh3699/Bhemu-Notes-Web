@@ -8,13 +8,14 @@ import './profileSettings.css';
 
 const jwtDetails = JSON.parse(localStorage.getItem('user_details'));
 
-function AboutSettings() {
-    const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
+function ProfileSettings() {
     const [userDetails, setUserDetails] = useState({
         firstName: jwtDetails?.firstName,
         lastName: jwtDetails?.lastName,
         profilePicture: jwtDetails?.profilePicture,
     });
+    const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
+    const [changeUserProfileMsg, setchangeUserProfileMsg] = useState('');
 
     const handleUserDetailsChange = useCallback(
         (e) => {
@@ -26,6 +27,7 @@ function AboutSettings() {
     const handleProfileSubmit = useCallback(
         async (e) => {
             e.preventDefault();
+            setchangeUserProfileMsg('');
             if (userDetails.firstName.trim() && userDetails.lastName.trim()) {
                 setIsSaveBtnLoading(true);
                 const apiResp = await apiCall('settings/update_profile', 'POST', userDetails);
@@ -34,19 +36,22 @@ function AboutSettings() {
                     if (apiResp?.details) {
                         localStorage.setItem('user_details', JSON.stringify(apiResp.details));
                     }
+                } else if (apiResp.statusCode === 401) {
+                    localStorage.clear();
+                    document.location.href = '/';
                 } else {
-                    // setMsg(apiResp.msg);
+                    setchangeUserProfileMsg(apiResp.msg);
                 }
                 setIsSaveBtnLoading(false);
             } else {
-                // setMsg(apiResp.msg);
+                setchangeUserProfileMsg('First name or Last name can not be empty.');
             }
         },
         [userDetails]
     );
 
     return (
-        <div className="aboutSettings">
+        <div className="profileSettings">
             <div className="ProfilePictureTitle">Profile Picture</div>
             <div className="userInfo">
                 <div>
@@ -89,8 +94,9 @@ function AboutSettings() {
                     </div>
                 </form>
             </div>
+            <div className="changeUserProfileMsg">{changeUserProfileMsg}</div>
         </div>
     );
 }
 
-export default AboutSettings;
+export default ProfileSettings;

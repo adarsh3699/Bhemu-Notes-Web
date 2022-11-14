@@ -52,6 +52,9 @@ function AccountSettings() {
 
             if (apiResp.statusCode === 200) {
                 setChangePasswordMsg(apiResp?.msg);
+            } else if (apiResp.statusCode === 401) {
+                localStorage.clear();
+                document.location.href = '/';
             } else {
                 setChangePasswordMsg(apiResp.msg);
             }
@@ -78,6 +81,9 @@ function AccountSettings() {
                     setEncryptedLoginInfo(apiResp.loginInfo);
                     setCreatePasswordMsg(apiResp.msg);
                 }
+            } else if (apiResp.statusCode === 401) {
+                localStorage.clear();
+                document.location.href = '/';
             } else {
                 setCreatePasswordMsg(apiResp.msg);
             }
@@ -97,6 +103,9 @@ function AccountSettings() {
                 setEncryptedLoginInfo(apiResp.loginInfo);
                 localStorage.setItem('login_info', apiResp.loginInfo);
                 setLinkWithGoogleMSg(apiResp.msg);
+            } else if (apiResp.statusCode === 401) {
+                localStorage.clear();
+                document.location.href = '/';
             } else {
                 setLinkWithGoogleMSg(apiResp.msg);
             }

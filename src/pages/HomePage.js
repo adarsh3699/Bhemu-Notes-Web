@@ -38,8 +38,8 @@ function HomePage() {
             setIsLoading(false);
             document.title = 'Bhemu Notes';
         } else {
-            document.location.href = '/';
             localStorage.clear();
+            document.location.href = '/';
         }
     }, []);
 
@@ -48,12 +48,14 @@ function HomePage() {
             setIsApiLoading(true);
             const apiResp = await apiCall('notes');
             if (apiResp.statusCode === 200) {
-                setIsApiLoading(false);
                 setAllNotes(apiResp.data);
+            } else if (apiResp.statusCode === 401) {
+                localStorage.clear();
+                document.location.href = '/';
             } else {
-                setIsApiLoading(false);
                 setMsg(apiResp.msg);
             }
+            setIsApiLoading(false);
         })();
     }, [flag]);
 
@@ -108,6 +110,9 @@ function HomePage() {
             if (apiResp.statusCode === 200) {
                 setFlag(!flag);
                 handleNoteOpening(apiResp?.notesId, type, notesTitle, newNoteData);
+            } else if (apiResp.statusCode === 401) {
+                localStorage.clear();
+                document.location.href = '/';
             } else {
                 setMsg(apiResp.msg);
             }
@@ -143,6 +148,9 @@ function HomePage() {
             });
             if (apiResp.statusCode === 200) {
                 setFlag(!flag);
+            } else if (apiResp.statusCode === 401) {
+                localStorage.clear();
+                document.location.href = '/';
             } else {
                 setMsg(apiResp.msg);
                 setIsNotesModalOpen(false);
@@ -159,6 +167,9 @@ function HomePage() {
         const apiResp = await apiCall('notes?noteId=' + myNotesId, 'delete');
         if (apiResp.statusCode === 200) {
             setFlag(!flag);
+        } else if (apiResp.statusCode === 401) {
+            localStorage.clear();
+            document.location.href = '/';
         } else {
             setMsg(apiResp.msg);
         }
