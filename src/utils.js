@@ -1,7 +1,7 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const apiBaseUrl = 'https://bhemu-notes.herokuapp.com/';
+const apiBaseUrl = 'https://notes-apis-production.up.railway.app/';
 // const apiBaseUrl = 'http://localhost:4000/';
 
 // variables for setting cookie expiratiom tym
