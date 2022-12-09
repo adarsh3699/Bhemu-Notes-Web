@@ -70,7 +70,7 @@ function ModalWrapper({
                                     onKeyDown={(e) => (e.key === 'Enter' ? handleEnterClick(index, e) : null)}
                                 />
                                 <IconButton
-                                    sx={{ color: '#F1F1F1', padding: ' 0 5px 0 0' }}
+                                    sx={{ color: '#F1F1F1', padding: '5px' }}
                                     aria-label="delete"
                                     onClick={() => handleDeleteToDoBtnClick(index)}
                                     size="large"
