@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall } from '../utils';
+import { handleUserState } from '../firebase/auth/auth';
 
 import Loader from '../components/Loader';
 import NotesModal from '../components/homePage/notesModal/NotesModal';
@@ -11,7 +12,7 @@ import homePageSkeleton from '../img/homePageSkeleton.svg';
 
 import Hotkeys from 'react-hot-keys';
 
-import '../css/homePage.css';
+import '../styles/homePage.css';
 
 function HomePage() {
     const [msg, setMsg] = useState('');
@@ -30,17 +31,10 @@ function HomePage() {
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
-        if (
-            localStorage.getItem('JWT_token') &&
-            localStorage.getItem('user_details') &&
-            localStorage.getItem('login_info')
-        ) {
-            setIsLoading(false);
-            document.title = 'Bhemu Notes';
-        } else {
-            localStorage.clear();
-            document.location.href = '/';
-        }
+        setIsLoading(false);
+        handleUserState('homePage');
+        document.title = 'Bhemu Notes';
+
     }, []);
 
     useEffect(() => {
@@ -51,7 +45,7 @@ function HomePage() {
                 setAllNotes(apiResp.data);
             } else if (apiResp.statusCode === 401) {
                 localStorage.clear();
-                document.location.href = '/';
+                // document.location.href = '/';
             } else {
                 setMsg(apiResp.msg);
             }

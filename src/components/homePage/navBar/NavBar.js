@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
+import { handleSignOut } from '../../../firebase/auth/auth';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -37,7 +39,7 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
     };
 
     const handleLogoutBtnClick = useCallback(() => {
-        localStorage.clear();
+        handleSignOut();
         document.location.href = '/';
     }, []);
 
@@ -76,12 +78,14 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={() => (document.location.href = '/settings')}>
-                    <ListItemIcon>
-                        <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Settings
-                </MenuItem>
+                <NavLink to="/Settings">
+                    <MenuItem>
+                        <ListItemIcon>
+                            <Settings fontSize="small" />
+                        </ListItemIcon>
+                        Settings
+                    </MenuItem>
+                </NavLink>
                 <MenuItem onClick={handleLogoutBtnClick}>
                     <ListItemIcon>
                         <Logout fontSize="small" />

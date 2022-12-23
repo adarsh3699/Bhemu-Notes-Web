@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import Routes from './routes';
 import { BrowserRouter } from 'react-router-dom';
 
-import './css/index.css';
+import './styles/index.css';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, createTheme } from '@mui/material/styles';

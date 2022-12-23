@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
+
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
 import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
 import AccountSettings from '../components/settingsPage/accountSettings/AccountSettings';
@@ -18,7 +20,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 
-import '../css/settingsPage.css';
+import '../styles/settingsPage.css';
 
 document.title = 'Bhemu Notes | Settings';
 
@@ -94,9 +96,11 @@ function SettingsPage() {
                             Settings
                         </Typography>
                     </div>
-                    <IconButton color="inherit" aria-label="delete" onClick={() => (document.location.href = '/home')}>
-                        <CloseIcon />
-                    </IconButton>
+                    <NavLink to="/home">
+                        <IconButton color="inherit" aria-label="delete">
+                            <CloseIcon />
+                        </IconButton>
+                    </NavLink>
                 </Toolbar>
                 <Divider />
             </AppBar>
