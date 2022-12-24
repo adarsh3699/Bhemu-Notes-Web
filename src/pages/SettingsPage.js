@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
+import { handleSignOut, handleUserState } from '../firebase/auth';
 
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
 import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
@@ -36,15 +37,8 @@ function SettingsPage() {
     ]);
 
     useEffect(() => {
-        if (
-            localStorage.getItem('JWT_token') &&
-            localStorage.getItem('user_details') &&
-            localStorage.getItem('login_info')
-        ) {
-        } else {
-            document.location.href = '/';
-            localStorage.clear();
-        }
+        handleUserState('settingsPage')
+        // document.location.href = '/';
     }, []);
 
     const handleDrawerToggle = useCallback(() => {
@@ -54,6 +48,7 @@ function SettingsPage() {
     const handleSelectedMenu = useCallback(
         (menuName, index) => {
             if (menuName === 'Log Out') {
+                handleSignOut();
                 localStorage.clear();
                 document.location.href = '/';
                 return;

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
-import { handleForgetPassword } from '../firebase/auth/auth';
+import { handleForgetPassword } from '../firebase/auth';
 import Loader from '../components/Loader';
 
 import '../styles/loginPage.css';

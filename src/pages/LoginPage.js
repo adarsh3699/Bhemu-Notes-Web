@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { apiCall, extractEncryptedToken } from '../utils';
 import Loader from '../components/Loader';
 import GoogleLoginBtn from '../components/googleLoginBtn/GoogleLoginBtn';
-import { handleUserState, handleLoginForm } from '../firebase/auth/auth';
+import { handleUserState, handleLoginForm } from '../firebase/auth';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -83,9 +83,9 @@ function LoginPage() {
 
                         <hr />
                         {/* <GoogleLoginBtn onClickFunction={googleLogin} /> */}
-                        <NavLink to="/register">
+                        <a href="/register">
                             <div id="createAcc">Create New Account</div>
-                        </NavLink>
+                        </a>
                     </div>
                 </div>
             )}

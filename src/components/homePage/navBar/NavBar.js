@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
-import { handleSignOut } from '../../../firebase/auth/auth';
+import { handleSignOut } from '../../../firebase/auth';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -18,10 +18,7 @@ import './files/navBar.css';
 
 import logo from './files/logo.jpeg';
 
-const userName =
-    JSON.parse(localStorage.getItem('user_details'))?.firstName +
-    ' ' +
-    JSON.parse(localStorage.getItem('user_details'))?.lastName;
+const userName = JSON.parse(localStorage.getItem('user_details'))?.userName || 'Bhemu Notes';
 
 function NavBar({ handleAddNotesInputbox, addNotes }) {
     const [addNotesAnchorEl, setAddNotesAnchorEl] = useState(null);
@@ -39,6 +36,7 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
     };
 
     const handleLogoutBtnClick = useCallback(() => {
+        localStorage.clear();
         handleSignOut();
         document.location.href = '/';
     }, []);

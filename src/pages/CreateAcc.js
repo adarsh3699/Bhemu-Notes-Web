@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { handleSignUpForm } from '../firebase/auth/auth';
+import { handleSignUpForm } from '../firebase/auth';
 import Loader from '../components/Loader';
 
 import '../styles/loginPage.css';
@@ -18,13 +18,7 @@ function CreateAcc() {
                 <div id="Title">Create Your Account</div>
 
                 <form className="form" onSubmit={(e) => handleSignUpForm(e, setMsg)}>
-                    <input
-                        type="tet"
-                        name="displayName"
-                        placeholder="User Name"
-                        className="inputBottomMargin"
-                        required
-                    />
+                    <input type="tet" name="userName" placeholder="User Name" className="inputBottomMargin" required />
 
                     <input type="email" name="email" placeholder="Email" className="inputBottomMargin" required />
 
