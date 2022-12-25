@@ -5,6 +5,7 @@ import {
     getFirestore,
     collection,
     onSnapshot,
+    getDocs,
     addDoc,
     deleteDoc,
     updateDoc,
@@ -12,42 +13,42 @@ import {
     query,
     where,
     serverTimestamp,
+    orderBy,
 } from 'firebase/firestore';
 
 const auth = getAuth();
-
 const database = getFirestore();
-
 // collection ref
 const colRef = collection(database, 'user_notes');
 
 const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
 
-function getRealTimeData(setAllNotes, setIsApiLoading, setMsg) {
-    const getDataQuery = query(colRef, where('userId', '==', userId)); // orderBy('name', 'desc || ase')
+function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
+    const getDataQuery = query(colRef, where('userId', '==', userId), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
     setIsApiLoading(true);
-    let toLoad = true;
     onSnapshot(
-        getDataQuery,
-        (snapshot) => {
-            let noteData = [];
-
-            snapshot.docChanges().forEach((change) => {});
-
-            snapshot.docs.forEach((doc) => {
-                noteData.push({
-                    notesId: doc.id,
-                    notesTitle: decryptText(doc.data().notesTitle),
-                    noteType: doc.data().noteType,
-                    noteData: JSON.parse(decryptText(doc.data().noteData)),
-                    updatedOn: doc.data().updatedOn,
+        colRef,
+        async (realSnapshot) => {
+            await getDocs(getDataQuery)
+                .then((snapshot) => {
+                    let noteData = [];
+                    snapshot.docs.forEach((doc) => {
+                        noteData.push({
+                            notesId: doc.id,
+                            notesTitle: decryptText(doc.data().notesTitle),
+                            noteType: doc.data().noteType,
+                            noteData: JSON.parse(decryptText(doc.data().noteData)),
+                            updatedOn: doc.data().updatedOn,
+                        });
+                    });
+                    setIsApiLoading(false);
+                    setAllNotes(noteData);
+                })
+                .catch((err) => {
+                    setIsApiLoading(false);
+                    console.log(err.message);
+                    setMsg(err.code);
                 });
-            });
-            setAllNotes(noteData);
-            if (toLoad) {
-                setIsApiLoading(false);
-            }
-            toLoad = false;
         },
         (err) => {
             setIsApiLoading(false);
@@ -76,7 +77,6 @@ function addNewNote(upcomingData, handleNoteOpening, setMsg, setIsApiLoading) {
     })
         .then((e) => {
             handleNoteOpening(e?.id, newNoteType, newNotesTitle, newNoteData);
-            console.log('Note Added');
             setIsApiLoading(false);
         })
         .catch((err) => {
@@ -85,14 +85,13 @@ function addNewNote(upcomingData, handleNoteOpening, setMsg, setIsApiLoading) {
             console.log(err);
         });
 }
-
+//delete Notes
 function deleteData(noteId, setIsApiLoading, setMsg) {
     const docRef = doc(database, 'user_notes', noteId);
 
     deleteDoc(docRef)
         .then((e) => {
             setIsApiLoading(false);
-            console.log('documentDeleted');
         })
         .catch((err) => {
             console.log(err.message);
@@ -100,6 +99,7 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
         });
 }
 
+//update notes
 function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen) {
     const { noteId, notesTitle, noteData } = upcomingData;
     const encryptTitle = encryptText(notesTitle ? notesTitle?.trim() : notesTitle);
@@ -115,7 +115,6 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen) 
     })
         .then(() => {
             setIsSaveBtnLoading(false);
-            console.log('Document Updated');
         })
         .catch((err) => {
             setIsNotesModalOpen(false);
@@ -124,4 +123,4 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen) 
         });
 }
 
-export { getRealTimeData, addNewNote, deleteData, updateDocument };
+export { getUserAllNoteData, addNewNote, deleteData, updateDocument };

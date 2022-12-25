@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { handleUserState } from '../firebase/auth';
-import { getRealTimeData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
+import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
 
 import Loader from '../components/Loader';
 import NotesModal from '../components/homePage/notesModal/NotesModal';
@@ -26,16 +26,15 @@ function HomePage() {
 
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
         handleUserState('homePage');
         if (JSON.parse(localStorage.getItem('user_details'))) {
-            getRealTimeData(setAllNotes, setIsApiLoading, setMsg);
-            setIsLoading(false);
-        } else {
+            getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg);
+            setIsPageLoaded(true);
             document.title = 'Bhemu Notes';
         }
     }, []);
@@ -187,7 +186,7 @@ function HomePage() {
 
     return (
         <>
-            {!isLoading && (
+            {isPageLoaded && (
                 <>
                     <Hotkeys
                         keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"

@@ -93,7 +93,6 @@ function handleForgetPassword(e, setMsg) {
 function handleUserState(currentPage) {
     if (!currentPage) return console.log('Missing currentPage');
     onAuthStateChanged(auth, (user) => {
-        console.log(user);
         if (currentPage === 'loginPage' && user !== null) {
             document.location.href = '/home';
         } else if (

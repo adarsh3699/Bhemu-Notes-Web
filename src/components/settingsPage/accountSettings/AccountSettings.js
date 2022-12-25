@@ -38,22 +38,25 @@ function AccountSettings() {
         [changePasswordData]
     );
 
-    // const handleChangePasswordBtn = useCallback(async () => {
-    //     if (loginInfo.linkWithPassword === true) {
-    //         setIsChangePasswordBtnLoading(true);
-    //         const apiResp = await apiCall('settings/change_password', 'POST', changePasswordData);
+    const handleChangePasswordBtn = useCallback(async () => {
+        setIsChangePasswordBtnLoading(true);
+        handlePasswordChange(changePasswordData, setChangePasswordMsg, setIsChangePasswordBtnLoading);
 
-    //         if (apiResp.statusCode === 200) {
-    //             setChangePasswordMsg(apiResp?.msg);
-    //         } else if (apiResp.statusCode === 401) {
-    //             localStorage.clear();
-    //             document.location.href = '/';
-    //         } else {
-    //             setChangePasswordMsg(apiResp.msg);
-    //         }
-    //         setIsChangePasswordBtnLoading(false);
-    //     }
-    // }, [changePasswordData, loginInfo.linkWithPassword]);
+        // if (loginInfo.linkWithPassword === true) {
+        //     setIsChangePasswordBtnLoading(true);
+        //     const apiResp = await apiCall('settings/change_password', 'POST', changePasswordData);
+
+        //     if (apiResp.statusCode === 200) {
+        //         setChangePasswordMsg(apiResp?.msg);
+        //     } else if (apiResp.statusCode === 401) {
+        //         localStorage.clear();
+        //         document.location.href = '/';
+        //     } else {
+        //         setChangePasswordMsg(apiResp.msg);
+        //     }
+        //     setIsChangePasswordBtnLoading(false);
+        // }
+    }, [changePasswordData, loginInfo.linkWithPassword]);
 
     // const handleCreatePasswordInputChange = useCallback(
     //     (e) => {
@@ -171,7 +174,7 @@ function AccountSettings() {
                     color="success"
                     id="basic-button"
                     aria-haspopup="true"
-                    onClick={() => handlePasswordChange(changePasswordData, setChangePasswordMsg)}
+                    onClick={handleChangePasswordBtn}
                     // disabled={!loginInfo.linkWithPassword || isChangePasswordBtnLoading}
                     sx={{ fontWeight: 600, p: 0, mt: 1.5, mb: 1.1, height: 40, width: 185 }}
                 >
@@ -180,7 +183,7 @@ function AccountSettings() {
                 <div className="changePasswordMsg">{changePasswordMsg}</div>
             </div>
 
-            <div className="createPasswordSection">
+            {/* <div className="createPasswordSection">
                 <div className="createPasswordTitle">
                     <div className="createPasswordText">Create a Password</div>
 
@@ -243,7 +246,7 @@ function AccountSettings() {
                     />
                     <div className="linkWithGoogleMSg">{linkWithGoogleMSg}</div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
