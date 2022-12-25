@@ -11,15 +11,15 @@ function RenderNotes({ allNotes, handleNoteOpening }) {
                         className="noteBox"
                         key={items.notesId}
                         onClick={() =>
-                            handleNoteOpening(items.notesId, items.notesType, items.notesTitle, items.noteData)
+                            handleNoteOpening(items.notesId, items.noteType, items.notesTitle, items.noteData)
                         }
                     >
                         <div className="titleAndType">
                             <div className="noteTitle">{items.notesTitle}</div>
-                            <div className="noteType">{items.notesType ? 'Todo' : 'Note'}</div>
+                            <div className="noteType">{items.noteType}</div>
                         </div>
                         <div className="noteContent">
-                            {items.notesType ? (
+                            {items.noteType === 'todo' ? (
                                 <div>
                                     {items.noteData.length === 1 && items.noteData[0]?.element === '' ? (
                                         'Empty.......'
@@ -45,14 +45,14 @@ function RenderNotes({ allNotes, handleNoteOpening }) {
                         </div>
                         <div className="date">
                             <div>
-                                {new Date(items.updatedOn)?.toLocaleString('en-US', {
+                                {new Date(items.updatedOn?.toDate())?.toLocaleString('en-US', {
                                     hour: '2-digit',
                                     minute: '2-digit',
                                     hour12: true,
                                 })}
                             </div>
                             <div>
-                                {new Date(items.updatedOn)?.toLocaleDateString(undefined, {
+                                {new Date(items.updatedOn?.toDate())?.toLocaleDateString(undefined, {
                                     day: '2-digit',
                                     month: 'long',
                                     year: 'numeric',

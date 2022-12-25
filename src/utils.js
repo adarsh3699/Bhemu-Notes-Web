@@ -1,78 +1,40 @@
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
+const { enc, AES, MD5 } = require('crypto-js');
 
 const apiBaseUrl = 'https://helpful-blue-bighorn-sheep.cyclic.app/';
 // const apiBaseUrl = 'http://localhost:4000/';
 
-// variables for setting cookie expiratiom tym
-const COOKIE_EXPIRATION_MINS = 30 * 24 * 60; // 30 days
+const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
 
-let COOKIE_EXPIRATION_TYM = new Date();
-COOKIE_EXPIRATION_TYM.setTime(COOKIE_EXPIRATION_TYM.getTime() + COOKIE_EXPIRATION_MINS * 60 * 1000);
-const COOKIE_EXPIRATION_TIME = COOKIE_EXPIRATION_TYM;
-
-async function apiCall(endpoint, method, body) {
-    const apiUrl = apiBaseUrl + endpoint;
+function encryptText(text) {
     try {
-        let apiCallResp;
-        const authorization = localStorage.getItem('JWT_token');
-
-        if (method === 'GET' || method === undefined) {
-            apiCallResp = await fetch(apiUrl, {
-                headers: { Authorization: 'Bearer ' + authorization },
-            });
-        } else {
-            apiCallResp = await fetch(apiUrl, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + authorization,
-                },
-                body: JSON.stringify(body),
-            });
-        }
-
-        const apiJsonResp = await apiCallResp.json();
-        return apiJsonResp;
-    } catch (error) {
-        return { msg: 'Something went wrong', statusCode: 500 };
-    }
-}
-
-function extractEncryptedToken(token) {
-    try {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(
-            window
-                .atob(base64)
-                .split('')
-                .map(function (c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                })
-                .join('')
-        );
-        return JSON.parse(jsonPayload);
+        const encryptedValue = AES.encrypt(text, encryptionKey).toString();
+        return encryptedValue;
     } catch (err) {
         console.log(err);
+        return null;
     }
 }
 
-function getLoggedUserId() {
+function decryptText(enryptedValue) {
+    let value = null;
     try {
-        const myUserId = cookies.get('userId');
-        if (myUserId) {
-            return myUserId;
-        }
-    } catch {}
+        const decrypted = AES.decrypt(enryptedValue, encryptionKey);
+        value = enc.Utf8.stringify(decrypted);
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
 
-    return null;
+    return value;
 }
 
-function setLoggedUserId(userId) {
+function md5Hash(text) {
     try {
-        cookies.set('userId', userId, { path: '/', expires: COOKIE_EXPIRATION_TIME });
-    } catch {}
+        return MD5(text).toString();
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
 }
 
 // function validateUsername(name) {
@@ -80,4 +42,51 @@ function setLoggedUserId(userId) {
 //     return re.test(name);
 // }
 
-export { apiCall, getLoggedUserId, setLoggedUserId, extractEncryptedToken };
+// async function apiCall(endpoint, method, body) {
+//     const apiUrl = apiBaseUrl + endpoint;
+//     try {
+//         let apiCallResp;
+//         const authorization = localStorage.getItem('JWT_token');
+
+//         if (method === 'GET' || method === undefined) {
+//             apiCallResp = await fetch(apiUrl, {
+//                 headers: { Authorization: 'Bearer ' + authorization },
+//             });
+//         } else {
+//             apiCallResp = await fetch(apiUrl, {
+//                 method: method,
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     Authorization: 'Bearer ' + authorization,
+//                 },
+//                 body: JSON.stringify(body),
+//             });
+//         }
+
+//         const apiJsonResp = await apiCallResp.json();
+//         return apiJsonResp;
+//     } catch (error) {
+//         return { msg: 'Something went wrong', statusCode: 500 };
+//     }
+// }
+
+// function extractEncryptedToken(token) {
+//     try {
+//         var base64Url = token.split('.')[1];
+//         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+//         var jsonPayload = decodeURIComponent(
+//             window
+//                 .atob(base64)
+//                 .split('')
+//                 .map(function (c) {
+//                     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+//                 })
+//                 .join('')
+//         );
+//         return JSON.parse(jsonPayload);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
+export { encryptText, decryptText, md5Hash };

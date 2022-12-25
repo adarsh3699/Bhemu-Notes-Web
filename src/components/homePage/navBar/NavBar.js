@@ -38,7 +38,6 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
     const handleLogoutBtnClick = useCallback(() => {
         localStorage.clear();
         handleSignOut();
-        document.location.href = '/';
     }, []);
 
     return (
@@ -128,13 +127,13 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={() => addNotes(false, 'Enter Notes Title')}>
+                <MenuItem onClick={() => addNotes('note', 'Enter Notes Title')}>
                     <ListItemIcon>
                         <NotesIcon fontSize="small" />
                     </ListItemIcon>
                     Notes
                 </MenuItem>
-                <MenuItem onClick={() => addNotes(true, 'Enter Notes Title')}>
+                <MenuItem onClick={() => addNotes('todo', 'Enter Notes Title')}>
                     <ListItemIcon>
                         <FormatListBulletedIcon fontSize="small" />
                     </ListItemIcon>

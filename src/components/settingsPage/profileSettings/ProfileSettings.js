@@ -8,13 +8,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import './profileSettings.css';
 
-const jwtDetails = JSON.parse(localStorage.getItem('user_details'));
+const localUserDetails = JSON.parse(localStorage.getItem('user_details'));
 
 function ProfileSettings() {
     const [userDetails, setUserDetails] = useState({
-        userName: jwtDetails?.userName,
-        email: jwtDetails?.email,
-        profilePicture: jwtDetails?.photoURL,
+        userName: localUserDetails?.userName,
+        email: localUserDetails?.email,
+        profilePicture: localUserDetails?.photoURL,
     });
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [msg, setMsg] = useState('');

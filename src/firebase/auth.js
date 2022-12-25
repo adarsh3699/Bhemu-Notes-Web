@@ -1,6 +1,3 @@
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -12,26 +9,9 @@ import {
     sendPasswordResetEmail,
 } from 'firebase/auth';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: 'AIzaSyAtcW8upslh33YFtZXJxhJ5x_9xGLNEYZg',
-    authDomain: 'bhemu-notes-13b4a.firebaseapp.com',
-    projectId: 'bhemu-notes-13b4a',
-    storageBucket: 'bhemu-notes-13b4a.appspot.com',
-    messagingSenderId: '1042432055409',
-    appId: '1:1042432055409:web:e918dec9c2a3119555e3d0',
-    measurementId: 'G-84Y76BPWW3',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
-getAnalytics(app);
+const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
 
 function handleLoginForm(e, setMsg) {
     e.preventDefault();
@@ -42,7 +22,10 @@ function handleLoginForm(e, setMsg) {
 
     signInWithEmailAndPassword(auth, email, password)
         .then((cred) => {
-            localStorage.setItem('user_details', JSON.stringify({ userName: cred?.user?.displayName, email }));
+            localStorage.setItem(
+                'user_details',
+                JSON.stringify({ userName: cred?.user?.displayName, email, userId: cred?.user?.uid })
+            );
             document.location.href = '/home';
         })
         .catch((err) => {
@@ -70,7 +53,7 @@ function handleSignUpForm(e, setMsg) {
             updateProfile(cred.user, { displayName: userName })
                 .then(() => {
                     console.log('user signed');
-                    localStorage.setItem('user_details', JSON.stringify({ userName, email }));
+                    localStorage.setItem('user_details', JSON.stringify({ userName, email, userId: cred?.user?.uid }));
                     document.location.href = '/home';
                 })
                 .catch((err) => {
@@ -85,7 +68,8 @@ function handleSignUpForm(e, setMsg) {
 function handleSignOut() {
     signOut(auth)
         .then(() => {
-            console.log('sgin out');
+            document.location.href = '/';
+            console.log('sgined out');
         })
         .catch((err) => {
             console.log(err.code);
@@ -111,11 +95,14 @@ function handleUserState(currentPage) {
     onAuthStateChanged(auth, (user) => {
         console.log(user);
         if (currentPage === 'loginPage' && user !== null) {
-            console.log('if');
             document.location.href = '/home';
-        } else if (currentPage === 'homePage' && user === null) {
-            document.location.href = '/';
-            console.log('else');
+        } else if (
+            (currentPage === 'homePage' && user === null) ||
+            (currentPage === 'homePage' && !userId) ||
+            (currentPage === 'settingsPage' && user === null) ||
+            (currentPage === 'settingsPage' && !userId)
+        ) {
+            handleSignOut();
         }
     });
 }

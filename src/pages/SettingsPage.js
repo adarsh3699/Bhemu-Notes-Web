@@ -37,7 +37,7 @@ function SettingsPage() {
     ]);
 
     useEffect(() => {
-        handleUserState('settingsPage')
+        handleUserState('settingsPage');
         // document.location.href = '/';
     }, []);
 
