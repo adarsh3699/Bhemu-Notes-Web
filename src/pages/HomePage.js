@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { apiCall } from '../utils';
+
+import { handleUserState } from '../firebase/auth';
+import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
 
 import Loader from '../components/Loader';
 import NotesModal from '../components/homePage/notesModal/NotesModal';
@@ -11,12 +13,11 @@ import homePageSkeleton from '../img/homePageSkeleton.svg';
 
 import Hotkeys from 'react-hot-keys';
 
-import '../css/homePage.css';
+import '../styles/homePage.css';
 
 function HomePage() {
     const [msg, setMsg] = useState('');
     const [allNotes, setAllNotes] = useState([]);
-    const [flag, setFlag] = useState(false);
 
     const [myNotesId, setMyNotesId] = useState('');
     const [notesType, setNotesType] = useState(0);
@@ -25,39 +26,18 @@ function HomePage() {
 
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
 
     useEffect(() => {
-        if (
-            localStorage.getItem('JWT_token') &&
-            localStorage.getItem('user_details') &&
-            localStorage.getItem('login_info')
-        ) {
-            setIsLoading(false);
+        handleUserState('homePage');
+        if (JSON.parse(localStorage.getItem('user_details'))) {
+            getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg);
+            setIsPageLoaded(true);
             document.title = 'Bhemu Notes';
-        } else {
-            localStorage.clear();
-            document.location.href = '/';
         }
     }, []);
-
-    useEffect(() => {
-        (async function () {
-            setIsApiLoading(true);
-            const apiResp = await apiCall('notes');
-            if (apiResp.statusCode === 200) {
-                setAllNotes(apiResp.data);
-            } else if (apiResp.statusCode === 401) {
-                localStorage.clear();
-                document.location.href = '/';
-            } else {
-                setMsg(apiResp.msg);
-            }
-            setIsApiLoading(false);
-        })();
-    }, [flag]);
 
     useEffect(function () {
         document.addEventListener(
@@ -95,42 +75,32 @@ function HomePage() {
         [setMyNotesId, setNotesType, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
     );
 
+    //add Note Function
     const addNotes = useCallback(
-        async (type, notesTitle) => {
+        (newNoteType, notesTitle) => {
             setIsApiLoading(true);
-            const newNoteData = [{ element: '', isDone: false }];
             const newNotesTitle = notesTitle ? notesTitle : 'Enter Notes Title';
-            const newNoteType = type ? type : false;
+            const newNoteData = [{ element: '', isDone: false }];
 
-            const apiResp = await apiCall('notes', 'post', {
-                notesType: newNoteType,
-                notesTitle: newNotesTitle,
-                noteData: newNoteData,
-            });
-            if (apiResp.statusCode === 200) {
-                setFlag(!flag);
-                handleNoteOpening(apiResp?.notesId, type, notesTitle, newNoteData);
-            } else if (apiResp.statusCode === 401) {
-                localStorage.clear();
-                document.location.href = '/';
-            } else {
-                setMsg(apiResp.msg);
-            }
-            setIsApiLoading(false);
+            const toSendNoteData = { newNotesTitle, newNoteType, newNoteData };
+
+            addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading, NotesModal);
         },
-        [flag, handleNoteOpening]
+        [handleNoteOpening]
     );
 
+    //add Note from inputBox Function
     const handleAddNotesInputbox = useCallback(
         (e) => {
             e.preventDefault();
             const textInput = e.target.searchBox.value;
-            addNotes(false, textInput);
+            addNotes('note', textInput);
             e.target.reset();
         },
         [addNotes]
     );
 
+    // handle note or todo title change
     const handleTitleChange = useCallback(
         (e) => {
             setNotesTitle(e.target.value);
@@ -138,45 +108,23 @@ function HomePage() {
         [setNotesTitle]
     );
 
+    //handle note or todo save
     const handleSaveBtnClick = useCallback(async () => {
-        if (isNotesModalOpen) {
-            setIsSaveBtnLoading(true);
+        setIsSaveBtnLoading(true);
+        const toSendData = { noteId: myNotesId, notesTitle, noteData: openedNoteData };
+        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen);
+    }, [myNotesId, openedNoteData, notesTitle]);
 
-            const apiResp = await apiCall('notes?notesId=' + myNotesId, 'put', {
-                notesTitle,
-                newNotesData: openedNoteData,
-            });
-            if (apiResp.statusCode === 200) {
-                setFlag(!flag);
-            } else if (apiResp.statusCode === 401) {
-                localStorage.clear();
-                document.location.href = '/';
-            } else {
-                setMsg(apiResp.msg);
-                setIsNotesModalOpen(false);
-            }
-            setIsSaveBtnLoading(false);
-        }
-    }, [flag, isNotesModalOpen, myNotesId, openedNoteData, notesTitle]);
-
+    //handle note or todo delete
     const handleDeleteBtnClick = useCallback(async () => {
         setIsApiLoading(true);
         setIsNotesModalOpen(false);
         setIsConfirmationDialogOpen(false);
 
-        const apiResp = await apiCall('notes?noteId=' + myNotesId, 'delete');
-        if (apiResp.statusCode === 200) {
-            setFlag(!flag);
-        } else if (apiResp.statusCode === 401) {
-            localStorage.clear();
-            document.location.href = '/';
-        } else {
-            setMsg(apiResp.msg);
-        }
-        setIsApiLoading(false);
-    }, [flag, myNotesId]);
+        deleteData(myNotesId, setIsApiLoading, setMsg);
+    }, [myNotesId]);
 
-    //For Todo's
+    //handle todo checkbo click
     const handleCheckboxClick = useCallback(
         (index, isDone) => {
             const newToDos = openedNoteData.map(function (toDo, i) {
@@ -238,7 +186,7 @@ function HomePage() {
 
     return (
         <>
-            {!isLoading && (
+            {isPageLoaded && (
                 <>
                     <Hotkeys
                         keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"

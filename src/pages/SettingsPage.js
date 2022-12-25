@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
+import { handleSignOut, handleUserState } from '../firebase/auth';
+
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
 import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
 import AccountSettings from '../components/settingsPage/accountSettings/AccountSettings';
@@ -18,13 +21,14 @@ import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 
-import '../css/settingsPage.css';
+import '../styles/settingsPage.css';
 
 document.title = 'Bhemu Notes | Settings';
 
 const drawerWidth = 240;
 
 function SettingsPage() {
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [settingsDrawerMenu, setSettingsDrawerMenu] = useState([
         { name: 'Profile', isSelected: true, icon: <AccountBoxIcon />, page: <ProfileSettings /> },
@@ -34,14 +38,10 @@ function SettingsPage() {
     ]);
 
     useEffect(() => {
-        if (
-            localStorage.getItem('JWT_token') &&
-            localStorage.getItem('user_details') &&
-            localStorage.getItem('login_info')
-        ) {
-        } else {
-            document.location.href = '/';
-            localStorage.clear();
+        handleUserState('settingsPage');
+        if (JSON.parse(localStorage.getItem('user_details'))) {
+            setIsPageLoaded(true);
+            document.title = 'Bhemu Notes | Settings ';
         }
     }, []);
 
@@ -52,6 +52,7 @@ function SettingsPage() {
     const handleSelectedMenu = useCallback(
         (menuName, index) => {
             if (menuName === 'Log Out') {
+                handleSignOut();
                 localStorage.clear();
                 document.location.href = '/';
                 return;
@@ -69,55 +70,64 @@ function SettingsPage() {
     );
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <AppBar
-                position="fixed"
-                sx={{
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
-                    background: '#1e1e1e',
-                }}
-            >
-                <Toolbar sx={{ justifyContent: 'space-between' }}>
-                    <div className="settingsMenu">
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            edge="start"
-                            onClick={handleDrawerToggle}
-                            sx={{ mr: 2, ml: 0, display: { sm: 'none' } }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
+        <>
+            {isPageLoaded && (
+                <Box sx={{ display: 'flex' }}>
+                    <AppBar
+                        position="fixed"
+                        sx={{
+                            width: { sm: `calc(100% - ${drawerWidth}px)` },
+                            ml: { sm: `${drawerWidth}px` },
+                            background: '#1e1e1e',
+                        }}
+                    >
+                        <Toolbar sx={{ justifyContent: 'space-between' }}>
+                            <div className="settingsMenu">
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    edge="start"
+                                    onClick={handleDrawerToggle}
+                                    sx={{ mr: 2, ml: 0, display: { sm: 'none' } }}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
 
-                        <Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
-                            Settings
-                        </Typography>
-                    </div>
-                    <IconButton color="inherit" aria-label="delete" onClick={() => (document.location.href = '/home')}>
-                        <CloseIcon />
-                    </IconButton>
-                </Toolbar>
-                <Divider />
-            </AppBar>
+                                <Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
+                                    Settings
+                                </Typography>
+                            </div>
+                            <NavLink to="/home">
+                                <IconButton color="inherit" aria-label="delete">
+                                    <CloseIcon />
+                                </IconButton>
+                            </NavLink>
+                        </Toolbar>
+                        <Divider />
+                    </AppBar>
 
-            <SettingsDrawer
-                drawerWidth={drawerWidth}
-                handleDrawerToggle={handleDrawerToggle}
-                mobileOpen={mobileOpen}
-                settingsDrawerMenu={settingsDrawerMenu}
-                handleSelectedMenu={handleSelectedMenu}
-            />
+                    <SettingsDrawer
+                        drawerWidth={drawerWidth}
+                        handleDrawerToggle={handleDrawerToggle}
+                        mobileOpen={mobileOpen}
+                        settingsDrawerMenu={settingsDrawerMenu}
+                        handleSelectedMenu={handleSelectedMenu}
+                    />
 
-            {/* content */}
-            <Box component="main" sx={{ flexGrow: 1, pt: 5, pb: 10, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
-                <Toolbar />
+                    {/* content */}
+                    <Box
+                        component="main"
+                        sx={{ flexGrow: 1, pt: 5, pb: 10, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                    >
+                        <Toolbar />
 
-                {settingsDrawerMenu.map((item, index) => (
-                    <div key={index}>{item?.isSelected ? item?.page : null}</div>
-                ))}
-            </Box>
-        </Box>
+                        {settingsDrawerMenu.map((item, index) => (
+                            <div key={index}>{item?.isSelected ? item?.page : null}</div>
+                        ))}
+                    </Box>
+                </Box>
+            )}
+        </>
     );
 }
 

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { apiCall } from '../utils';
+import { NavLink } from 'react-router-dom';
+
+import { handleSignUpForm } from '../firebase/auth';
 import Loader from '../components/Loader';
 
-import '../css/loginPage.css';
+import '../styles/loginPage.css';
 
 document.title = 'Bhemu Notes | Create Your Account';
 
@@ -10,49 +12,15 @@ function CreateAcc() {
     const [msg, setMsg] = useState('');
     const [isApiLoading, setIsApiLoading] = useState(false);
 
-    async function handleFormSubmit(e) {
-        e.preventDefault();
-        const { fName, lName, email, password, confPassword } = e.target;
-
-        const userData = {
-            firstName: fName.value,
-            lastName: lName.value,
-            email: email.value,
-            password: password.value,
-            confPassword: confPassword.value,
-        };
-
-        if (userData.email !== '' && userData.password !== '' && userData.confPassword !== '') {
-            if (userData.password === userData.confPassword) {
-                setIsApiLoading(true);
-
-                const apiResp = await apiCall('auth/signup', 'post', userData);
-                if (apiResp.statusCode === 200) {
-                    setMsg(apiResp.msg);
-                    document.location.href = '/';
-                } else {
-                    setMsg(apiResp.msg);
-                }
-                setIsApiLoading(false);
-            } else {
-                setMsg("Passwords didn't match.");
-            }
-        } else {
-            setMsg('Please enter all data.');
-        }
-    }
-
     return (
         <div id="background">
             <div id="wrapper">
                 <div id="Title">Create Your Account</div>
 
-                <form className="form" onSubmit={handleFormSubmit}>
-                    <input type="tet" name="fName" placeholder="First Name" className="inputBottomMargin" />
+                <form className="form" onSubmit={(e) => handleSignUpForm(e, setMsg)}>
+                    <input type="tet" name="userName" placeholder="User Name" className="inputBottomMargin" required />
 
-                    <input type="tet" name="lName" placeholder="Last Name" className="inputBottomMargin" />
-
-                    <input type="email" name="email" placeholder="Email" className="inputBottomMargin" />
+                    <input type="email" name="email" placeholder="Email" className="inputBottomMargin" required />
 
                     <input
                         type="Password"
@@ -60,6 +28,7 @@ function CreateAcc() {
                         placeholder="Password (8 digit)"
                         pattern="().{8,}"
                         className="inputBottomMargin"
+                        required
                     />
 
                     <input
@@ -68,6 +37,7 @@ function CreateAcc() {
                         placeholder="Confirm Password (8 digit)"
                         pattern="().{8,}"
                         className="inputBottomMargin"
+                        required
                     />
 
                     <button id="signup" className={isApiLoading ? 'isSignup' : ''}>
@@ -83,7 +53,7 @@ function CreateAcc() {
                 <hr />
 
                 <div id="alreadyAcc" style={isApiLoading ? null : { margin: '25px 0px 5px 0px' }}>
-                    <a href="/">Already have an Account</a>
+                    <NavLink to="/">Already have an Account</NavLink>
                 </div>
             </div>
         </div>

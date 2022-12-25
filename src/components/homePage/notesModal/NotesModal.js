@@ -41,7 +41,7 @@ function ModalWrapper({
 
                 <div id="elementBox">
                     {openedNoteData.map(function (item, index) {
-                        return notesType === false ? ( //type notes
+                        return notesType === 'note' ? ( //type notes
                             <textarea
                                 id="notesArea"
                                 key={index}
@@ -50,7 +50,7 @@ function ModalWrapper({
                                 value={item.element}
                                 onChange={(e) => handleTextChange(index, e)}
                             ></textarea>
-                        ) : notesType === true ? ( //type todo
+                        ) : notesType === 'todo' ? ( //type todo
                             <div className="toDosBox" key={index}>
                                 <input
                                     style={{ marginLeft: '10px' }}

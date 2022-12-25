@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
+import { handleSignOut } from '../../../firebase/auth';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -16,10 +18,7 @@ import './files/navBar.css';
 
 import logo from './files/logo.jpeg';
 
-const userName =
-    JSON.parse(localStorage.getItem('user_details'))?.firstName +
-    ' ' +
-    JSON.parse(localStorage.getItem('user_details'))?.lastName;
+const userName = JSON.parse(localStorage.getItem('user_details'))?.userName || 'Bhemu Notes';
 
 function NavBar({ handleAddNotesInputbox, addNotes }) {
     const [addNotesAnchorEl, setAddNotesAnchorEl] = useState(null);
@@ -38,7 +37,7 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
 
     const handleLogoutBtnClick = useCallback(() => {
         localStorage.clear();
-        document.location.href = '/';
+        handleSignOut();
     }, []);
 
     return (
@@ -76,12 +75,14 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={() => (document.location.href = '/settings')}>
-                    <ListItemIcon>
-                        <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Settings
-                </MenuItem>
+                <NavLink to="/Settings">
+                    <MenuItem>
+                        <ListItemIcon>
+                            <Settings fontSize="small" />
+                        </ListItemIcon>
+                        Settings
+                    </MenuItem>
+                </NavLink>
                 <MenuItem onClick={handleLogoutBtnClick}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
@@ -126,13 +127,13 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={() => addNotes(false, 'Enter Notes Title')}>
+                <MenuItem onClick={() => addNotes('note', 'Enter Notes Title')}>
                     <ListItemIcon>
                         <NotesIcon fontSize="small" />
                     </ListItemIcon>
                     Notes
                 </MenuItem>
-                <MenuItem onClick={() => addNotes(true, 'Enter Notes Title')}>
+                <MenuItem onClick={() => addNotes('todo', 'Enter Notes Title')}>
                     <ListItemIcon>
                         <FormatListBulletedIcon fontSize="small" />
                     </ListItemIcon>

@@ -15,27 +15,25 @@ function Routes() {
     return (
         <Suspense
             fallback={
-                <>
-                    <div id="loadingScreen">
-                        Loading
-                        <div id="loadingIcon">
-                            <div className="lds-spinner">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
+                <div id="loadingScreen">
+                    Loading
+                    <div id="loadingIcon">
+                        <div className="lds-spinner">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
                         </div>
                     </div>
-                </>
+                </div>
             }
         >
             <Switch>
