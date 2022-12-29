@@ -13,15 +13,17 @@ const auth = getAuth();
 
 const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
 
-function handleLoginForm(e, setMsg) {
+function handleLoginForm(e, setMsg, setIsApiLoading) {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
     if (!email || !password) return setMsg('Please Enter Your Email and Password');
+    setIsApiLoading(true);
 
     signInWithEmailAndPassword(auth, email, password)
         .then((cred) => {
+            setIsApiLoading(false);
             localStorage.setItem(
                 'user_details',
                 JSON.stringify({ userName: cred?.user?.displayName, email, userId: cred?.user?.uid })
@@ -29,6 +31,7 @@ function handleLoginForm(e, setMsg) {
             document.location.href = '/home';
         })
         .catch((err) => {
+            setIsApiLoading(false);
             setMsg(err.code);
         });
 }
