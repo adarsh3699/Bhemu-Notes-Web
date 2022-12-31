@@ -34,4 +34,10 @@ function md5Hash(text) {
     }
 }
 
+// function handleMsgAndBtnLoading(setMsg, msg, setIsApiLoading) {
+//     if (!msg) return console.log('Please set your msg');
+//     setIsApiLoading(false);
+//     setMsg(msg);
+// }
+
 export { encryptText, decryptText, md5Hash };

@@ -51,6 +51,8 @@ function handleSignUpForm(e, setMsg, setIsApiLoading) {
     if (!email || !password || !confPassword || !userName) return setMsg('Please enter all data');
     if (password !== confPassword) return setMsg("Passwords didn't match.");
 
+    setIsApiLoading(true);
+
     createUserWithEmailAndPassword(auth, email, password)
         .then((cred) => {
             sendEmailVerification(cred.user).then(() => {
@@ -77,6 +79,7 @@ function handleSignUpForm(e, setMsg, setIsApiLoading) {
         })
         .catch((err) => {
             setMsg(err.code);
+            setIsApiLoading(false);
         });
 }
 
