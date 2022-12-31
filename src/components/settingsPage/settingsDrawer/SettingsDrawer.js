@@ -70,7 +70,10 @@ function SettingsDrawer(
                 }}
                 sx={{
                     display: { xs: 'block', sm: 'none' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box',
+                        width: drawerWidth,
+                    },
                 }}
             >
                 {drawer}
@@ -79,7 +82,10 @@ function SettingsDrawer(
                 variant="permanent"
                 sx={{
                     display: { xs: 'none', sm: 'block' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box',
+                        width: drawerWidth,
+                    },
                 }}
                 open
             >

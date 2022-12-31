@@ -17,7 +17,13 @@ function ConfirmationDialog({ title, message, isOpen, onCancel, onYesClick }) {
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
             </DialogContent>
-            <DialogActions style={{ display: 'flex}', justifyContent: 'space-around', margin: '0 12px 12px 12px' }}>
+            <DialogActions
+                style={{
+                    display: 'flex}',
+                    justifyContent: 'space-around',
+                    margin: '0 12px 12px 12px',
+                }}
+            >
                 <Button variant="contained" color="primary" size="medium" fullWidth={true} onClick={onCancel}>
                     No
                 </Button>

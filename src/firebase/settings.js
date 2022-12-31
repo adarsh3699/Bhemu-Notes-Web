@@ -4,12 +4,12 @@ const auth = getAuth();
 
 async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading) {
     setIsSaveBtnLoading(true);
-    const userName = userDetails?.userName;
+    const { userName, email, userId } = userDetails;
     if (!userName) return setMsg('User Name can not be empty');
     const user = auth.currentUser;
     updateProfile(user, { displayName: userName })
         .then(() => {
-            localStorage.setItem('user_details', JSON.stringify({ userName, email: userDetails?.email }));
+            localStorage.setItem('user_details', JSON.stringify({ userName, email, userId }));
             setMsg('Changed successfully');
             setIsSaveBtnLoading(false);
         })

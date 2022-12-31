@@ -31,10 +31,30 @@ function SettingsPage() {
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [settingsDrawerMenu, setSettingsDrawerMenu] = useState([
-        { name: 'Profile', isSelected: true, icon: <AccountBoxIcon />, page: <ProfileSettings /> },
-        { name: 'Account', isSelected: false, icon: <SettingsIcon />, page: <AccountSettings /> },
-        { name: 'About', isSelected: false, icon: <InfoIcon />, page: <AboutSettings /> },
-        { name: 'Log Out', isSelected: false, icon: <LogoutIcon />, page: undefined },
+        {
+            name: 'Profile',
+            isSelected: true,
+            icon: <AccountBoxIcon />,
+            page: <ProfileSettings />,
+        },
+        {
+            name: 'Account',
+            isSelected: false,
+            icon: <SettingsIcon />,
+            page: <AccountSettings />,
+        },
+        {
+            name: 'About',
+            isSelected: false,
+            icon: <InfoIcon />,
+            page: <AboutSettings />,
+        },
+        {
+            name: 'Log Out',
+            isSelected: false,
+            icon: <LogoutIcon />,
+            page: undefined,
+        },
     ]);
 
     useEffect(() => {
@@ -60,7 +80,10 @@ function SettingsPage() {
 
             const newSettingsDrawerMenu = settingsDrawerMenu.map(function (items, i) {
                 return i === index
-                    ? { ...items, isSelected: settingsDrawerMenu.i === menuName ? false : true }
+                    ? {
+                          ...items,
+                          isSelected: settingsDrawerMenu.i === menuName ? false : true,
+                      }
                     : { ...items, isSelected: false };
             });
 
@@ -88,7 +111,11 @@ function SettingsPage() {
                                     aria-label="open drawer"
                                     edge="start"
                                     onClick={handleDrawerToggle}
-                                    sx={{ mr: 2, ml: 0, display: { sm: 'none' } }}
+                                    sx={{
+                                        mr: 2,
+                                        ml: 0,
+                                        display: { sm: 'none' },
+                                    }}
                                 >
                                     <MenuIcon />
                                 </IconButton>
@@ -117,7 +144,12 @@ function SettingsPage() {
                     {/* content */}
                     <Box
                         component="main"
-                        sx={{ flexGrow: 1, pt: 5, pb: 10, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                        sx={{
+                            flexGrow: 1,
+                            pt: 5,
+                            pb: 10,
+                            width: { sm: `calc(100% - ${drawerWidth}px)` },
+                        }}
                     >
                         <Toolbar />
 

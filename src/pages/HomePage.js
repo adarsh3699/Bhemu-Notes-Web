@@ -111,7 +111,11 @@ function HomePage() {
     //handle note or todo save
     const handleSaveBtnClick = useCallback(async () => {
         setIsSaveBtnLoading(true);
-        const toSendData = { noteId: myNotesId, notesTitle, noteData: openedNoteData };
+        const toSendData = {
+            noteId: myNotesId,
+            notesTitle,
+            noteData: openedNoteData,
+        };
         updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen);
     }, [myNotesId, openedNoteData, notesTitle]);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { handleSignUpForm } from '../firebase/auth';
@@ -12,15 +12,38 @@ function CreateAcc() {
     const [msg, setMsg] = useState('');
     const [isApiLoading, setIsApiLoading] = useState(false);
 
+    const handleUserSignUpForm = useCallback((e) => {
+        setIsApiLoading(true);
+        handleSignUpForm(e, setMsg, setIsApiLoading);
+    }, []);
+
+    const handleMsgHideOnKeyUp = useCallback(() => {
+        setMsg('');
+    }, []);
+
     return (
         <div id="background">
             <div id="wrapper">
                 <div id="Title">Create Your Account</div>
 
-                <form className="form" onSubmit={(e) => handleSignUpForm(e, setMsg)}>
-                    <input type="tet" name="userName" placeholder="User Name" className="inputBottomMargin" required />
+                <form className="form" onSubmit={handleUserSignUpForm}>
+                    <input
+                        type="tet"
+                        name="userName"
+                        placeholder="User Name"
+                        className="inputBottomMargin"
+                        required
+                        onChange={handleMsgHideOnKeyUp}
+                    />
 
-                    <input type="email" name="email" placeholder="Email" className="inputBottomMargin" required />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        className="inputBottomMargin"
+                        required
+                        onChange={handleMsgHideOnKeyUp}
+                    />
 
                     <input
                         type="Password"
@@ -29,6 +52,7 @@ function CreateAcc() {
                         pattern="().{8,}"
                         className="inputBottomMargin"
                         required
+                        onChange={handleMsgHideOnKeyUp}
                     />
 
                     <input
@@ -38,6 +62,7 @@ function CreateAcc() {
                         pattern="().{8,}"
                         className="inputBottomMargin"
                         required
+                        onChange={handleMsgHideOnKeyUp}
                     />
 
                     <button id="signup" className={isApiLoading ? 'isSignup' : ''}>

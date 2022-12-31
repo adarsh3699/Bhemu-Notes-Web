@@ -8,33 +8,30 @@ import '../styles/loginPage.css';
 document.title = 'Bhemu Notes | Forget Password';
 
 function ForgetPasswordPage() {
-    const [emailVal, setEmailValsg] = useState('');
-
     const [msg, setMsg] = useState('');
-
     const [isOTPApiLoading, setIsOTPApiLoading] = useState(false);
-    const [showChangePassForm, setShowChangePassForm] = useState(false);
 
-    const handleEmailValue = useCallback((e) => {
-        setEmailValsg(e.target.value);
+    const handleForgetPasswordSubmit = useCallback((e) => {
+        setIsOTPApiLoading(true);
+        handleForgetPassword(e, setMsg, setIsOTPApiLoading);
+    }, []);
+
+    const handleMsgHideOnKeyUp = useCallback((e) => {
+        setMsg('');
     }, []);
 
     return (
         <div id="background">
             <div id="wrapper">
                 <div id="Title">Forget Password</div>
-                <form
-                    className="form"
-                    onSubmit={(e) => handleForgetPassword(e, setMsg)}
-                    style={showChangePassForm ? { display: 'none' } : { display: 'block' }}
-                >
+                <form className="form" onSubmit={handleForgetPasswordSubmit}>
                     <input
                         type="email"
                         name="email"
                         className="inputBottomMargin"
-                        onChange={handleEmailValue}
-                        value={emailVal}
                         placeholder="Email"
+                        required
+                        onChange={handleMsgHideOnKeyUp}
                     />
 
                     <button id="createAcc" style={{ marginTop: 'unset' }}>

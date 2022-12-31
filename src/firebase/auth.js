@@ -11,7 +11,7 @@ import {
 
 const auth = getAuth();
 
-const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
+const user_details = JSON.parse(localStorage.getItem('user_details'));
 
 function handleLoginForm(e, setMsg, setIsApiLoading) {
     e.preventDefault();
@@ -26,7 +26,11 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
             setIsApiLoading(false);
             localStorage.setItem(
                 'user_details',
-                JSON.stringify({ userName: cred?.user?.displayName, email, userId: cred?.user?.uid })
+                JSON.stringify({
+                    userName: cred?.user?.displayName,
+                    email,
+                    userId: cred?.user?.uid,
+                })
             );
             document.location.href = '/home';
         })
@@ -36,7 +40,7 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
         });
 }
 
-function handleSignUpForm(e, setMsg) {
+function handleSignUpForm(e, setMsg, setIsApiLoading) {
     e.preventDefault();
 
     const email = e.target.email.value;
@@ -55,11 +59,19 @@ function handleSignUpForm(e, setMsg) {
 
             updateProfile(cred.user, { displayName: userName })
                 .then(() => {
-                    console.log('user signed');
-                    localStorage.setItem('user_details', JSON.stringify({ userName, email, userId: cred?.user?.uid }));
+                    setIsApiLoading(false);
+                    localStorage.setItem(
+                        'user_details',
+                        JSON.stringify({
+                            userName,
+                            email,
+                            userId: cred?.user?.uid,
+                        })
+                    );
                     document.location.href = '/home';
                 })
                 .catch((err) => {
+                    setIsApiLoading(false);
                     setMsg(err.code);
                 });
         })
@@ -71,39 +83,41 @@ function handleSignUpForm(e, setMsg) {
 function handleSignOut() {
     signOut(auth)
         .then(() => {
+            localStorage.clear();
             document.location.href = '/';
-            console.log('sgined out');
         })
         .catch((err) => {
             console.log(err.code);
+            alert(err.code);
         });
 }
 
-function handleForgetPassword(e, setMsg) {
+function handleForgetPassword(e, setMsg, setIsOTPApiLoading) {
     e.preventDefault();
 
     const email = e.target.email.value;
     sendPasswordResetEmail(auth, email)
         .then(() => {
+            setIsOTPApiLoading(false);
             setMsg('Password reset email sent. Please also check spam');
         })
         .catch((error) => {
-            console.log(error.code);
+            setIsOTPApiLoading(false);
             setMsg(error.code);
+            console.log(error.code);
         });
 }
 
 function handleUserState(currentPage) {
     if (!currentPage) return console.log('Missing currentPage');
+
     onAuthStateChanged(auth, (user) => {
+        console.log(user);
         if (currentPage === 'loginPage' && user !== null) {
             document.location.href = '/home';
-        } else if (
-            (currentPage === 'homePage' && user === null) ||
-            (currentPage === 'homePage' && !userId) ||
-            (currentPage === 'settingsPage' && user === null) ||
-            (currentPage === 'settingsPage' && !userId)
-        ) {
+        } else if (user_details?.email !== user?.email || user_details?.userId !== user?.uid) {
+            handleSignOut();
+        } else if ((currentPage === 'homePage' && user === null) || (currentPage === 'settingsPage' && user === null)) {
             handleSignOut();
         }
     });

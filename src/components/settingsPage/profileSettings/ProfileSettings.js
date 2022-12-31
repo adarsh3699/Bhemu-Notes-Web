@@ -15,13 +15,17 @@ function ProfileSettings() {
         userName: localUserDetails?.userName,
         email: localUserDetails?.email,
         profilePicture: localUserDetails?.photoURL,
+        userId: localUserDetails?.userId,
     });
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [msg, setMsg] = useState('');
 
     const handleUserDetailsChange = useCallback(
         (e) => {
-            setUserDetails({ ...userDetails, [e.target.name]: e.target.value.trim() });
+            setUserDetails({
+                ...userDetails,
+                [e.target.name]: e.target.value.trim(),
+            });
         },
         [userDetails, setUserDetails]
     );
@@ -55,7 +59,12 @@ function ProfileSettings() {
                             aria-haspopup="true"
                             onClick={() => handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading)}
                             disabled={isSaveBtnLoading}
-                            sx={{ fontWeight: 600, p: 0, height: 40, width: 140 }}
+                            sx={{
+                                fontWeight: 600,
+                                p: 0,
+                                height: 40,
+                                width: 140,
+                            }}
                         >
                             {isSaveBtnLoading ? <CircularProgress size={30} /> : ' Save Changes'}
                         </Button>
