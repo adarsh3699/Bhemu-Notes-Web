@@ -115,7 +115,6 @@ function handleUserState(currentPage) {
     if (!currentPage) return console.log('Missing currentPage');
 
     onAuthStateChanged(auth, (user) => {
-        console.log(user);
         if (currentPage === 'loginPage' && user !== null) {
             document.location.href = '/home';
         } else if (user_details?.email !== user?.email || user_details?.userId !== user?.uid) {
