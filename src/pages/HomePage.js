@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
@@ -29,6 +29,8 @@ function HomePage() {
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
+    const todoRef = useRef();
+    const [focusedInput, setfocusedInput] = useState(0);
 
     useEffect(() => {
         handleUserState('homePage');
@@ -150,18 +152,6 @@ function HomePage() {
         [openedNoteData]
     );
 
-    const handleEnterClick = useCallback(
-        (index) => {
-            const tempData = [...openedNoteData];
-            tempData.splice(index + 1, 0, { element: '', isDone: false });
-            setOpenedNoteData(tempData);
-            if (openedNoteData.length - 1 !== index) {
-                document.getElementById(index + 1).focus();
-            }
-        },
-        [openedNoteData]
-    );
-
     const handleDeleteToDoBtnClick = useCallback(
         (index) => {
             let newToDos = openedNoteData.filter((data, i) => {
@@ -187,6 +177,18 @@ function HomePage() {
     const handleNotesModalClosing = useCallback(() => {
         setIsNotesModalOpen(false);
     }, []);
+
+    const handleEnterClick = useCallback(
+        (e, index) => {
+            e.preventDefault();
+            const tempData = [...openedNoteData];
+            tempData.splice(index + 1, 0, { element: '', isDone: false });
+
+            setOpenedNoteData(tempData);
+            setfocusedInput(index + 1);
+        },
+        [openedNoteData]
+    );
 
     return (
         <>
@@ -240,9 +242,11 @@ function HomePage() {
                                 notesType={notesType}
                                 handleTextChange={handleTextChange}
                                 handleCheckboxClick={handleCheckboxClick}
-                                handleEnterClick={handleEnterClick}
                                 handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
                                 handleAddToDoBtnClick={handleAddToDoBtnClick}
+                                handleEnterClick={handleEnterClick}
+                                todoRef={todoRef}
+                                focusedInput={focusedInput}
                             />
                         )}
                     </div>

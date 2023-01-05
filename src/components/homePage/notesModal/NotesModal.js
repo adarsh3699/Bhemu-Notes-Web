@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 
 import { IconButton } from '@mui/material';
@@ -23,10 +23,16 @@ function ModalWrapper({
     notesType,
     handleTextChange,
     handleCheckboxClick,
-    handleEnterClick,
     handleDeleteToDoBtnClick,
     handleAddToDoBtnClick,
+    handleEnterClick,
+    todoRef,
+    focusedInput,
 }) {
+    useEffect(() => {
+        if (focusedInput) todoRef?.current?.focus();
+    }, [focusedInput, todoRef]);
+
     return (
         <Modal open={open} onClose={closeOnOutsideClick ? handleModalClose : null}>
             <div className={['modal', containerClassName].join('')}>
@@ -51,7 +57,7 @@ function ModalWrapper({
                                 onChange={(e) => handleTextChange(index, e)}
                             ></textarea>
                         ) : notesType === 'todo' ? ( //type todo
-                            <div className="toDosBox" key={index}>
+                            <form className="toDosBox" key={index} onSubmit={(e) => handleEnterClick(e, index)}>
                                 <input
                                     style={{ marginLeft: '10px' }}
                                     type="checkbox"
@@ -66,8 +72,7 @@ function ModalWrapper({
                                     autoComplete="off"
                                     spellCheck="false"
                                     onChange={(e) => handleTextChange(index, e)}
-                                    // autoFocus={noteData.length - 1 === index ? true : false}
-                                    onKeyDown={(e) => (e.key === 'Enter' ? handleEnterClick(index, e) : null)}
+                                    ref={focusedInput === index ? todoRef : null}
                                 />
                                 <IconButton
                                     sx={{ color: '#F1F1F1', padding: '5px' }}
@@ -77,7 +82,7 @@ function ModalWrapper({
                                 >
                                     <CloseIcon fontSize="inherit" />
                                 </IconButton>
-                            </div>
+                            </form>
                         ) : null;
                     })}
                     {notesType === true ? (
