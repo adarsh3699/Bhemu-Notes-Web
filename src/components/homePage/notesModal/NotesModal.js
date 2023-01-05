@@ -5,6 +5,10 @@ import { IconButton } from '@mui/material';
 import NotesModalBar from './notesModalBar/NotesModalBar';
 import CloseIcon from '@mui/icons-material/Close';
 
+import Checkbox from '@mui/material/Checkbox';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+
 import './notesModal.css';
 
 function ModalWrapper({
@@ -24,7 +28,6 @@ function ModalWrapper({
     handleTextChange,
     handleCheckboxClick,
     handleDeleteToDoBtnClick,
-    handleAddToDoBtnClick,
     handleEnterClick,
     todoRef,
     focusedInput,
@@ -45,52 +48,50 @@ function ModalWrapper({
                     handleSaveBtnClick={handleSaveBtnClick}
                 />
 
-                <div id="elementBox">
-                    {openedNoteData.map(function (item, index) {
-                        return notesType === 'note' ? ( //type notes
-                            <textarea
-                                id="notesArea"
-                                key={index}
-                                placeholder="Take a note..."
-                                autoFocus={item.element ? false : true}
-                                value={item.element}
+                {openedNoteData.map(function (item, index) {
+                    return notesType === 'note' ? ( //type notes
+                        <textarea
+                            id="notesArea"
+                            key={index}
+                            placeholder="Take a note..."
+                            autoFocus={item.element ? false : true}
+                            value={item.element}
+                            onChange={(e) => handleTextChange(index, e)}
+                        ></textarea>
+                    ) : notesType === 'todo' ? ( //type todo
+                        <form
+                            className={index === 0 ? 'toDosBox firstToDoBox' : 'toDosBox'}
+                            key={index}
+                            onSubmit={(e) => handleEnterClick(e, index)}
+                        >
+                            <Checkbox
+                                icon={<CircleOutlinedIcon />}
+                                checkedIcon={<CheckCircleOutlineIcon />}
+                                checked={item?.isDone}
+                                onChange={() => handleCheckboxClick(index, item.isDone)}
+                                size="small"
+                                sx={{ p: 0.5, ml: 1 }}
+                            />
+                            <input
+                                type="text"
+                                id={index}
+                                className={item?.isDone ? 'todosIsDone todosInputBox' : 'todosInputBox'}
+                                value={item.element || ''}
+                                autoComplete="off"
+                                spellCheck="false"
                                 onChange={(e) => handleTextChange(index, e)}
-                            ></textarea>
-                        ) : notesType === 'todo' ? ( //type todo
-                            <form className="toDosBox" key={index} onSubmit={(e) => handleEnterClick(e, index)}>
-                                <input
-                                    style={{ marginLeft: '10px' }}
-                                    type="checkbox"
-                                    checked={item?.isDone}
-                                    onChange={() => handleCheckboxClick(index, item.isDone)}
-                                />
-                                <input
-                                    type="text"
-                                    id={index}
-                                    className={item?.isDone ? 'todosIsDone todosInputBox' : 'todosInputBox'}
-                                    value={item.element || ''}
-                                    autoComplete="off"
-                                    spellCheck="false"
-                                    onChange={(e) => handleTextChange(index, e)}
-                                    ref={focusedInput === index ? todoRef : null}
-                                />
-                                <IconButton
-                                    sx={{ color: '#F1F1F1', padding: '5px' }}
-                                    aria-label="delete"
-                                    onClick={() => handleDeleteToDoBtnClick(index)}
-                                    size="large"
-                                >
-                                    <CloseIcon fontSize="inherit" />
-                                </IconButton>
-                            </form>
-                        ) : null;
-                    })}
-                    {notesType === true ? (
-                        <div id="addTodos" onClick={handleAddToDoBtnClick}>
-                            Add ToDos
-                        </div>
-                    ) : null}
-                </div>
+                                ref={focusedInput === index ? todoRef : null}
+                            />
+                            <IconButton
+                                sx={{ color: '#F1F1F1', p: '5px', mr: 1 }}
+                                aria-label="delete"
+                                onClick={() => handleDeleteToDoBtnClick(index)}
+                            >
+                                <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        </form>
+                    ) : null;
+                })}
             </div>
         </Modal>
     );

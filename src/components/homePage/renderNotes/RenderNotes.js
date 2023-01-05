@@ -5,7 +5,7 @@ import './renderNotes.css';
 function RenderNotes({ allNotes, handleNoteOpening }) {
     return (
         <div id="content">
-            {allNotes.map(function (items) {
+            {allNotes.map(function (items, index) {
                 return (
                     <div
                         className="noteBox"
@@ -21,7 +21,7 @@ function RenderNotes({ allNotes, handleNoteOpening }) {
                         <div className="noteContent">
                             {items.noteType === 'todo' ? (
                                 <div>
-                                    {items.noteData.length === 1 && items.noteData[0]?.element === '' ? (
+                                    {items.noteData.length <= 2 && items.noteData[0]?.element === '' ? (
                                         'Empty.......'
                                     ) : (
                                         <>

@@ -8,25 +8,18 @@
     width: 90%;
     height: 90%;
     border-radius: 8px;
-    overflow: hidden;
-}
-
-#elementBox {
-    /* background-color: rgba(102, 51, 153, 0.506); */
-    padding: 10px 0;
-    width: 100%;
     overflow: auto;
-    height: 88%;
 }
 
 /* ...............modalContent................. */
 #notesArea {
-    padding: 5px 15px;
+    position: absolute;
+    padding: 10px 15px 40px 15px;
     color: white;
-    font-size: 18px;
+    font-size: 16px;
     resize: unset;
     width: calc(100% - 30px);
-    min-height: 100%;
+    min-height: calc(90% - 40px);
     background: unset;
     border: unset;
     outline: unset;
@@ -35,20 +28,23 @@
 .toDosBox {
     display: flex;
     align-items: center;
-    background-color: rgba(24, 23, 23, 0.6);
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    margin: 0 15px;
 }
 
-.toDosBox:first-child {
-    border-top: 1px solid #ccc;
+.firstToDoBox {
+    margin-top: 10px;
+}
+
+.toDosBox:focus-within {
+    background-color: rgb(58, 58, 58);
+}
+
+.toDosBox:last-child {
+    margin-bottom: 40px;
 }
 
 .todosInputBox {
     color: white;
-    font-size: 18px;
+    font-size: 15px;
     padding: 10px;
     resize: vertical;
     outline: unset;
@@ -57,25 +53,10 @@
     border: unset;
 }
 
-.todosInputBox:focus {
-    background-color: rgb(49, 48, 48);
-}
-
 .todosIsDone {
     text-decoration: line-through;
     text-decoration-color: rgb(255, 182, 182);
     text-decoration-thickness: 2px;
-}
-
-#addTodos {
-    margin: 20px 15px;
-    padding: 5px;
-    background-color: rgba(24, 23, 23, 0.6);
-    color: white;
-    border: 1px solid #ccc;
-    width: fit-content;
-    user-select: none;
-    cursor: pointer;
 }
 
 /* ...............................mWeb............................. */
@@ -90,8 +71,7 @@
 }
 
 @media screen and (max-width: 480px) {
-    #notesArea,
-    .todosInputBox {
+    #notesArea {
         font-size: 15px;
     }
 }
@@ -106,43 +86,12 @@
     .todosInputBox {
         font-size: 14px;
     }
-
-    .toDosBox {
-        margin: 0 10px;
-    }
-
-    #addTodos {
-        margin: 20px 10px;
-    }
 }
 
 @media screen and (max-width: 375px) {
-    #searchBox {
-        font-size: 13px;
-        height: 23px;
-    }
-
-    .addNoteBtn {
-        margin-right: 5px;
-        padding: 7px;
-        font-size: 11px;
-    }
-
     #notesArea,
     .todosInputBox {
         font-size: 13px;
-    }
-}
-
-@media screen and (max-height: 650px) and (min-height: 500px) {
-    #elementBox {
-        height: 84%;
-    }
-}
-
-@media screen and (max-height: 500px) {
-    #elementBox {
-        height: 80%;
     }
 }
 

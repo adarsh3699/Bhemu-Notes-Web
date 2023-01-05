@@ -11,10 +11,10 @@ function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return { width, height };
 }
-let loaderTop = 11;
+let loaderPosition = {top: 9, left: 9}
 
 if (getWindowDimensions().width <= 375) {
-    loaderTop = 4;
+    loaderPosition = {top: 5.6, left: 4};
 }
 
 function NotesModalBar({
@@ -35,6 +35,7 @@ function NotesModalBar({
                     aria-label="delete"
                     size="large"
                     onClick={toggleConfirmationDialogClosing}
+                    sx={{p: 1.2}}
                 >
                     <DeleteIcon fontSize="inherit" />
                 </IconButton>
@@ -46,6 +47,7 @@ function NotesModalBar({
                         aria-label="save"
                         size="large"
                         onClick={handleSaveBtnClick}
+                        sx={{p: 1.2}}
                     >
                         {isSaveBtnLoading ? (
                             <div style={{ height: '28px', width: '28px' }}></div>
@@ -59,8 +61,8 @@ function NotesModalBar({
                             size={30}
                             sx={{
                                 position: 'absolute',
-                                top: loaderTop,
-                                left: 11,
+                                top: loaderPosition.top,
+                                left: loaderPosition.left,
                                 zIndex: 1,
                             }}
                         />

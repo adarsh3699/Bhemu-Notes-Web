@@ -163,10 +163,6 @@ function HomePage() {
         [openedNoteData]
     );
 
-    const handleAddToDoBtnClick = useCallback(() => {
-        setOpenedNoteData([...openedNoteData, { element: '', isDone: false }]);
-    }, [openedNoteData]);
-
     //function to handle when "ctrl + s" is pressed
     const handleShortcutKeyPress = useCallback(() => {
         if (isNotesModalOpen) {
@@ -243,7 +239,6 @@ function HomePage() {
                                 handleTextChange={handleTextChange}
                                 handleCheckboxClick={handleCheckboxClick}
                                 handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                handleAddToDoBtnClick={handleAddToDoBtnClick}
                                 handleEnterClick={handleEnterClick}
                                 todoRef={todoRef}
                                 focusedInput={focusedInput}
