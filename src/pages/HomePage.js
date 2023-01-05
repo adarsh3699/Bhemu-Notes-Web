@@ -30,7 +30,7 @@ function HomePage() {
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
     const todoRef = useRef();
-    const [focusedInput, setfocusedInput] = useState(0);
+    const [focusedInput, setfocusedInput] = useState(null);
 
     useEffect(() => {
         handleUserState('homePage');
@@ -172,6 +172,7 @@ function HomePage() {
 
     const handleNotesModalClosing = useCallback(() => {
         setIsNotesModalOpen(false);
+        setfocusedInput(null);
     }, []);
 
     const handleEnterClick = useCallback(
@@ -181,7 +182,13 @@ function HomePage() {
             tempData.splice(index + 1, 0, { element: '', isDone: false });
 
             setOpenedNoteData(tempData);
-            setfocusedInput(index + 1);
+
+            if (openedNoteData.length - 1 !== index) {
+                document.getElementById('todo_' + (index + 1)).focus();
+                console.log('id');
+            } else {
+                setfocusedInput(index + 1);
+            }
         },
         [openedNoteData]
     );

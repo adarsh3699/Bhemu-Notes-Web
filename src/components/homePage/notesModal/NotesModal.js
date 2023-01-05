@@ -33,8 +33,9 @@ function ModalWrapper({
     focusedInput,
 }) {
     useEffect(() => {
-        todoRef?.current?.focus();
-    });
+        console.log(focusedInput, todoRef?.current);
+        if (focusedInput) todoRef?.current?.focus();
+    }, [focusedInput, todoRef]);
 
     return (
         <Modal open={open} onClose={closeOnOutsideClick ? handleModalClose : null}>
@@ -54,16 +55,12 @@ function ModalWrapper({
                             id="notesArea"
                             key={index}
                             placeholder="Take a note..."
-                            autoFocus={item.element ? false : true}
+                            autoFocus={true}
                             value={item.element}
                             onChange={(e) => handleTextChange(index, e)}
                         ></textarea>
                     ) : notesType === 'todo' ? ( //type todo
-                        <form
-                            className={index === 0 ? 'toDosBox firstToDoBox' : 'toDosBox'}
-                            key={index}
-                            onSubmit={(e) => handleEnterClick(e, index)}
-                        >
+                        <div className={index === 0 ? 'toDosBox firstToDoBox' : 'toDosBox'} key={index}>
                             <Checkbox
                                 icon={<CircleOutlinedIcon />}
                                 checkedIcon={<CheckCircleOutlineIcon />}
@@ -74,13 +71,18 @@ function ModalWrapper({
                             />
                             <input
                                 type="text"
-                                id={index}
+                                id={'todo_' + index}
                                 className={item?.isDone ? 'todosIsDone todosInputBox' : 'todosInputBox'}
                                 value={item.element || ''}
                                 autoComplete="off"
                                 spellCheck="false"
                                 onChange={(e) => handleTextChange(index, e)}
                                 ref={focusedInput === index ? todoRef : null}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleEnterClick(e, index);
+                                    }
+                                }}
                             />
                             <IconButton
                                 sx={{ color: '#F1F1F1', p: '5px', mr: 1 }}
@@ -89,7 +91,7 @@ function ModalWrapper({
                             >
                                 <CloseIcon fontSize="inherit" />
                             </IconButton>
-                        </form>
+                        </div>
                     ) : null;
                 })}
             </div>
