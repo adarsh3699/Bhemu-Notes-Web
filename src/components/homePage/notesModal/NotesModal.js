@@ -33,7 +33,6 @@ function ModalWrapper({
     focusedInput,
 }) {
     useEffect(() => {
-        console.log(focusedInput, todoRef?.current);
         if (focusedInput) todoRef?.current?.focus();
     }, [focusedInput, todoRef]);
 
