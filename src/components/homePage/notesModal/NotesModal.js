@@ -33,8 +33,8 @@ function ModalWrapper({
     focusedInput,
 }) {
     useEffect(() => {
-        if (focusedInput) todoRef?.current?.focus();
-    }, [focusedInput, todoRef]);
+        todoRef?.current?.focus();
+    });
 
     return (
         <Modal open={open} onClose={closeOnOutsideClick ? handleModalClose : null}>
