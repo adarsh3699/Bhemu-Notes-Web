@@ -146,19 +146,21 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                     <IconButton
                         id="iconMenuBtn"
                         color="inherit"
+                        size="small"
                         aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
                         aria-haspopup="true"
                         aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
                         onClick={toggleSettingsMenu}
+                        sx={{ ml: 1.2 }}
                     >
-                        <Avatar alt="Remy Sharp" src={logo} sx={{ width: 35, height: 35 }} />
+                        <Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
                     </IconButton>
-                    <div id="name">{localStorage.getItem('user_details') ? userName : 'Bhemu Notes'}</div>
+                    <div id="name">Bhemu Notes</div>
                 </div>
 
-                <form onSubmit={handleAddNotesInputbox}>
+                {/* <form onSubmit={handleAddNotesInputbox}>
                     <input type="text" id="searchBox" name="searchBox" placeholder="Add Notes" />
-                </form>
+                </form> */}
 
                 <Button
                     className="addNoteBtn"

@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { IconButton, Button } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import NotesIcon from '@mui/icons-material/Notes';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -25,6 +31,13 @@ function NotesModalBar({
     isSaveBtnLoading,
     handleModalClose,
 }) {
+    const [notesModalBarAnchorEl, setNotesModalBarAnchorEl] = useState(null);
+    const isNotesModalBarMenuOpen = Boolean(notesModalBarAnchorEl);
+
+    const toggleSettingsMenu = useCallback((event) => {
+        setNotesModalBarAnchorEl(event.currentTarget);
+    }, []);
+
     return (
         <div id="notesModelBar">
             <input
@@ -45,10 +58,13 @@ function NotesModalBar({
                     color="inherit"
                     aria-label="delete"
                     size="large"
-                    onClick={toggleConfirmationDialogClosing}
+                    aria-expanded={isNotesModalBarMenuOpen ? 'true' : undefined}
+                    aria-haspopup="true"
+                    aria-controls={isNotesModalBarMenuOpen ? 'account-menu' : undefined}
+                    onClick={toggleSettingsMenu}
                     sx={{ p: 1.2 }}
                 >
-                    <DeleteIcon fontSize="inherit" />
+                    <MoreVertIcon fontSize="inherit" />
                 </IconButton>
 
                 <div style={{ position: 'relative' }}>
@@ -84,6 +100,58 @@ function NotesModalBar({
                     Close
                 </Button>
             </div>
+
+            <Menu
+                id="basic-menu"
+                anchorEl={notesModalBarAnchorEl}
+                open={isNotesModalBarMenuOpen}
+                onClose={() => setNotesModalBarAnchorEl(null)}
+                onClick={() => setNotesModalBarAnchorEl(null)}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+                PaperProps={{
+                    sx: {
+                        overflow: 'visible',
+                        mt: 0.5,
+                        '& .MuiMenuItem-root': {
+                            height: 42.5,
+                        },
+                        '&:before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            left: 17,
+                            width: 10,
+                            height: 10,
+                            bgcolor: '#121212',
+                            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                        },
+                    },
+                }}
+            >
+                <MenuItem>
+                    <ListItemIcon>
+                        <NotesIcon fontSize="small" />
+                    </ListItemIcon>
+                    Add Note
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <FormatListBulletedIcon fontSize="small" />
+                    </ListItemIcon>
+                    Add ToDo
+                </MenuItem>
+                <MenuItem onClick={toggleConfirmationDialogClosing}>
+                    <ListItemIcon>
+                        <DeleteIcon fontSize="small" />
+                    </ListItemIcon>
+                    Delete
+                </MenuItem>
+            </Menu>
         </div>
     );
 }

@@ -4,9 +4,10 @@ import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
 
 import Loader from '../components/Loader';
-import NotesModal from '../components/homePage/notesModal/NotesModal';
+// import NotesModal from '../components/homePage/notesModal/NotesModal';
+import NoteContentContainer from '../components/homePage/noteContentContainer/NoteContentContainer';
 import NavBar from '../components/homePage/navBar/NavBar';
-import RenderNotes from '../components/homePage/renderNotes/RenderNotes';
+import NotesTitleContainer from '../components/homePage/notesTitleContainer/NotesTitleContainer';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 
 import homePageSkeleton from '../img/homePageSkeleton.svg';
@@ -14,6 +15,12 @@ import homePageSkeleton from '../img/homePageSkeleton.svg';
 import Hotkeys from 'react-hot-keys';
 
 import '../styles/homePage.css';
+
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return { width, height };
+}
+console.log(getWindowDimensions());
 
 function HomePage() {
     const [msg, setMsg] = useState('');
@@ -24,7 +31,7 @@ function HomePage() {
     const [notesTitle, setNotesTitle] = useState('');
     const [openedNoteData, setOpenedNoteData] = useState([]);
 
-    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(getWindowDimensions()?.width > 768 ? true : false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -86,7 +93,7 @@ function HomePage() {
 
             const toSendNoteData = { newNotesTitle, newNoteType, newNoteData };
 
-            addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading, NotesModal);
+            // addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading, NotesModal);
         },
         [handleNoteOpening]
     );
@@ -196,6 +203,49 @@ function HomePage() {
         <>
             {isPageLoaded && (
                 <>
+                    <div id="homePage">
+                        <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
+
+                        <div id="msg">{msg}</div>
+                        <Loader isLoading={isApiLoading} />
+
+                        {allNotes.length === 0 ? (
+                            <div id="homePageSkeleton">
+                                <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
+                                <div id="homePageSkeletonText">Create your first note !</div>
+                            </div>
+                        ) : (
+                            <div id="allContent">
+                                <div id="notesTitleContainer">
+                                    <NotesTitleContainer allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
+                                </div>
+                                {isNotesModalOpen && (
+                                    <div id="noteContentContainer">
+                                        <NoteContentContainer
+                                            isNotesModalOpen={isNotesModalOpen}
+                                            isSaveBtnLoading={isSaveBtnLoading}
+                                            handleNotesModalClosing={handleNotesModalClosing}
+                                            handleModalClose={handleNotesModalClosing}
+                                            toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+                                            notesTitle={notesTitle}
+                                            handleTitleChange={handleTitleChange}
+                                            handleDeleteBtnClick={handleDeleteBtnClick}
+                                            handleSaveBtnClick={handleSaveBtnClick}
+                                            openedNoteData={openedNoteData}
+                                            notesType={notesType}
+                                            handleTextChange={handleTextChange}
+                                            handleCheckboxClick={handleCheckboxClick}
+                                            handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                            handleEnterClick={handleEnterClick}
+                                            todoRef={todoRef}
+                                            focusedInput={focusedInput}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
                     <Hotkeys
                         keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
                         onKeyDown={handleShortcutKeyPress}
@@ -214,43 +264,27 @@ function HomePage() {
                         />
                     )}
 
-                    <div id="homePage">
-                        <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
-
-                        <div id="msg">{msg}</div>
-                        <Loader isLoading={isApiLoading} />
-
-                        {allNotes.length === 0 ? (
-                            <div id="homePageSkeleton">
-                                <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
-                                <div id="homePageSkeletonText">Create your first note !</div>
-                            </div>
-                        ) : (
-                            <RenderNotes allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
-                        )}
-
-                        {isNotesModalOpen && (
-                            <NotesModal
-                                open={isNotesModalOpen}
-                                isSaveBtnLoading={isSaveBtnLoading}
-                                closeOnOutsideClick={handleNotesModalClosing}
-                                handleModalClose={handleNotesModalClosing}
-                                toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-                                notesTitle={notesTitle}
-                                handleTitleChange={handleTitleChange}
-                                handleDeleteBtnClick={handleDeleteBtnClick}
-                                handleSaveBtnClick={handleSaveBtnClick}
-                                openedNoteData={openedNoteData}
-                                notesType={notesType}
-                                handleTextChange={handleTextChange}
-                                handleCheckboxClick={handleCheckboxClick}
-                                handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                handleEnterClick={handleEnterClick}
-                                todoRef={todoRef}
-                                focusedInput={focusedInput}
-                            />
-                        )}
-                    </div>
+                    {/* {isNotesModalOpen && (
+                        <NotesModal
+                            open={isNotesModalOpen}
+                            isSaveBtnLoading={isSaveBtnLoading}
+                            closeOnOutsideClick={handleNotesModalClosing}
+                            handleModalClose={handleNotesModalClosing}
+                            toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+                            notesTitle={notesTitle}
+                            handleTitleChange={handleTitleChange}
+                            handleDeleteBtnClick={handleDeleteBtnClick}
+                            handleSaveBtnClick={handleSaveBtnClick}
+                            openedNoteData={openedNoteData}
+                            notesType={notesType}
+                            handleTextChange={handleTextChange}
+                            handleCheckboxClick={handleCheckboxClick}
+                            handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                            handleEnterClick={handleEnterClick}
+                            todoRef={todoRef}
+                            focusedInput={focusedInput}
+                        />
+                    )} */}
                 </>
             )}
         </>

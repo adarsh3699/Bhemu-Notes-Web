@@ -1,0 +1,82 @@
+#addNotesInputBox {
+    height: 30px;
+    width: calc(95% - 7px);
+    outline: unset;
+    border: unset;
+    background: unset;
+    background-color: bisque;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding-left: 5px;
+}
+
+#renderNotes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 45px - 52px);
+    max-height: calc(100vh - 45px - 52px);
+    overflow: auto;
+    text-align: left;
+}
+
+.noteBox {
+    background: rgb(220 95 115);
+    color: white;
+    width: calc(95% - 40px);
+    padding: 10px 20px;
+    border-radius: 15px;
+    margin: 5px auto;
+}
+
+.noteBox:last-child {
+    margin-bottom: 20px;
+}
+
+.titleAndType {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    align-items: center;
+}
+
+.noteTitle {
+    font-size: 19px;
+}
+
+.noteType {
+    background: rgb(53, 52, 52);
+    padding: 6px 13px;
+    border-radius: 10px;
+    color: rgb(231, 102, 145);
+    font-size: 14px;
+}
+
+.noteContent {
+    font-size: 13px;
+    height: 75px;
+    white-space: pre-line;
+    overflow: hidden;
+}
+
+.todoDisplay {
+    margin-left: 1em;
+    display: list-item;
+    line-height: 20px;
+}
+
+.date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* ...............M-Web................ */
+
+@media screen and (max-width: 768px) {
+    .noteContent {
+        height: 78px;
+    }
+}
