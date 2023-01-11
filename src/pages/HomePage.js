@@ -20,7 +20,6 @@ function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return { width, height };
 }
-console.log(getWindowDimensions());
 
 function HomePage() {
     const [msg, setMsg] = useState('');
@@ -122,11 +121,11 @@ function HomePage() {
         setIsSaveBtnLoading(true);
         const toSendData = {
             noteId: myNotesId,
-            notesTitle,
+            notesTitle: document.getElementById('titleTextBox')?.innerText,
             noteData: openedNoteData,
         };
         updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen);
-    }, [myNotesId, openedNoteData, notesTitle]);
+    }, [myNotesId, openedNoteData]);
 
     //handle note or todo delete
     const handleDeleteBtnClick = useCallback(async () => {

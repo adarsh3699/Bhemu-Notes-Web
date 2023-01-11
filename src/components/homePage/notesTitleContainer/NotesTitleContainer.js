@@ -41,8 +41,10 @@ function NotesTitleContainer({ allNotes, handleNoteOpening }) {
                                             </>
                                         )}
                                     </div>
+                                ) : items.noteData[0].element ? (
+                                    items.noteData[0]?.element
                                 ) : (
-                                    <div>{items.noteData[0].element ? items.noteData[0]?.element : 'Empty.......'}</div>
+                                    'Empty.......'
                                 )}
                             </div>
                             <div className="date">

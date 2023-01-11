@@ -34,12 +34,30 @@ function NoteContentContainer({
             <NoteContainerBar
                 handleNotesModalClosing={handleNotesModalClosing}
                 isSaveBtnLoading={isSaveBtnLoading}
-                notesTitle={notesTitle}
                 handleTitleChange={handleTitleChange}
                 toggleConfirmationDialogClosing={toggleConfirmationDialogClosing}
                 handleSaveBtnClick={handleSaveBtnClick}
             />
             <div id="userNotesContent">
+                <div
+                    id="titleTextBox"
+                    aria-multiline="true"
+                    placeholder="Title"
+                    role="textbox"
+                    spellCheck="true"
+                    dir="ltr"
+                    tabIndex="0"
+                    contentEditable
+                    suppressContentEditableWarning
+                    onKeyDown={(e) => {
+                        if (e.keyCode === 13 || e.which === 13) {
+                            e.preventDefault();
+                        }
+                    }}
+                >
+                    {notesTitle}
+                </div>
+
                 {openedNoteData.map(function (item, index) {
                     return notesType === 'note' ? ( //type notes
                         <textarea

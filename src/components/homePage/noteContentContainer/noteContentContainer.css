@@ -4,6 +4,24 @@
     overflow: auto;
 }
 
+#titleTextBox {
+    display: block;
+    padding: 6px 15px 0 15px;
+    min-width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    color: white;
+    font-size: 22px;
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
+    font-weight: 500;
+    border: unset;
+    outline: unset;
+}
+
+#titleTextBox[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: rgb(140, 138, 138);
+}
+
 #notesArea {
     padding: 10px 15px 100px 15px;
     color: white;

@@ -21,7 +21,8 @@
 #noteContentContainer {
     min-height: calc(100vh - 45px);
     max-height: calc(100vh - 45px);
-    width: 75%;
+    min-width: 75%;
+    max-width: 75%;
     background: rgb(30, 30, 30);
 }
 
@@ -61,7 +62,8 @@
     }
 
     #noteContentContainer {
-        width: 100%;
+        min-width: calc(100% - 320px);
+        max-width: calc(100% - 320px);
     }
 }
 
@@ -78,7 +80,8 @@
 
     #noteContentContainer {
         position: fixed;
-        /* z-index: 9; */
+        min-width: 100%;
+        max-width: 100%;
     }
 }
 

@@ -55,9 +55,13 @@
 
 .noteContent {
     font-size: 13px;
-    height: 75px;
-    white-space: pre-line;
+    height: 63px;
+    white-space: pre;
+    text-overflow: ellipsis;
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 
 .todoDisplay {

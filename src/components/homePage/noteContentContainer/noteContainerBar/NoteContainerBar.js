@@ -19,7 +19,7 @@ function NoteContainerBar({
 }) {
     return (
         <div id="noteContainerBar">
-            <div id='backAndTitleSection'>
+            <div id="backAndTitleSection">
                 <IconButton
                     id="arrowBackIcon"
                     color="inherit"
@@ -42,7 +42,7 @@ function NoteContainerBar({
                 </IconButton>
             </div>
 
-            <div id='addNoteAndTodoSection'>
+            <div id="addNoteAndTodoSection">
                 <IconButton color="inherit" aria-label="addNotesBtn" aria-haspopup="true">
                     <TextIncreaseIcon fontSize="inherit" />
                 </IconButton>
@@ -51,13 +51,9 @@ function NoteContainerBar({
                 </IconButton>
             </div>
 
-            <div id='deleteAndSaveBtnSection' >
+            <div id="deleteAndSaveBtnSection">
                 <IconButton color="inherit" aria-label="save" onClick={handleSaveBtnClick} sx={{ mr: 1 }}>
-                    {isSaveBtnLoading ? (
-                        <CircularProgress size={24} />
-                    ) : (
-                        <SaveIcon fontSize="inherit" />
-                    )}
+                    {isSaveBtnLoading ? <CircularProgress size={24} /> : <SaveIcon fontSize="inherit" />}
                 </IconButton>
             </div>
         </div>
