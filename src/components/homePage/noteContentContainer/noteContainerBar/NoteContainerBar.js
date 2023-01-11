@@ -19,13 +19,12 @@ function NoteContainerBar({
 }) {
     return (
         <div id="noteContainerBar">
-            <div>
+            <div id='backAndTitleSection'>
                 <IconButton
                     id="arrowBackIcon"
                     color="inherit"
-                    aria-label="delete"
+                    aria-label="backBtn"
                     aria-haspopup="true"
-                    sx={{ mr: 1.6 }}
                     onClick={handleNotesModalClosing}
                 >
                     <ArrowBackIcon fontSize="inherit" />
@@ -37,40 +36,29 @@ function NoteContainerBar({
                     aria-label="delete"
                     aria-haspopup="true"
                     onClick={toggleConfirmationDialogClosing}
+                    sx={{ ml: 1 }}
                 >
                     <DeleteIcon fontSize="inherit" />
                 </IconButton>
             </div>
 
-            <div>
-                <IconButton id="deleteBtn" color="inherit" aria-label="delete" aria-haspopup="true">
+            <div id='addNoteAndTodoSection'>
+                <IconButton color="inherit" aria-label="addNotesBtn" aria-haspopup="true">
                     <TextIncreaseIcon fontSize="inherit" />
                 </IconButton>
-                <IconButton id="deleteBtn" color="inherit" aria-label="delete" aria-haspopup="true">
+                <IconButton color="inherit" aria-label="addTodoBtn" aria-haspopup="true">
                     <FormatListBulletedIcon fontSize="inherit" />
                 </IconButton>
             </div>
 
-            <div style={{ position: 'relative' }}>
-                <IconButton color="inherit" aria-label="save" onClick={handleSaveBtnClick}>
+            <div id='deleteAndSaveBtnSection' >
+                <IconButton color="inherit" aria-label="save" onClick={handleSaveBtnClick} sx={{ mr: 1 }}>
                     {isSaveBtnLoading ? (
-                        <div style={{ height: '28px', width: '28px' }}></div>
+                        <CircularProgress size={24} />
                     ) : (
                         <SaveIcon fontSize="inherit" />
                     )}
                 </IconButton>
-
-                {isSaveBtnLoading && (
-                    <CircularProgress
-                        size={28}
-                        sx={{
-                            position: 'absolute',
-                            top: 7,
-                            left: 10,
-                            zIndex: 1,
-                        }}
-                    />
-                )}
             </div>
         </div>
     );
