@@ -175,9 +175,8 @@ function HomePage() {
         setfocusedInput(null);
     }, []);
 
-    const handleEnterClick = useCallback(
+    const handleTodoEnterClick = useCallback(
         (e, index) => {
-            e.preventDefault();
             const tempData = [...openedNoteData];
             tempData.splice(index + 1, 0, { element: '', isDone: false });
 
@@ -187,6 +186,20 @@ function HomePage() {
                 document.getElementById('todo_' + (index + 1)).focus();
             } else {
                 setfocusedInput(index + 1);
+            }
+        },
+        [openedNoteData]
+    );
+
+    const handleTodoBackspaceClick = useCallback(
+        (e, index) => {
+            if (e.target.value === '') {
+                e.preventDefault();
+                let newToDos = openedNoteData.filter((data, i) => {
+                    return i !== index ? data : null;
+                });
+
+                setOpenedNoteData(newToDos);
             }
         },
         [openedNoteData]
@@ -245,7 +258,8 @@ function HomePage() {
                                 handleTextChange={handleTextChange}
                                 handleCheckboxClick={handleCheckboxClick}
                                 handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                handleEnterClick={handleEnterClick}
+                                handleTodoEnterClick={handleTodoEnterClick}
+                                handleTodoBackspaceClick={handleTodoBackspaceClick}
                                 todoRef={todoRef}
                                 focusedInput={focusedInput}
                             />
