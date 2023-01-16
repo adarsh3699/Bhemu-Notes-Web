@@ -200,6 +200,12 @@ function HomePage() {
                 });
 
                 setOpenedNoteData(newToDos);
+
+                if (openedNoteData.length - 1 !== index) {
+                    document.getElementById('todo_' + (index - 1))?.focus();
+                } else {
+                    setfocusedInput(index - 1);
+                }
             }
         },
         [openedNoteData]
