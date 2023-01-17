@@ -28,8 +28,8 @@
     font-size: 16px;
     resize: unset;
     width: calc(100% - 30px);
-    min-height: calc(100vh - 199px);
-    max-height: calc(100vh - 199px);
+    min-height: calc(100vh - 230px);
+    max-height: calc(100vh - 230px);
     border: unset;
     outline: unset;
     background-color: unset;
