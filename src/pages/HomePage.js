@@ -199,71 +199,70 @@ function HomePage() {
     );
 
     return (
-        <>
-            {isPageLoaded && (
-                <>
-                    <div id="homePage">
-                        <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
+        isPageLoaded && (
+            <>
+                <div id="homePage">
+                    <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
 
-                        <div id="msg">{msg}</div>
-                        <Loader isLoading={isApiLoading} />
+                    <div id="msg">{msg}</div>
+                    <Loader isLoading={isApiLoading} />
 
-                        {allNotes.length === 0 ? (
-                            <div id="homePageSkeleton">
-                                <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
-                                <div id="homePageSkeletonText">Create your first note !</div>
+                    {allNotes.length === 0 ? (
+                        <div id="homePageSkeleton">
+                            <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
+                            <div id="homePageSkeletonText">Create your first note !</div>
+                        </div>
+                    ) : (
+                        <div id="allContent">
+                            <div id="notesTitleContainer">
+                                <NotesTitleContainer allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
                             </div>
-                        ) : (
-                            <div id="allContent">
-                                <div id="notesTitleContainer">
-                                    <NotesTitleContainer allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
+                            {isNotesModalOpen && (
+                                <div id="noteContentContainer">
+                                    <NoteContentContainer
+                                        isNotesModalOpen={isNotesModalOpen}
+                                        isSaveBtnLoading={isSaveBtnLoading}
+                                        handleNotesModalClosing={handleNotesModalClosing}
+                                        handleModalClose={handleNotesModalClosing}
+                                        toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+                                        notesTitle={notesTitle}
+                                        handleTitleChange={handleTitleChange}
+                                        handleDeleteBtnClick={handleDeleteBtnClick}
+                                        handleSaveBtnClick={handleSaveBtnClick}
+                                        openedNoteData={openedNoteData}
+                                        notesType={notesType}
+                                        handleTextChange={handleTextChange}
+                                        handleCheckboxClick={handleCheckboxClick}
+                                        handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                        handleEnterClick={handleEnterClick}
+                                        todoRef={todoRef}
+                                        focusedInput={focusedInput}
+                                    />
                                 </div>
-                                {isNotesModalOpen && (
-                                    <div id="noteContentContainer">
-                                        <NoteContentContainer
-                                            isNotesModalOpen={isNotesModalOpen}
-                                            isSaveBtnLoading={isSaveBtnLoading}
-                                            handleNotesModalClosing={handleNotesModalClosing}
-                                            handleModalClose={handleNotesModalClosing}
-                                            toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-                                            notesTitle={notesTitle}
-                                            handleTitleChange={handleTitleChange}
-                                            handleDeleteBtnClick={handleDeleteBtnClick}
-                                            handleSaveBtnClick={handleSaveBtnClick}
-                                            openedNoteData={openedNoteData}
-                                            notesType={notesType}
-                                            handleTextChange={handleTextChange}
-                                            handleCheckboxClick={handleCheckboxClick}
-                                            handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                            handleEnterClick={handleEnterClick}
-                                            todoRef={todoRef}
-                                            focusedInput={focusedInput}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <Hotkeys
-                        keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
-                        onKeyDown={handleShortcutKeyPress}
-                        // onKeyUp={onKeyUp}
-                        filter={(event) => {
-                            return true; //to enable shortcut key inside input, textarea and select too
-                        }}
-                    />
-                    {isConfirmationDialogOpen && (
-                        <ConfirmationDialog
-                            title="Are You Sure?"
-                            message="You can't undo this action."
-                            isOpen={isConfirmationDialogOpen}
-                            onCancel={() => setIsConfirmationDialogOpen(false)}
-                            onYesClick={handleDeleteBtnClick}
-                        />
+                            )}
+                        </div>
                     )}
+                </div>
 
-                    {/* {isNotesModalOpen && (
+                <Hotkeys
+                    keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
+                    onKeyDown={handleShortcutKeyPress}
+                    // onKeyUp={onKeyUp}
+                    filter={(event) => {
+                        return true; //to enable shortcut key inside input, textarea and select too
+                    }}
+                />
+                {isConfirmationDialogOpen && (
+                    <ConfirmationDialog
+                        title="Are You Sure?"
+                        message="You can't undo this action."
+                        isOpen={isConfirmationDialogOpen}
+                        onCancel={() => setIsConfirmationDialogOpen(false)}
+                        onYesClick={handleDeleteBtnClick}
+                    />
+                )}
+
+                {/* {isNotesModalOpen && (
                         <NotesModal
                             open={isNotesModalOpen}
                             isSaveBtnLoading={isSaveBtnLoading}
@@ -284,9 +283,8 @@ function HomePage() {
                             focusedInput={focusedInput}
                         />
                     )} */}
-                </>
-            )}
-        </>
+            </>
+        )
     );
 }
 

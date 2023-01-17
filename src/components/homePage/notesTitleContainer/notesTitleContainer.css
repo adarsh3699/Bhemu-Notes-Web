@@ -1,4 +1,11 @@
 #addNotesInputBox {
+    position: sticky;
+    top: 0px;
+    background: #1e1e1e;
+
+}
+
+#addNotesInputBox input {
     height: 30px;
     width: calc(95% - 7px);
     outline: unset;
@@ -43,6 +50,9 @@
 
 .noteTitle {
     font-size: 19px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .noteType {
@@ -80,6 +90,13 @@
 /* ...............M-Web................ */
 
 @media screen and (max-width: 768px) {
+    #renderNotes {
+        width: 100%;
+        min-height: unset;
+        max-height: unset;
+        overflow: unset;
+    }
+
     .noteContent {
         height: 78px;
     }

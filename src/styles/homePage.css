@@ -9,16 +9,12 @@
 
 #notesTitleContainer {
     width: 25%;
-    min-height: calc(100vh - 45px);
-    max-height: calc(100vh - 45px);
     text-align: center;
     border-right: 0.5px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 
 #noteContentContainer {
-    min-height: calc(100vh - 45px);
-    max-height: calc(100vh - 45px);
     min-width: 75%;
     max-width: 75%;
     background: rgb(30, 30, 30);

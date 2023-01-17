@@ -5,7 +5,9 @@ import './notesTitleContainer.css';
 function NotesTitleContainer({ allNotes, handleNoteOpening }) {
     return (
         <>
-            <input id="addNotesInputBox" type="text" placeholder="Take a note..." />
+            <div id="addNotesInputBox">
+                <input id="addNotesInput" type="text" placeholder="Take a note..." />
+            </div>
             <div id="renderNotes">
                 {allNotes.map(function (items, index) {
                     return (
