@@ -11,7 +11,6 @@
     width: 25%;
     text-align: center;
     border-right: 0.5px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 
 #noteContentContainer {
@@ -21,49 +20,21 @@
 }
 
 #msg {
-    /* padding-top: 65px; */
     text-align: center;
     color: red;
     font-size: 18px;
     font-weight: bold;
 }
 
-#homePageSkeleton {
-    position: fixed;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-#homePageSkeletonImg {
-    height: 400px;
-}
-
-#homePageSkeletonText {
-    margin-top: 10px;
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px #000;
-}
-
 /* ...............M-Web................ */
-
 @media screen and (max-width: 1200px) {
     #notesTitleContainer {
-        min-width: 320px;
+        min-width: 300px;
     }
 
     #noteContentContainer {
-        min-width: calc(100% - 320px);
-        max-width: calc(100% - 320px);
-    }
-}
-
-@media screen and (max-width: 800px) {
-    #homePageSkeletonImg {
-        height: unset;
+        min-width: calc(100% - 300px);
+        max-width: calc(100% - 300px);
     }
 }
 
@@ -76,15 +47,5 @@
         position: fixed;
         min-width: 100%;
         max-width: 100%;
-    }
-}
-
-@media screen and (max-width: 450px) {
-    #homePageSkeleton {
-        top: 40%;
-    }
-
-    #homePageSkeletonImg {
-        height: 200px;
     }
 }

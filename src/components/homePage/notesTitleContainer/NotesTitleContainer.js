@@ -1,15 +1,25 @@
 import React from 'react';
+import Loader from '../../../components/Loader';
+
+import homePageSkeleton from '../../../img/homePageSkeleton.svg';
 
 import './notesTitleContainer.css';
 
-function NotesTitleContainer({ allNotes, handleNoteOpening }) {
+function NotesTitleContainer({ allNotes, handleNoteOpening, isApiLoading }) {
     return (
         <>
             <div id="addNotesInputBox">
                 <input id="addNotesInput" type="text" placeholder="Take a note..." />
             </div>
             <div id="renderNotes">
-                {allNotes.map(function (items, index) {
+                <Loader isLoading={isApiLoading} />
+                {allNotes.length === 0 && !isApiLoading && (
+                    <div id="homePageSkeleton">
+                        <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
+                        <div id="homePageSkeletonText">Create your first note !</div>
+                    </div>
+                )}
+                {allNotes.map(function (items) {
                     return (
                         <div
                             className="noteBox"
@@ -20,7 +30,7 @@ function NotesTitleContainer({ allNotes, handleNoteOpening }) {
                         >
                             <div className="titleAndType">
                                 <div className="noteTitle">{items.notesTitle}</div>
-                                <div className="noteType">{items.noteType}</div>
+                                {/* <div className="noteType">{items.noteType}</div> */}
                             </div>
                             <div className="noteContent">
                                 {items.noteType === 'todo' ? (

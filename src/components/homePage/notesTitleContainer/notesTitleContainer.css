@@ -2,7 +2,6 @@
     position: sticky;
     top: 0px;
     background: #1e1e1e;
-
 }
 
 #addNotesInputBox input {
@@ -15,6 +14,23 @@
     border-radius: 5px;
     margin: 10px 0;
     padding-left: 5px;
+}
+
+#homePageSkeleton {
+    margin-top: 100px;
+    text-align: center;
+}
+
+#homePageSkeletonImg {
+    width: 70%;
+}
+
+#homePageSkeletonText {
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px #000;
 }
 
 #renderNotes {

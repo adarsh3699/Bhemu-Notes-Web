@@ -3,14 +3,11 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
 
-import Loader from '../components/Loader';
-// import NotesModal from '../components/homePage/notesModal/NotesModal';
+import NotesModal from '../components/homePage/notesModal/NotesModal';
 import NoteContentContainer from '../components/homePage/noteContentContainer/NoteContentContainer';
 import NavBar from '../components/homePage/navBar/NavBar';
 import NotesTitleContainer from '../components/homePage/notesTitleContainer/NotesTitleContainer';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
-
-import homePageSkeleton from '../img/homePageSkeleton.svg';
 
 import Hotkeys from 'react-hot-keys';
 
@@ -20,6 +17,7 @@ function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return { width, height };
 }
+const isPhoneMode = getWindowDimensions()?.width <= 768 ? true : false;
 
 function HomePage() {
     const [msg, setMsg] = useState('');
@@ -204,44 +202,40 @@ function HomePage() {
                 <div id="homePage">
                     <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
 
-                    <div id="msg">{msg}</div>
-                    <Loader isLoading={isApiLoading} />
+                    {/* <div id="msg">{msg}</div> */}
 
-                    {allNotes.length === 0 ? (
-                        <div id="homePageSkeleton">
-                            <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
-                            <div id="homePageSkeletonText">Create your first note !</div>
+                    <div id="allContent">
+                        <div id="notesTitleContainer">
+                            <NotesTitleContainer
+                                allNotes={allNotes}
+                                handleNoteOpening={handleNoteOpening}
+                                isApiLoading={isApiLoading}
+                            />
                         </div>
-                    ) : (
-                        <div id="allContent">
-                            <div id="notesTitleContainer">
-                                <NotesTitleContainer allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
+                        {isNotesModalOpen && !isPhoneMode && (
+                            <div id="noteContentContainer">
+                                <NoteContentContainer
+                                    isNotesModalOpen={isNotesModalOpen}
+                                    isSaveBtnLoading={isSaveBtnLoading}
+                                    handleNotesModalClosing={handleNotesModalClosing}
+                                    handleModalClose={handleNotesModalClosing}
+                                    toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+                                    notesTitle={notesTitle}
+                                    handleTitleChange={handleTitleChange}
+                                    handleDeleteBtnClick={handleDeleteBtnClick}
+                                    handleSaveBtnClick={handleSaveBtnClick}
+                                    openedNoteData={openedNoteData}
+                                    notesType={notesType}
+                                    handleTextChange={handleTextChange}
+                                    handleCheckboxClick={handleCheckboxClick}
+                                    handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                    handleEnterClick={handleEnterClick}
+                                    todoRef={todoRef}
+                                    focusedInput={focusedInput}
+                                />
                             </div>
-                            {isNotesModalOpen && (
-                                <div id="noteContentContainer">
-                                    <NoteContentContainer
-                                        isNotesModalOpen={isNotesModalOpen}
-                                        isSaveBtnLoading={isSaveBtnLoading}
-                                        handleNotesModalClosing={handleNotesModalClosing}
-                                        handleModalClose={handleNotesModalClosing}
-                                        toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-                                        notesTitle={notesTitle}
-                                        handleTitleChange={handleTitleChange}
-                                        handleDeleteBtnClick={handleDeleteBtnClick}
-                                        handleSaveBtnClick={handleSaveBtnClick}
-                                        openedNoteData={openedNoteData}
-                                        notesType={notesType}
-                                        handleTextChange={handleTextChange}
-                                        handleCheckboxClick={handleCheckboxClick}
-                                        handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                        handleEnterClick={handleEnterClick}
-                                        todoRef={todoRef}
-                                        focusedInput={focusedInput}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
 
                 <Hotkeys
@@ -262,27 +256,27 @@ function HomePage() {
                     />
                 )}
 
-                {/* {isNotesModalOpen && (
-                        <NotesModal
-                            open={isNotesModalOpen}
-                            isSaveBtnLoading={isSaveBtnLoading}
-                            closeOnOutsideClick={handleNotesModalClosing}
-                            handleModalClose={handleNotesModalClosing}
-                            toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-                            notesTitle={notesTitle}
-                            handleTitleChange={handleTitleChange}
-                            handleDeleteBtnClick={handleDeleteBtnClick}
-                            handleSaveBtnClick={handleSaveBtnClick}
-                            openedNoteData={openedNoteData}
-                            notesType={notesType}
-                            handleTextChange={handleTextChange}
-                            handleCheckboxClick={handleCheckboxClick}
-                            handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                            handleEnterClick={handleEnterClick}
-                            todoRef={todoRef}
-                            focusedInput={focusedInput}
-                        />
-                    )} */}
+                {isNotesModalOpen && isPhoneMode && (
+                    <NotesModal
+                        open={isNotesModalOpen}
+                        isSaveBtnLoading={isSaveBtnLoading}
+                        closeOnOutsideClick={handleNotesModalClosing}
+                        handleModalClose={handleNotesModalClosing}
+                        toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+                        notesTitle={notesTitle}
+                        handleTitleChange={handleTitleChange}
+                        handleDeleteBtnClick={handleDeleteBtnClick}
+                        handleSaveBtnClick={handleSaveBtnClick}
+                        openedNoteData={openedNoteData}
+                        notesType={notesType}
+                        handleTextChange={handleTextChange}
+                        handleCheckboxClick={handleCheckboxClick}
+                        handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                        handleEnterClick={handleEnterClick}
+                        todoRef={todoRef}
+                        focusedInput={focusedInput}
+                    />
+                )}
             </>
         )
     );
