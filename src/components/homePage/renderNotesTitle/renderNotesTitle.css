@@ -75,7 +75,7 @@
 
 .noteDisplay {
     display: -webkit-box;
-    line-height: 17px;
+    line-height: 18px;
     white-space: pre-wrap;
     text-overflow: ellipsis;
     -webkit-line-clamp: 2;
@@ -84,7 +84,7 @@
 
 .todoDisplay {
     display: list-item;
-    line-height: 17px;
+    line-height: 18px;
     margin-left: 1em;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -105,9 +105,5 @@
         min-height: unset;
         max-height: unset;
         overflow: unset;
-    }
-
-    .noteContent {
-        height: 78px;
     }
 }

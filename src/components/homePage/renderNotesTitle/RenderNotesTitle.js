@@ -33,11 +33,19 @@ function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading }) {
                                         'Empty.......'
                                     ) : (
                                         <>
-                                            <div className={items?.type === 'todo' ? 'todoDisplay' : 'noteDisplay'}>
+                                            <div
+                                                className={
+                                                    items?.noteData[0]?.type === 'todo' ? 'todoDisplay' : 'noteDisplay'
+                                                }
+                                            >
                                                 {items?.noteData[0]?.element}
                                             </div>
 
-                                            <div className={items?.noteData[1]?.element ? 'todoDisplay' : null}>
+                                            <div
+                                                className={
+                                                    items?.noteData[1]?.type === 'todo' ? 'todoDisplay' : 'noteDisplay'
+                                                }
+                                            >
                                                 {items?.noteData[1]?.element}
                                             </div>
                                         </>

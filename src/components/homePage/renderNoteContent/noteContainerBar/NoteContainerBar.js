@@ -6,6 +6,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Tooltip from '@mui/material/Tooltip';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -13,9 +14,10 @@ import './noteContainerBar.css';
 
 function NoteContainerBar({
     handleNotesModalClosing,
+    isSaveBtnLoading,
+    handleAddTodoBtn,
     handleSaveBtnClick,
     toggleConfirmationDialogClosing,
-    isSaveBtnLoading,
 }) {
     return (
         <div id="noteContainerBar">
@@ -30,31 +32,39 @@ function NoteContainerBar({
                     <ArrowBackIcon fontSize="inherit" />
                 </IconButton>
 
-                <IconButton
-                    id="deleteBtn"
-                    color="inherit"
-                    aria-label="delete"
-                    aria-haspopup="true"
-                    onClick={toggleConfirmationDialogClosing}
-                    sx={{ ml: 1 }}
-                >
-                    <DeleteIcon fontSize="inherit" />
-                </IconButton>
+                <Tooltip title="Delete" arrow>
+                    <IconButton
+                        id="deleteBtn"
+                        color="inherit"
+                        aria-label="delete"
+                        aria-haspopup="true"
+                        onClick={toggleConfirmationDialogClosing}
+                        sx={{ ml: 1 }}
+                    >
+                        <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                </Tooltip>
             </div>
 
             <div id="addNoteAndTodoSection">
-                <IconButton color="inherit" aria-label="addNotesBtn" aria-haspopup="true">
-                    <TextIncreaseIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton color="inherit" aria-label="addTodoBtn" aria-haspopup="true">
-                    <FormatListBulletedIcon fontSize="inherit" />
-                </IconButton>
+                <Tooltip title="Add Note" arrow>
+                    <IconButton color="inherit" aria-label="addNotesBtn" aria-haspopup="true">
+                        <TextIncreaseIcon fontSize="inherit" />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Add Todo" arrow>
+                    <IconButton onClick={handleAddTodoBtn} color="inherit" aria-label="addTodoBtn" aria-haspopup="true">
+                        <FormatListBulletedIcon fontSize="inherit" />
+                    </IconButton>
+                </Tooltip>
             </div>
 
             <div id="deleteAndSaveBtnSection">
-                <IconButton color="inherit" aria-label="save" onClick={handleSaveBtnClick} sx={{ mr: 1 }}>
-                    {isSaveBtnLoading ? <CircularProgress size={24} /> : <SaveIcon fontSize="inherit" />}
-                </IconButton>
+                <Tooltip title="Save" arrow>
+                    <IconButton color="inherit" aria-label="save" onClick={handleSaveBtnClick} sx={{ mr: 1 }}>
+                        {isSaveBtnLoading ? <CircularProgress size={24} /> : <SaveIcon fontSize="inherit" />}
+                    </IconButton>
+                </Tooltip>
             </div>
         </div>
     );

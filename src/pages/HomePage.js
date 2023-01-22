@@ -176,6 +176,17 @@ function HomePage() {
         setfocusedInput(null);
     }, []);
 
+    const handleAddTodoBtn = useCallback(
+        (e, index) => {
+            e.preventDefault();
+            const tempData = [...openedNoteData];
+            tempData.push({ element: '', isDone: false, type: 'todo' });
+
+            setOpenedNoteData(tempData);
+        },
+        [openedNoteData]
+    );
+
     const handleEnterClick = useCallback(
         (e, index) => {
             e.preventDefault();
@@ -225,6 +236,7 @@ function HomePage() {
                                     handleTextChange={handleTextChange}
                                     handleCheckboxClick={handleCheckboxClick}
                                     handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                    handleAddTodoBtn={handleAddTodoBtn}
                                     handleEnterClick={handleEnterClick}
                                     todoRef={todoRef}
                                     focusedInput={focusedInput}
