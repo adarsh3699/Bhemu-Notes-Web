@@ -21,15 +21,9 @@ import logo from './files/logo.jpeg';
 const userName = JSON.parse(localStorage.getItem('user_details'))?.userName || 'Bhemu Notes';
 
 function NavBar({ handleAddNotesInputbox, addNotes }) {
-    const [addNotesAnchorEl, setAddNotesAnchorEl] = useState(null);
     const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
-    const isAddNotesMenuOpen = Boolean(addNotesAnchorEl);
 
     const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
-
-    const toggleAddNotesMenu = (event) => {
-        setAddNotesAnchorEl(event.currentTarget);
-    };
 
     const toggleSettingsMenu = (event) => {
         setSettingMenuAddNotesAnchorEl(event.currentTarget);
@@ -91,56 +85,6 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                 </MenuItem>
             </Menu>
 
-            {/* add notes Munu */}
-            <Menu
-                id="basic-menu"
-                anchorEl={addNotesAnchorEl}
-                open={isAddNotesMenuOpen}
-                onClose={() => setAddNotesAnchorEl(null)}
-                onClick={() => setAddNotesAnchorEl(null)}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
-                PaperProps={{
-                    sx: {
-                        overflow: 'visible',
-                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                        mt: 1,
-                        '& .MuiMenuItem-root': {
-                            height: 45,
-                        },
-                        '&:before': {
-                            content: '""',
-                            display: 'block',
-                            position: 'absolute',
-                            top: 0,
-                            right: 25,
-                            width: 10,
-                            height: 10,
-                            bgcolor: '#121212',
-                            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
-                            transform: 'translateY(-50%) rotate(45deg)',
-                            zIndex: 0,
-                        },
-                    },
-                }}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            >
-                <MenuItem onClick={() => addNotes('note', 'Enter Notes Title')}>
-                    <ListItemIcon>
-                        <NotesIcon fontSize="small" />
-                    </ListItemIcon>
-                    Notes
-                </MenuItem>
-                <MenuItem onClick={() => addNotes('todo', 'Enter Notes Title')}>
-                    <ListItemIcon>
-                        <FormatListBulletedIcon fontSize="small" />
-                    </ListItemIcon>
-                    ToDos
-                </MenuItem>
-            </Menu>
-
             <div className="navbar">
                 <div id="logo">
                     <IconButton
@@ -158,19 +102,13 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                     <div id="name">Bhemu Notes</div>
                 </div>
 
-                {/* <form onSubmit={handleAddNotesInputbox}>
-                    <input type="text" id="searchBox" name="searchBox" placeholder="Add Notes" />
-                </form> */}
-
                 <Button
                     className="addNoteBtn"
                     variant="contained"
                     color="success"
                     id="basic-button"
-                    aria-controls={isAddNotesMenuOpen ? 'basic-menu' : undefined}
                     aria-haspopup="true"
-                    aria-expanded={isAddNotesMenuOpen ? 'true' : undefined}
-                    onClick={toggleAddNotesMenu}
+                    onClick={addNotes}
                 >
                     Add Note
                 </Button>

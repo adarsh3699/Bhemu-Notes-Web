@@ -61,8 +61,7 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 //Add Notes
 function addNewNote(upcomingData, handleNoteOpening, setMsg, setIsApiLoading) {
     const userId = auth?.currentUser?.uid;
-    const { newNotesTitle, newNoteType, newNoteData } = upcomingData;
-
+    const { newNotesTitle, newNoteData } = upcomingData;
     const encryptTitle = encryptText(newNotesTitle ? newNotesTitle?.trim() : newNotesTitle);
     const stringifyedNoteData = JSON.stringify(newNoteData);
     const encryptNoteData = encryptText(stringifyedNoteData);
@@ -70,13 +69,12 @@ function addNewNote(upcomingData, handleNoteOpening, setMsg, setIsApiLoading) {
     addDoc(colRef, {
         userId,
         notesTitle: encryptTitle,
-        noteType: newNoteType,
         noteData: encryptNoteData,
         createdAt: serverTimestamp(),
         updatedOn: serverTimestamp(),
     })
         .then((e) => {
-            handleNoteOpening(e?.id, newNoteType, newNotesTitle, newNoteData);
+            handleNoteOpening(e?.id, newNotesTitle, newNoteData);
             setIsApiLoading(false);
         })
         .catch((err) => {

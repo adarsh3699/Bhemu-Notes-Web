@@ -48,7 +48,7 @@ function ModalWrapper({
                     handleSaveBtnClick={handleSaveBtnClick}
                 />
 
-                {openedNoteData.map(function (item, index) {
+                {/* {openedNoteData.map(function (item, index) {
                     return notesType === 'note' ? ( //type notes
                         <textarea
                             id="notesArea"
@@ -92,7 +92,7 @@ function ModalWrapper({
                             </IconButton>
                         </div>
                     ) : null;
-                })}
+                })} */}
             </div>
         </Modal>
     );

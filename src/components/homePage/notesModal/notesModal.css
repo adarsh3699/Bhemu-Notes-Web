@@ -1,6 +1,6 @@
 .modal {
     position: absolute;
-    top: 50%;
+    top: calc(50% + 22.5px);
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(54, 54, 54, 0.95);
@@ -78,8 +78,8 @@
 
 @media screen and (max-width: 400px) {
     .modal {
-        width: 95%;
-        height: 80%;
+        width: 100%;
+        height: calc(100% - 45px);
     }
 
     #notesArea,
@@ -88,7 +88,9 @@
     }
 }
 
+/* 
 @media screen and (max-width: 375px) {
+
     #notesArea,
     .todosInputBox {
         font-size: 13px;
@@ -99,4 +101,4 @@
     .modal {
         height: 95%;
     }
-}
+} */

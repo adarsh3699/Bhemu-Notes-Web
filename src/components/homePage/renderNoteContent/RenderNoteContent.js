@@ -8,9 +8,9 @@ import Checkbox from '@mui/material/Checkbox';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-import './noteContentContainer.css';
+import './renderNoteContent.css';
 
-function NoteContentContainer({
+function RenderNoteContent({
     isNotesModalOpen,
     isSaveBtnLoading,
     handleNotesModalClosing,
@@ -59,7 +59,8 @@ function NoteContentContainer({
                 </div>
 
                 {openedNoteData.map(function (item, index) {
-                    return notesType === 'note' ? ( //type notes
+                    console.log(item);
+                    return item.type === 'note' ? ( //type notes
                         <textarea
                             id="notesArea"
                             key={index}
@@ -68,7 +69,7 @@ function NoteContentContainer({
                             value={item.element}
                             onChange={(e) => handleTextChange(index, e)}
                         ></textarea>
-                    ) : notesType === 'todo' ? ( //type todo
+                    ) : item.type === 'todo' ? ( //type todo
                         <div className={index === 0 ? 'toDosBox firstToDoBox' : 'toDosBox'} key={index}>
                             <Checkbox
                                 icon={<CircleOutlinedIcon />}
@@ -101,11 +102,13 @@ function NoteContentContainer({
                                 <CloseIcon fontSize="inherit" />
                             </IconButton>
                         </div>
-                    ) : null;
+                    ) : (
+                        'null'
+                    );
                 })}
             </div>
         </>
     );
 }
 
-export default NoteContentContainer;
+export default RenderNoteContent;

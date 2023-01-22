@@ -3,10 +3,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
 
-import NotesModal from '../components/homePage/notesModal/NotesModal';
-import NoteContentContainer from '../components/homePage/noteContentContainer/NoteContentContainer';
 import NavBar from '../components/homePage/navBar/NavBar';
-import NotesTitleContainer from '../components/homePage/notesTitleContainer/NotesTitleContainer';
+import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
+import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
+import NotesModal from '../components/homePage/notesModal/NotesModal';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 
 import Hotkeys from 'react-hot-keys';
@@ -24,7 +24,6 @@ function HomePage() {
     const [allNotes, setAllNotes] = useState([]);
 
     const [myNotesId, setMyNotesId] = useState('');
-    const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState('');
     const [openedNoteData, setOpenedNoteData] = useState([]);
 
@@ -71,26 +70,24 @@ function HomePage() {
     }, []);
 
     const handleNoteOpening = useCallback(
-        (noteId, type, title, data) => {
+        (noteId, title, data) => {
             setMyNotesId(noteId);
-            setNotesType(type);
             setNotesTitle(title);
             setOpenedNoteData(data);
             setIsNotesModalOpen(true);
         },
-        [setMyNotesId, setNotesType, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
+        [setMyNotesId, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
     );
 
     //add Note Function
     const addNotes = useCallback(
-        (newNoteType, notesTitle) => {
+        (e, notesTitle) => {
             setIsApiLoading(true);
             const newNotesTitle = notesTitle ? notesTitle : 'Enter Notes Title';
-            const newNoteData = [{ element: '', isDone: false }];
+            const newNoteData = [{ element: '', type: 'note' }];
 
-            const toSendNoteData = { newNotesTitle, newNoteType, newNoteData };
-
-            // addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading, NotesModal);
+            const toSendNoteData = { newNotesTitle, newNoteData };
+            addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading);
         },
         [handleNoteOpening]
     );
@@ -100,7 +97,7 @@ function HomePage() {
         (e) => {
             e.preventDefault();
             const textInput = e.target.searchBox.value;
-            addNotes('note', textInput);
+            addNotes(textInput);
             e.target.reset();
         },
         [addNotes]
@@ -206,7 +203,7 @@ function HomePage() {
 
                     <div id="allContent">
                         <div id="notesTitleContainer">
-                            <NotesTitleContainer
+                            <RenderNotesTitle
                                 allNotes={allNotes}
                                 handleNoteOpening={handleNoteOpening}
                                 isApiLoading={isApiLoading}
@@ -214,7 +211,7 @@ function HomePage() {
                         </div>
                         {isNotesModalOpen && !isPhoneMode && (
                             <div id="noteContentContainer">
-                                <NoteContentContainer
+                                <RenderNoteContent
                                     isNotesModalOpen={isNotesModalOpen}
                                     isSaveBtnLoading={isSaveBtnLoading}
                                     handleNotesModalClosing={handleNotesModalClosing}
@@ -225,7 +222,6 @@ function HomePage() {
                                     handleDeleteBtnClick={handleDeleteBtnClick}
                                     handleSaveBtnClick={handleSaveBtnClick}
                                     openedNoteData={openedNoteData}
-                                    notesType={notesType}
                                     handleTextChange={handleTextChange}
                                     handleCheckboxClick={handleCheckboxClick}
                                     handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
@@ -268,7 +264,6 @@ function HomePage() {
                         handleDeleteBtnClick={handleDeleteBtnClick}
                         handleSaveBtnClick={handleSaveBtnClick}
                         openedNoteData={openedNoteData}
-                        notesType={notesType}
                         handleTextChange={handleTextChange}
                         handleCheckboxClick={handleCheckboxClick}
                         handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
