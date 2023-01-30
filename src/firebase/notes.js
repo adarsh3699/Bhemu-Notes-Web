@@ -98,8 +98,9 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
 }
 
 //update notes
-function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen) {
+function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg) {
     const { noteId, notesTitle, noteData } = upcomingData;
+    if (noteId || notesTitle || noteData) setMsg('Please Provide all details');
     const encryptTitle = encryptText(notesTitle ? notesTitle?.trim() : notesTitle);
     const stringifyedNoteData = JSON.stringify(noteData);
     const encryptNoteData = encryptText(stringifyedNoteData);

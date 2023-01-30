@@ -16,6 +16,7 @@
 #noteContentContainer {
     min-width: 75%;
     max-width: 75%;
+    z-index: 10;
     background: rgb(30, 30, 30);
 }
 
@@ -41,6 +42,7 @@
 @media screen and (max-width: 768px) {
     #notesTitleContainer {
         width: 100%;
+        border: unset;
     }
 
     #noteContentContainer {

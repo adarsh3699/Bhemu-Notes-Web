@@ -1,40 +1,57 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NoteContainerBar from './noteContainerBar/NoteContainerBar';
 
 import { IconButton } from '@mui/material';
-
 import CloseIcon from '@mui/icons-material/Close';
 import Checkbox from '@mui/material/Checkbox';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
+import TextareaAutosize from 'react-textarea-autosize';
+
 import './renderNoteContent.css';
 
 function RenderNoteContent({
-    isNotesModalOpen,
     isSaveBtnLoading,
     handleNotesModalClosing,
 
     notesTitle,
-    handleTitleChange,
     toggleConfirmationDialogClosing,
     handleSaveBtnClick,
 
     openedNoteData,
-    notesType,
-    handleTextChange,
+    handleNoteTextChange,
     handleCheckboxClick,
     handleDeleteToDoBtnClick,
-    handleEnterClick,
+    handleAddTodoBtn,
+    handleAddNoteBtn,
+    handleTodoEnterClick,
+    handleBackspaceClick,
     todoRef,
     focusedInput,
+    setfocusedInput,
+    lastTextBoxRef,
 }) {
+    useEffect(() => {
+        if (focusedInput) todoRef?.current?.focus();
+        setfocusedInput(null);
+    }, [focusedInput, todoRef, setfocusedInput]);
+
+    useEffect(() => {
+        const textBox = lastTextBoxRef?.current;
+        if (textBox && openedNoteData.length >= 1) {
+            const upperHeight = textBox?.getBoundingClientRect()?.top;
+            textBox.style.minHeight = 'calc(100vh - ' + (upperHeight + 15) + 'px)';
+        }
+    });
+
     return (
         <>
             <NoteContainerBar
                 handleNotesModalClosing={handleNotesModalClosing}
                 isSaveBtnLoading={isSaveBtnLoading}
-                handleTitleChange={handleTitleChange}
+                handleAddTodoBtn={handleAddTodoBtn}
+                handleAddNoteBtn={handleAddNoteBtn}
                 toggleConfirmationDialogClosing={toggleConfirmationDialogClosing}
                 handleSaveBtnClick={handleSaveBtnClick}
             />
@@ -52,6 +69,7 @@ function RenderNoteContent({
                     onKeyDown={(e) => {
                         if (e.keyCode === 13 || e.which === 13) {
                             e.preventDefault();
+                            document.getElementById('textbox_0').focus();
                         }
                     }}
                 >
@@ -59,18 +77,30 @@ function RenderNoteContent({
                 </div>
 
                 {openedNoteData.map(function (item, index) {
-                    console.log(item);
-                    return item.type === 'note' ? ( //type notes
-                        <textarea
-                            id="notesArea"
+                    return item?.type === 'note' ? ( //type notes
+                        <TextareaAutosize
+                            id={'textbox_' + index}
                             key={index}
-                            placeholder="Take a note..."
-                            autoFocus={true}
-                            value={item.element}
-                            onChange={(e) => handleTextChange(index, e)}
-                        ></textarea>
-                    ) : item.type === 'todo' ? ( //type todo
-                        <div className={index === 0 ? 'toDosBox firstToDoBox' : 'toDosBox'} key={index}>
+                            placeholder={openedNoteData.length === 1 ? 'Take a note' : null}
+                            className={
+                                openedNoteData.length > 7 && openedNoteData.length - 1 === index
+                                    ? 'notesArea lastNotesArea'
+                                    : 'notesArea'
+                            }
+                            onChange={(e) => handleNoteTextChange(index, e)}
+                            value={item?.element}
+                            ref={openedNoteData.length - 1 === index ? lastTextBoxRef : null}
+                            onKeyDown={(e) => {
+                                if (
+                                    (e.key === 'Backspace' || e.keyCode === 8 || e.which === 8) &&
+                                    openedNoteData.length - 1 !== index
+                                ) {
+                                    handleBackspaceClick(e, index);
+                                }
+                            }}
+                        />
+                    ) : item?.type === 'todo' ? ( //type todo/////////
+                        <div className="toDosBox" key={index}>
                             <Checkbox
                                 icon={<CircleOutlinedIcon />}
                                 checkedIcon={<CheckCircleOutlineIcon />}
@@ -81,16 +111,18 @@ function RenderNoteContent({
                             />
                             <input
                                 type="text"
-                                id={'todo_' + index}
+                                id={'textbox_' + index}
                                 className={item?.isDone ? 'todosIsDone todosInputBox' : 'todosInputBox'}
                                 value={item.element || ''}
                                 autoComplete="off"
                                 spellCheck="false"
-                                onChange={(e) => handleTextChange(index, e)}
+                                onChange={(e) => handleNoteTextChange(index, e)}
                                 ref={focusedInput === index ? todoRef : null}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleEnterClick(e, index);
+                                    if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
+                                        handleTodoEnterClick(e, index);
+                                    } else if (e.key === 'Backspace' || e.keyCode === 8 || e.which === 8) {
+                                        handleBackspaceClick(e, index);
                                     }
                                 }}
                             />

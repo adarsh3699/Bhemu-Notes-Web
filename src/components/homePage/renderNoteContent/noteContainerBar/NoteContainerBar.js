@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -47,11 +46,6 @@ function NoteContainerBar({
             </div>
 
             <div id="addNoteAndTodoSection">
-                <Tooltip title="Add Note" arrow>
-                    <IconButton color="inherit" aria-label="addNotesBtn" aria-haspopup="true">
-                        <TextIncreaseIcon fontSize="inherit" />
-                    </IconButton>
-                </Tooltip>
                 <Tooltip title="Add Todo" arrow>
                     <IconButton onClick={handleAddTodoBtn} color="inherit" aria-label="addTodoBtn" aria-haspopup="true">
                         <FormatListBulletedIcon fontSize="inherit" />

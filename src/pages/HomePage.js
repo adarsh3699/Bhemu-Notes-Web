@@ -6,7 +6,6 @@ import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../f
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
-import NotesModal from '../components/homePage/notesModal/NotesModal';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 
 import Hotkeys from 'react-hot-keys';
@@ -17,7 +16,16 @@ function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return { width, height };
 }
-const isPhoneMode = getWindowDimensions()?.width <= 768 ? true : false;
+
+document.addEventListener(
+    'keydown',
+    (e) => {
+        if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+        }
+    },
+    true
+);
 
 function HomePage() {
     const [msg, setMsg] = useState('');
@@ -32,8 +40,9 @@ function HomePage() {
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
-    const todoRef = useRef();
     const [focusedInput, setfocusedInput] = useState(null);
+    const todoRef = useRef();
+    const lastTextBoxRef = useRef();
 
     useEffect(() => {
         handleUserState('homePage');
@@ -44,30 +53,11 @@ function HomePage() {
         }
     }, []);
 
-    useEffect(function () {
-        document.addEventListener(
-            'keydown',
-            (e) => {
-                if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-                    e.preventDefault();
-                }
-            },
-            true
-        );
-
-        // //component did un-mount
-        return function () {
-            document.removeEventListener(
-                'keydown',
-                (e) => {
-                    if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-                        e.preventDefault();
-                    }
-                },
-                true
-            );
-        };
-    }, []);
+    // useEffect(function () {
+    //     setOpenedNoteData(allNotes[0]?.noteData || [])
+    //     setNotesTitle(allNotes[0]?.notesTitle || '')
+    //     setMyNotesId(allNotes[0]?.notesId || '')
+    // }, [allNotes]);
 
     const handleNoteOpening = useCallback(
         (noteId, title, data) => {
@@ -75,6 +65,7 @@ function HomePage() {
             setNotesTitle(title);
             setOpenedNoteData(data);
             setIsNotesModalOpen(true);
+            setfocusedInput(null);
         },
         [setMyNotesId, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
     );
@@ -90,17 +81,6 @@ function HomePage() {
             addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading);
         },
         [handleNoteOpening]
-    );
-
-    //add Note from inputBox Function
-    const handleAddNotesInputbox = useCallback(
-        (e) => {
-            e.preventDefault();
-            const textInput = e.target.searchBox.value;
-            addNotes(textInput);
-            e.target.reset();
-        },
-        [addNotes]
     );
 
     // handle note or todo title change
@@ -119,7 +99,7 @@ function HomePage() {
             notesTitle: document.getElementById('titleTextBox')?.innerText,
             noteData: openedNoteData,
         };
-        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen);
+        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg);
     }, [myNotesId, openedNoteData]);
 
     //handle note or todo delete
@@ -142,12 +122,11 @@ function HomePage() {
         [openedNoteData]
     );
 
-    const handleTextChange = useCallback(
+    const handleNoteTextChange = useCallback(
         (index, e) => {
-            const newToDos = openedNoteData.map(function (toDo, i) {
-                return i === index ? { ...toDo, element: e.target.value } : toDo;
+            const newToDos = openedNoteData.map(function (item, i) {
+                return i === index ? { ...item, element: e.target.value } : item;
             });
-
             setOpenedNoteData(newToDos);
         },
         [openedNoteData]
@@ -177,28 +156,52 @@ function HomePage() {
     }, []);
 
     const handleAddTodoBtn = useCallback(
-        (e, index) => {
-            e.preventDefault();
-            const tempData = [...openedNoteData];
-            tempData.push({ element: '', isDone: false, type: 'todo' });
+        (e) => {
+            let tempData = [...openedNoteData];
+            if (lastTextBoxRef?.current) {
+                lastTextBoxRef.current.style.minHeight = '';
+                if (!lastTextBoxRef.current?.value.trim()) {
+                    tempData.splice(openedNoteData.length - 1, 0, { element: '', isDone: false, type: 'todo' });
+                } else {
+                    tempData.push({ element: '', isDone: false, type: 'todo' }, { element: '', type: 'note' });
+                }
+            }
 
             setOpenedNoteData(tempData);
         },
         [openedNoteData]
     );
 
-    const handleEnterClick = useCallback(
+    const handleTodoEnterClick = useCallback(
         (e, index) => {
             e.preventDefault();
-            const tempData = [...openedNoteData];
-            tempData.splice(index + 1, 0, { element: '', isDone: false });
+            if (e?.target?.value) {
+                const tempData = [...openedNoteData];
+                tempData.splice(index + 1, 0, { element: '', isDone: false, type: 'todo' });
 
-            setOpenedNoteData(tempData);
+                setOpenedNoteData(tempData);
+            }
+            document.getElementById('textbox_' + (index + 1)).focus();
+            setfocusedInput(index + 1);
+        },
+        [openedNoteData]
+    );
 
-            if (openedNoteData.length - 1 !== index) {
-                document.getElementById('todo_' + (index + 1)).focus();
-            } else {
-                setfocusedInput(index + 1);
+    const handleBackspaceClick = useCallback(
+        (e, index) => {
+            if (e.target.value.trim() === '') {
+                e.preventDefault();
+                let newToDos = openedNoteData.filter((data, i) => {
+                    return i !== index ? data : null;
+                });
+
+                setOpenedNoteData(newToDos);
+
+                if (openedNoteData.length - 1 !== index) {
+                    document.getElementById('textbox_' + (index - 1))?.focus();
+                } else {
+                    setfocusedInput(index - 1);
+                }
             }
         },
         [openedNoteData]
@@ -208,7 +211,7 @@ function HomePage() {
         isPageLoaded && (
             <>
                 <div id="homePage">
-                    <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
+                    <NavBar addNotes={addNotes} />
 
                     {/* <div id="msg">{msg}</div> */}
 
@@ -220,26 +223,28 @@ function HomePage() {
                                 isApiLoading={isApiLoading}
                             />
                         </div>
-                        {isNotesModalOpen && !isPhoneMode && (
+                        {isNotesModalOpen && (
                             <div id="noteContentContainer">
                                 <RenderNoteContent
                                     isNotesModalOpen={isNotesModalOpen}
                                     isSaveBtnLoading={isSaveBtnLoading}
                                     handleNotesModalClosing={handleNotesModalClosing}
-                                    handleModalClose={handleNotesModalClosing}
                                     toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
                                     notesTitle={notesTitle}
                                     handleTitleChange={handleTitleChange}
                                     handleDeleteBtnClick={handleDeleteBtnClick}
                                     handleSaveBtnClick={handleSaveBtnClick}
                                     openedNoteData={openedNoteData}
-                                    handleTextChange={handleTextChange}
+                                    handleNoteTextChange={handleNoteTextChange}
                                     handleCheckboxClick={handleCheckboxClick}
                                     handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
                                     handleAddTodoBtn={handleAddTodoBtn}
-                                    handleEnterClick={handleEnterClick}
+                                    handleTodoEnterClick={handleTodoEnterClick}
+                                    handleBackspaceClick={handleBackspaceClick}
                                     todoRef={todoRef}
                                     focusedInput={focusedInput}
+                                    setfocusedInput={setfocusedInput}
+                                    lastTextBoxRef={lastTextBoxRef}
                                 />
                             </div>
                         )}
@@ -261,27 +266,6 @@ function HomePage() {
                         isOpen={isConfirmationDialogOpen}
                         onCancel={() => setIsConfirmationDialogOpen(false)}
                         onYesClick={handleDeleteBtnClick}
-                    />
-                )}
-
-                {isNotesModalOpen && isPhoneMode && (
-                    <NotesModal
-                        open={isNotesModalOpen}
-                        isSaveBtnLoading={isSaveBtnLoading}
-                        closeOnOutsideClick={handleNotesModalClosing}
-                        handleModalClose={handleNotesModalClosing}
-                        toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-                        notesTitle={notesTitle}
-                        handleTitleChange={handleTitleChange}
-                        handleDeleteBtnClick={handleDeleteBtnClick}
-                        handleSaveBtnClick={handleSaveBtnClick}
-                        openedNoteData={openedNoteData}
-                        handleTextChange={handleTextChange}
-                        handleCheckboxClick={handleCheckboxClick}
-                        handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                        handleEnterClick={handleEnterClick}
-                        todoRef={todoRef}
-                        focusedInput={focusedInput}
                     />
                 )}
             </>
