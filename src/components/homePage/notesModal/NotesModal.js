@@ -28,7 +28,8 @@ function ModalWrapper({
     handleTextChange,
     handleCheckboxClick,
     handleDeleteToDoBtnClick,
-    handleEnterClick,
+    handleTodoEnterClick,
+    handleTodoBackspaceClick,
     todoRef,
     focusedInput,
 }) {
@@ -78,8 +79,10 @@ function ModalWrapper({
                                 onChange={(e) => handleTextChange(index, e)}
                                 ref={focusedInput === index ? todoRef : null}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleEnterClick(e, index);
+                                    if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
+                                        handleTodoEnterClick(e, index);
+                                    } else if (e.key === 'Backspace' || e.keyCode === 8 || e.which === 8) {
+                                        handleTodoBackspaceClick(e, index);
                                     }
                                 }}
                             />
