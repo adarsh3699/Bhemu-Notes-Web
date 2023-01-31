@@ -3,34 +3,46 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
 
-import Loader from '../components/Loader';
-import NotesModal from '../components/homePage/notesModal/NotesModal';
 import NavBar from '../components/homePage/navBar/NavBar';
-import RenderNotes from '../components/homePage/renderNotes/RenderNotes';
+import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
+import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
-
-import homePageSkeleton from '../img/homePageSkeleton.svg';
 
 import Hotkeys from 'react-hot-keys';
 
 import '../styles/homePage.css';
+
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return { width, height };
+}
+
+document.addEventListener(
+    'keydown',
+    (e) => {
+        if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+        }
+    },
+    true
+);
 
 function HomePage() {
     const [msg, setMsg] = useState('');
     const [allNotes, setAllNotes] = useState([]);
 
     const [myNotesId, setMyNotesId] = useState('');
-    const [notesType, setNotesType] = useState(0);
     const [notesTitle, setNotesTitle] = useState('');
     const [openedNoteData, setOpenedNoteData] = useState([]);
 
-    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(getWindowDimensions()?.width > 768 ? true : false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
     const [isPageLoaded, setIsPageLoaded] = useState(false);
     const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
-    const todoRef = useRef();
     const [focusedInput, setfocusedInput] = useState(null);
+    const todoRef = useRef();
+    const lastTextBoxRef = useRef();
 
     useEffect(() => {
         handleUserState('homePage');
@@ -41,65 +53,34 @@ function HomePage() {
         }
     }, []);
 
-    useEffect(function () {
-        document.addEventListener(
-            'keydown',
-            (e) => {
-                if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-                    e.preventDefault();
-                }
-            },
-            true
-        );
-
-        // //component did un-mount
-        return function () {
-            document.removeEventListener(
-                'keydown',
-                (e) => {
-                    if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-                        e.preventDefault();
-                    }
-                },
-                true
-            );
-        };
-    }, []);
+    // useEffect(function () {
+    //     setOpenedNoteData(allNotes[0]?.noteData || [])
+    //     setNotesTitle(allNotes[0]?.notesTitle || '')
+    //     setMyNotesId(allNotes[0]?.notesId || '')
+    // }, [allNotes]);
 
     const handleNoteOpening = useCallback(
-        (noteId, type, title, data) => {
+        (noteId, title, data) => {
             setMyNotesId(noteId);
-            setNotesType(type);
             setNotesTitle(title);
             setOpenedNoteData(data);
             setIsNotesModalOpen(true);
+            setfocusedInput(null);
         },
-        [setMyNotesId, setNotesType, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
+        [setMyNotesId, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
     );
 
     //add Note Function
     const addNotes = useCallback(
-        (newNoteType, notesTitle) => {
+        (e, notesTitle) => {
             setIsApiLoading(true);
             const newNotesTitle = notesTitle ? notesTitle : 'Enter Notes Title';
-            const newNoteData = [{ element: '', isDone: false }];
+            const newNoteData = [{ element: '', type: 'note' }];
 
-            const toSendNoteData = { newNotesTitle, newNoteType, newNoteData };
-
-            addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading, NotesModal);
+            const toSendNoteData = { newNotesTitle, newNoteData };
+            addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading);
         },
         [handleNoteOpening]
-    );
-
-    //add Note from inputBox Function
-    const handleAddNotesInputbox = useCallback(
-        (e) => {
-            e.preventDefault();
-            const textInput = e.target.searchBox.value;
-            addNotes('note', textInput);
-            e.target.reset();
-        },
-        [addNotes]
     );
 
     // handle note or todo title change
@@ -115,11 +96,11 @@ function HomePage() {
         setIsSaveBtnLoading(true);
         const toSendData = {
             noteId: myNotesId,
-            notesTitle,
+            notesTitle: document.getElementById('titleTextBox')?.innerText,
             noteData: openedNoteData,
         };
-        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen);
-    }, [myNotesId, openedNoteData, notesTitle]);
+        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg);
+    }, [myNotesId, openedNoteData]);
 
     //handle note or todo delete
     const handleDeleteBtnClick = useCallback(async () => {
@@ -141,12 +122,11 @@ function HomePage() {
         [openedNoteData]
     );
 
-    const handleTextChange = useCallback(
+    const handleNoteTextChange = useCallback(
         (index, e) => {
-            const newToDos = openedNoteData.map(function (toDo, i) {
-                return i === index ? { ...toDo, element: e.target.value } : toDo;
+            const newToDos = openedNoteData.map(function (item, i) {
+                return i === index ? { ...item, element: e.target.value } : item;
             });
-
             setOpenedNoteData(newToDos);
         },
         [openedNoteData]
@@ -175,25 +155,41 @@ function HomePage() {
         setfocusedInput(null);
     }, []);
 
-    const handleTodoEnterClick = useCallback(
-        (e, index) => {
-            const tempData = [...openedNoteData];
-            tempData.splice(index + 1, 0, { element: '', isDone: false });
+    const handleAddTodoBtn = useCallback(
+        (e) => {
+            let tempData = [...openedNoteData];
+            if (lastTextBoxRef?.current) {
+                lastTextBoxRef.current.style.minHeight = '';
+                if (!lastTextBoxRef.current?.value.trim()) {
+                    tempData.splice(openedNoteData.length - 1, 0, { element: '', isDone: false, type: 'todo' });
+                } else {
+                    tempData.push({ element: '', isDone: false, type: 'todo' }, { element: '', type: 'note' });
+                }
+            }
 
             setOpenedNoteData(tempData);
-
-            if (openedNoteData.length - 1 !== index) {
-                document.getElementById('todo_' + (index + 1)).focus();
-            } else {
-                setfocusedInput(index + 1);
-            }
         },
         [openedNoteData]
     );
 
-    const handleTodoBackspaceClick = useCallback(
+    const handleTodoEnterClick = useCallback(
         (e, index) => {
-            if (e.target.value === '') {
+            e.preventDefault();
+            if (e?.target?.value) {
+                const tempData = [...openedNoteData];
+                tempData.splice(index + 1, 0, { element: '', isDone: false, type: 'todo' });
+
+                setOpenedNoteData(tempData);
+            }
+            document.getElementById('textbox_' + (index + 1)).focus();
+            setfocusedInput(index + 1);
+        },
+        [openedNoteData]
+    );
+
+    const handleBackspaceClick = useCallback(
+        (e, index) => {
+            if (e.target.value.trim() === '') {
                 e.preventDefault();
                 let newToDos = openedNoteData.filter((data, i) => {
                     return i !== index ? data : null;
@@ -202,7 +198,7 @@ function HomePage() {
                 setOpenedNoteData(newToDos);
 
                 if (openedNoteData.length - 1 !== index) {
-                    document.getElementById('todo_' + (index - 1))?.focus();
+                    document.getElementById('textbox_' + (index - 1))?.focus();
                 } else {
                     setfocusedInput(index - 1);
                 }
@@ -212,68 +208,68 @@ function HomePage() {
     );
 
     return (
-        <>
-            {isPageLoaded && (
-                <>
-                    <Hotkeys
-                        keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
-                        onKeyDown={handleShortcutKeyPress}
-                        // onKeyUp={onKeyUp}
-                        filter={(event) => {
-                            return true; //to enable shortcut key inside input, textarea and select too
-                        }}
-                    />
-                    {isConfirmationDialogOpen && (
-                        <ConfirmationDialog
-                            title="Are You Sure?"
-                            message="You can't undo this action."
-                            isOpen={isConfirmationDialogOpen}
-                            onCancel={() => setIsConfirmationDialogOpen(false)}
-                            onYesClick={handleDeleteBtnClick}
-                        />
-                    )}
+        isPageLoaded && (
+            <>
+                <div id="homePage">
+                    <NavBar addNotes={addNotes} />
 
-                    <div id="homePage">
-                        <NavBar handleAddNotesInputbox={handleAddNotesInputbox} addNotes={addNotes} />
+                    {/* <div id="msg">{msg}</div> */}
 
-                        <div id="msg">{msg}</div>
-                        <Loader isLoading={isApiLoading} />
-
-                        {allNotes.length === 0 ? (
-                            <div id="homePageSkeleton">
-                                <img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
-                                <div id="homePageSkeletonText">Create your first note !</div>
-                            </div>
-                        ) : (
-                            <RenderNotes allNotes={allNotes} handleNoteOpening={handleNoteOpening} />
-                        )}
-
-                        {isNotesModalOpen && (
-                            <NotesModal
-                                open={isNotesModalOpen}
-                                isSaveBtnLoading={isSaveBtnLoading}
-                                closeOnOutsideClick={handleNotesModalClosing}
-                                handleModalClose={handleNotesModalClosing}
-                                toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-                                notesTitle={notesTitle}
-                                handleTitleChange={handleTitleChange}
-                                handleDeleteBtnClick={handleDeleteBtnClick}
-                                handleSaveBtnClick={handleSaveBtnClick}
-                                openedNoteData={openedNoteData}
-                                notesType={notesType}
-                                handleTextChange={handleTextChange}
-                                handleCheckboxClick={handleCheckboxClick}
-                                handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-                                handleTodoEnterClick={handleTodoEnterClick}
-                                handleTodoBackspaceClick={handleTodoBackspaceClick}
-                                todoRef={todoRef}
-                                focusedInput={focusedInput}
+                    <div id="allContent">
+                        <div id="notesTitleContainer">
+                            <RenderNotesTitle
+                                allNotes={allNotes}
+                                handleNoteOpening={handleNoteOpening}
+                                isApiLoading={isApiLoading}
                             />
+                        </div>
+                        {isNotesModalOpen && (
+                            <div id="noteContentContainer">
+                                <RenderNoteContent
+                                    isNotesModalOpen={isNotesModalOpen}
+                                    isSaveBtnLoading={isSaveBtnLoading}
+                                    handleNotesModalClosing={handleNotesModalClosing}
+                                    toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+                                    notesTitle={notesTitle}
+                                    handleTitleChange={handleTitleChange}
+                                    handleDeleteBtnClick={handleDeleteBtnClick}
+                                    handleSaveBtnClick={handleSaveBtnClick}
+                                    openedNoteData={openedNoteData}
+                                    handleNoteTextChange={handleNoteTextChange}
+                                    handleCheckboxClick={handleCheckboxClick}
+                                    handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
+                                    handleAddTodoBtn={handleAddTodoBtn}
+                                    handleTodoEnterClick={handleTodoEnterClick}
+                                    handleBackspaceClick={handleBackspaceClick}
+                                    todoRef={todoRef}
+                                    focusedInput={focusedInput}
+                                    setfocusedInput={setfocusedInput}
+                                    lastTextBoxRef={lastTextBoxRef}
+                                />
+                            </div>
                         )}
                     </div>
-                </>
-            )}
-        </>
+                </div>
+
+                <Hotkeys
+                    keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
+                    onKeyDown={handleShortcutKeyPress}
+                    // onKeyUp={onKeyUp}
+                    filter={(event) => {
+                        return true; //to enable shortcut key inside input, textarea and select too
+                    }}
+                />
+                {isConfirmationDialogOpen && (
+                    <ConfirmationDialog
+                        title="Are You Sure?"
+                        message="You can't undo this action."
+                        isOpen={isConfirmationDialogOpen}
+                        onCancel={() => setIsConfirmationDialogOpen(false)}
+                        onYesClick={handleDeleteBtnClick}
+                    />
+                )}
+            </>
+        )
     );
 }
 

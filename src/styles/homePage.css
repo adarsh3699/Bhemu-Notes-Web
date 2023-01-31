@@ -1,48 +1,53 @@
 #homePage {
     background: rgb(30, 30, 30);
-    min-height: 100vh;
     width: 100%;
 }
 
+#allContent {
+    display: flex;
+}
+
+#notesTitleContainer {
+    width: 25%;
+    text-align: center;
+    border-right: 0.5px solid rgba(255, 255, 255, 0.3);
+}
+
+#noteContentContainer {
+    min-width: 75%;
+    max-width: 75%;
+    z-index: 10;
+    background: rgb(30, 30, 30);
+}
+
 #msg {
-    padding-top: 65px;
     text-align: center;
     color: red;
     font-size: 18px;
     font-weight: bold;
 }
 
-#homePageSkeleton {
-    position: fixed;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
+/* ...............M-Web................ */
+@media screen and (max-width: 1200px) {
+    #notesTitleContainer {
+        min-width: 300px;
+    }
 
-#homePageSkeletonImg {
-    height: 400px;
-}
-
-#homePageSkeletonText {
-    margin-top: 10px;
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px #000;
-}
-
-@media screen and (max-width: 800px) {
-    #homePageSkeletonImg {
-        height: unset;
+    #noteContentContainer {
+        min-width: calc(100% - 300px);
+        max-width: calc(100% - 300px);
     }
 }
 
-@media screen and (max-width: 450px) {
-    #homePageSkeleton {
-        top: 40%;
+@media screen and (max-width: 768px) {
+    #notesTitleContainer {
+        width: 100%;
+        border: unset;
     }
-    #homePageSkeletonImg {
-        height: 200px;
+
+    #noteContentContainer {
+        position: fixed;
+        min-width: 100%;
+        max-width: 100%;
     }
 }

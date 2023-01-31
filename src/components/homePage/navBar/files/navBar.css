@@ -1,12 +1,10 @@
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
-    padding: 5px 0;
+    min-height: 44px;
+    max-height: 44px;
     background-color: #121212;
     border-width: 0;
     border-style: solid;
@@ -21,13 +19,9 @@
     align-items: center;
 }
 
-#iconMenuBtn {
-    margin: 0 5px 0 20px;
-}
-
 #name {
-    font-size: 16px;
-    font-weight: 550;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 #searchBox {
@@ -44,41 +38,8 @@
 
 .addNoteBtn {
     margin-right: 20px !important;
-    padding: 4px 11px !important;
     border-radius: 7px !important;
     font-weight: 550 !important;
-}
-
-@media screen and (max-width: 945px) {
-    #searchBox {
-        width: 400px;
-    }
-}
-
-@media screen and (max-width: 800px) {
-    #searchBox {
-        width: 300px;
-    }
-}
-
-@media screen and (max-width: 615px) {
-    #name {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 530px) {
-    #iconMenuBtn {
-        margin: 0 0 0 4px;
-    }
-
-    .addNoteBtn {
-        margin-right: 10px !important;
-        padding: 5px 7px !important;
-        font-size: 11px !important;
-    }
-
-    #searchBox {
-        width: 200px;
-    }
+    padding: 5px 8px !important;
+    font-size: 12px !important;
 }

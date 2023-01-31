@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-import './notesModal.css';
+// import './notesModal.css';
 
 function ModalWrapper({
     open,
@@ -49,7 +49,7 @@ function ModalWrapper({
                     handleSaveBtnClick={handleSaveBtnClick}
                 />
 
-                {openedNoteData.map(function (item, index) {
+                {/* {openedNoteData.map(function (item, index) {
                     return notesType === 'note' ? ( //type notes
                         <textarea
                             id="notesArea"
@@ -95,7 +95,7 @@ function ModalWrapper({
                             </IconButton>
                         </div>
                     ) : null;
-                })}
+                })} */}
             </div>
         </Modal>
     );

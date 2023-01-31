@@ -24,11 +24,11 @@ function handlePasswordChange(changePasswordData, setChangePasswordMsg, setIsCha
     console.log(changePasswordData);
 
     if (!currentPassword || !newPassword || !confPassword)
-        return setChangePasswordMsg('Please provide all detials'), setIsChangePasswordBtnLoading(false);
+        return setChangePasswordMsg('Please provide all detials') && setIsChangePasswordBtnLoading(false);
     if (newPassword !== confPassword)
-        return setChangePasswordMsg('Password does not match.'), setIsChangePasswordBtnLoading(false);
+        return setChangePasswordMsg('Password does not match.') && setIsChangePasswordBtnLoading(false);
     if (currentPassword.length < 8 || newPassword.length < 8 || confPassword.length < 8)
-        return setChangePasswordMsg('Password must be 8 digits.'), setIsChangePasswordBtnLoading(false);
+        return setChangePasswordMsg('Password must be 8 digits.') && setIsChangePasswordBtnLoading(false);
 
     const user = auth.currentUser;
     const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
