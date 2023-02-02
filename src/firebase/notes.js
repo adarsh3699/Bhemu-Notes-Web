@@ -59,7 +59,7 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 }
 
 //Add Notes
-function addNewNote(upcomingData, handleNoteOpening, setMsg, setIsApiLoading) {
+function addNewNote(upcomingData, setMyNotesId, setMsg, setIsApiLoading) {
     const userId = auth?.currentUser?.uid;
     const { newNotesTitle, newNoteData } = upcomingData;
     const encryptTitle = encryptText(newNotesTitle ? newNotesTitle?.trim() : newNotesTitle);
@@ -74,7 +74,7 @@ function addNewNote(upcomingData, handleNoteOpening, setMsg, setIsApiLoading) {
         updatedOn: serverTimestamp(),
     })
         .then((e) => {
-            handleNoteOpening(e?.id, newNotesTitle, newNoteData);
+            setMyNotesId(e?.id);
             setIsApiLoading(false);
         })
         .catch((err) => {
@@ -100,7 +100,11 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
 //update notes
 function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg) {
     const { noteId, notesTitle, noteData } = upcomingData;
-    if (noteId || notesTitle || noteData) setMsg('Please Provide all details');
+    if (!noteId || !notesTitle || !noteData) {
+        setMsg('Please Provide all details');
+        setIsSaveBtnLoading(false);
+        return;
+    }
     const encryptTitle = encryptText(notesTitle ? notesTitle?.trim() : notesTitle);
     const stringifyedNoteData = JSON.stringify(noteData);
     const encryptNoteData = encryptText(stringifyedNoteData);

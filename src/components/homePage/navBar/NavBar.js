@@ -97,7 +97,7 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
                     >
                         <Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
                     </IconButton>
-                    <div id="name">Bhemu Notes</div>
+                    <div id="name">{userName ? userName : 'Bhemu Notes'}</div>
                 </div>
 
                 <Button

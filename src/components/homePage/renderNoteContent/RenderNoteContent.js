@@ -33,6 +33,12 @@ function RenderNoteContent({
     lastTextBoxRef,
 }) {
     useEffect(() => {
+        if (lastTextBoxRef.current) {
+            lastTextBoxRef.current.focus();
+        }
+    }, [lastTextBoxRef]);
+
+    useEffect(() => {
         if (focusedInput) todoRef?.current?.focus();
         setfocusedInput(null);
     }, [focusedInput, todoRef, setfocusedInput]);

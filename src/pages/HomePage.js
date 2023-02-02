@@ -7,6 +7,7 @@ import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
+import ErrorMsg from '../components/errorMsg/ErrorMsg';
 
 import Hotkeys from 'react-hot-keys';
 
@@ -44,6 +45,7 @@ function HomePage() {
     const todoRef = useRef();
     const lastTextBoxRef = useRef();
 
+    console.log(msg);
     useEffect(() => {
         handleUserState('homePage');
         if (JSON.parse(localStorage.getItem('user_details'))) {
@@ -59,15 +61,26 @@ function HomePage() {
     //     setMyNotesId(allNotes[0]?.notesId || '')
     // }, [allNotes]);
 
+    const handleErrorShown = useCallback((msgText) => {
+        if (msgText) {
+            setMsg(msgText);
+            setTimeout(() => {
+                setMsg('');
+            }, 2500);
+        } else {
+            console.log('Please Provide Text Msg');
+        }
+    }, []);
+
     const handleNoteOpening = useCallback(
         (noteId, title, data) => {
-            setMyNotesId(noteId);
+            if (noteId) setMyNotesId(noteId);
             setNotesTitle(title);
             setOpenedNoteData(data);
             setIsNotesModalOpen(true);
             setfocusedInput(null);
         },
-        [setMyNotesId, setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
+        [setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
     );
 
     //add Note Function
@@ -78,9 +91,27 @@ function HomePage() {
             const newNoteData = [{ element: '', type: 'note' }];
 
             const toSendNoteData = { newNotesTitle, newNoteData };
-            addNewNote(toSendNoteData, handleNoteOpening, setMsg, setIsApiLoading);
+            handleNoteOpening('', newNotesTitle, newNoteData);
+            addNewNote(toSendNoteData, setMyNotesId, handleErrorShown, setIsApiLoading);
         },
-        [handleNoteOpening]
+        [handleNoteOpening, handleErrorShown]
+    );
+
+    const handleAddNoteInputBox = useCallback(
+        (e) => {
+            e.preventDefault();
+            const newNotesTitle = e.target.noteTitle.value.trim();
+            if (newNotesTitle) {
+                setIsApiLoading(true);
+                const newNoteData = [{ element: '', type: 'note' }];
+
+                const toSendNoteData = { newNotesTitle, newNoteData };
+                handleNoteOpening('', newNotesTitle, newNoteData);
+                addNewNote(toSendNoteData, setMyNotesId, handleErrorShown, setIsApiLoading);
+                e.target.reset();
+            }
+        },
+        [handleNoteOpening, handleErrorShown]
     );
 
     // handle note or todo title change
@@ -99,8 +130,8 @@ function HomePage() {
             notesTitle: document.getElementById('titleTextBox')?.innerText,
             noteData: openedNoteData,
         };
-        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg);
-    }, [myNotesId, openedNoteData]);
+        updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleErrorShown);
+    }, [handleErrorShown, myNotesId, openedNoteData]);
 
     //handle note or todo delete
     const handleDeleteBtnClick = useCallback(async () => {
@@ -108,8 +139,8 @@ function HomePage() {
         setIsNotesModalOpen(false);
         setIsConfirmationDialogOpen(false);
 
-        deleteData(myNotesId, setIsApiLoading, setMsg);
-    }, [myNotesId]);
+        deleteData(myNotesId, setIsApiLoading, handleErrorShown);
+    }, [handleErrorShown, myNotesId]);
 
     //handle todo checkbo click
     const handleCheckboxClick = useCallback(
@@ -221,6 +252,7 @@ function HomePage() {
                                 allNotes={allNotes}
                                 handleNoteOpening={handleNoteOpening}
                                 isApiLoading={isApiLoading}
+                                handleAddNoteInputBox={handleAddNoteInputBox}
                             />
                         </div>
                         {isNotesModalOpen && (
@@ -268,6 +300,7 @@ function HomePage() {
                         onYesClick={handleDeleteBtnClick}
                     />
                 )}
+                {msg && <ErrorMsg isError={msg ? true : false} msgText={msg} />}
             </>
         )
     );

@@ -5,12 +5,18 @@ import homePageSkeleton from '../../../img/homePageSkeleton.svg';
 
 import './renderNotesTitle.css';
 
-function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading }) {
+function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading, handleAddNoteInputBox }) {
     return (
         <>
-            <div id="addNotesInputBox">
-                <input id="addNotesInput" type="text" placeholder="Take a note..." />
-            </div>
+            <form id="addNotesInputBox" onSubmit={handleAddNoteInputBox}>
+                <input
+                    id="addNotesInput"
+                    name="noteTitle"
+                    autoComplete="off"
+                    type="text"
+                    placeholder="Take a note..."
+                />
+            </form>
             <div id="renderNotes">
                 <Loader isLoading={isApiLoading} />
                 {allNotes.length === 0 && !isApiLoading && (
