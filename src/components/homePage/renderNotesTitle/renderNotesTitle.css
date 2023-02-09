@@ -43,6 +43,12 @@
     max-height: calc(100vh - 45px - 52px);
     overflow: auto;
     text-align: left;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#renderNotes::-webkit-scrollbar {
+    display: none;
 }
 
 .noteBox {
