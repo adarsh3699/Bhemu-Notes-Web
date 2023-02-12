@@ -11,3 +11,9 @@
 li {
 	line-height: 32px;
 }
+
+@media screen and (max-width: 470px) {
+	.aboutSettings {
+		margin: 0 30px;
+	}
+}
