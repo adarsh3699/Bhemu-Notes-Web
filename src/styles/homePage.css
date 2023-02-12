@@ -1,53 +1,53 @@
 #homePage {
-    background: rgb(30, 30, 30);
-    width: 100%;
+	background: rgb(30, 30, 30);
+	width: 100%;
 }
 
 #allContent {
-    display: flex;
+	display: flex;
 }
 
 #notesTitleContainer {
-    width: 25%;
-    text-align: center;
-    border-right: 0.5px solid rgba(255, 255, 255, 0.3);
+	width: 25%;
+	text-align: center;
+	border-right: 0.5px solid rgba(255, 255, 255, 0.3);
 }
 
 #noteContentContainer {
-    min-width: calc(75% - 0.5px);
-    max-width: calc(75% - 0.5px);
-    z-index: 10;
-    background: rgb(30, 30, 30);
+	min-width: calc(75% - 0.5px);
+	max-width: calc(75% - 0.5px);
+	z-index: 10;
+	background: rgb(30, 30, 30);
 }
 
 #msg {
-    text-align: center;
-    color: red;
-    font-size: 18px;
-    font-weight: bold;
+	text-align: center;
+	color: red;
+	font-size: 18px;
+	font-weight: bold;
 }
 
 /* ...............M-Web................ */
 @media screen and (max-width: 1200px) {
-    #notesTitleContainer {
-        min-width: calc(300px - 0.5px);
-    }
+	#notesTitleContainer {
+		min-width: calc(300px - 0.5px);
+	}
 
-    #noteContentContainer {
-        min-width: calc(100% - 300px);
-        max-width: calc(100% - 300px);
-    }
+	#noteContentContainer {
+		min-width: calc(100% - 300px);
+		max-width: calc(100% - 300px);
+	}
 }
 
 @media screen and (max-width: 768px) {
-    #notesTitleContainer {
-        width: 100%;
-        border: unset;
-    }
+	#notesTitleContainer {
+		width: 100%;
+		border: unset;
+	}
 
-    #noteContentContainer {
-        position: fixed;
-        min-width: 100%;
-        max-width: 100%;
-    }
+	#noteContentContainer {
+		position: fixed;
+		min-width: 100%;
+		max-width: 100%;
+	}
 }

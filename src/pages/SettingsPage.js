@@ -28,139 +28,139 @@ document.title = 'Bhemu Notes | Settings';
 const drawerWidth = 240;
 
 function SettingsPage() {
-    const [isPageLoaded, setIsPageLoaded] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [settingsDrawerMenu, setSettingsDrawerMenu] = useState([
-        {
-            name: 'Profile',
-            isSelected: true,
-            icon: <AccountBoxIcon />,
-            page: <ProfileSettings />,
-        },
-        {
-            name: 'Account',
-            isSelected: false,
-            icon: <SettingsIcon />,
-            page: <AccountSettings />,
-        },
-        {
-            name: 'About',
-            isSelected: false,
-            icon: <InfoIcon />,
-            page: <AboutSettings />,
-        },
-        {
-            name: 'Log Out',
-            isSelected: false,
-            icon: <LogoutIcon />,
-            page: undefined,
-        },
-    ]);
+	const [isPageLoaded, setIsPageLoaded] = useState(false);
+	const [mobileOpen, setMobileOpen] = useState(false);
+	const [settingsDrawerMenu, setSettingsDrawerMenu] = useState([
+		{
+			name: 'Profile',
+			isSelected: true,
+			icon: <AccountBoxIcon />,
+			page: <ProfileSettings />,
+		},
+		{
+			name: 'Account',
+			isSelected: false,
+			icon: <SettingsIcon />,
+			page: <AccountSettings />,
+		},
+		{
+			name: 'About',
+			isSelected: false,
+			icon: <InfoIcon />,
+			page: <AboutSettings />,
+		},
+		{
+			name: 'Log Out',
+			isSelected: false,
+			icon: <LogoutIcon />,
+			page: undefined,
+		},
+	]);
 
-    useEffect(() => {
-        handleUserState('settingsPage');
-        if (JSON.parse(localStorage.getItem('user_details'))) {
-            setIsPageLoaded(true);
-            document.title = 'Bhemu Notes | Settings ';
-        }
-    }, []);
+	useEffect(() => {
+		handleUserState('settingsPage');
+		if (JSON.parse(localStorage.getItem('user_details'))) {
+			setIsPageLoaded(true);
+			document.title = 'Bhemu Notes | Settings ';
+		}
+	}, []);
 
-    const handleDrawerToggle = useCallback(() => {
-        setMobileOpen(!mobileOpen);
-    }, [mobileOpen]);
+	const handleDrawerToggle = useCallback(() => {
+		setMobileOpen(!mobileOpen);
+	}, [mobileOpen]);
 
-    const handleSelectedMenu = useCallback(
-        (menuName, index) => {
-            if (menuName === 'Log Out') {
-                handleSignOut();
-                localStorage.clear();
-                document.location.href = '/';
-                return;
-            }
+	const handleSelectedMenu = useCallback(
+		(menuName, index) => {
+			if (menuName === 'Log Out') {
+				handleSignOut();
+				localStorage.clear();
+				document.location.href = '/';
+				return;
+			}
 
-            const newSettingsDrawerMenu = settingsDrawerMenu.map(function (items, i) {
-                return i === index
-                    ? {
-                          ...items,
-                          isSelected: settingsDrawerMenu.i === menuName ? false : true,
-                      }
-                    : { ...items, isSelected: false };
-            });
+			const newSettingsDrawerMenu = settingsDrawerMenu.map(function (items, i) {
+				return i === index
+					? {
+							...items,
+							isSelected: settingsDrawerMenu.i === menuName ? false : true,
+					  }
+					: { ...items, isSelected: false };
+			});
 
-            setSettingsDrawerMenu(newSettingsDrawerMenu);
-        },
-        [settingsDrawerMenu]
-    );
+			setSettingsDrawerMenu(newSettingsDrawerMenu);
+		},
+		[settingsDrawerMenu]
+	);
 
-    return (
-        <>
-            {isPageLoaded && (
-                <Box sx={{ display: 'flex' }}>
-                    <AppBar
-                        position="fixed"
-                        sx={{
-                            width: { sm: `calc(100% - ${drawerWidth}px)` },
-                            ml: { sm: `${drawerWidth}px` },
-                            background: '#1e1e1e',
-                        }}
-                    >
-                        <Toolbar sx={{ justifyContent: 'space-between' }}>
-                            <div className="settingsMenu">
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    edge="start"
-                                    onClick={handleDrawerToggle}
-                                    sx={{
-                                        mr: 2,
-                                        ml: 0,
-                                        display: { sm: 'none' },
-                                    }}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
+	return (
+		<>
+			{isPageLoaded && (
+				<Box sx={{ display: 'flex' }}>
+					<AppBar
+						position="fixed"
+						sx={{
+							width: { sm: `calc(100% - ${drawerWidth}px)` },
+							ml: { sm: `${drawerWidth}px` },
+							background: '#1e1e1e',
+						}}
+					>
+						<Toolbar sx={{ justifyContent: 'space-between' }}>
+							<div className="settingsMenu">
+								<IconButton
+									color="inherit"
+									aria-label="open drawer"
+									edge="start"
+									onClick={handleDrawerToggle}
+									sx={{
+										mr: 2,
+										ml: 0,
+										display: { sm: 'none' },
+									}}
+								>
+									<MenuIcon />
+								</IconButton>
 
-                                <Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
-                                    Settings
-                                </Typography>
-                            </div>
-                            <NavLink to="/home">
-                                <IconButton color="inherit" aria-label="delete">
-                                    <CloseIcon />
-                                </IconButton>
-                            </NavLink>
-                        </Toolbar>
-                        <Divider />
-                    </AppBar>
+								<Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
+									Settings
+								</Typography>
+							</div>
+							<NavLink to="/home">
+								<IconButton color="inherit" aria-label="delete">
+									<CloseIcon />
+								</IconButton>
+							</NavLink>
+						</Toolbar>
+						<Divider />
+					</AppBar>
 
-                    <SettingsDrawer
-                        drawerWidth={drawerWidth}
-                        handleDrawerToggle={handleDrawerToggle}
-                        mobileOpen={mobileOpen}
-                        settingsDrawerMenu={settingsDrawerMenu}
-                        handleSelectedMenu={handleSelectedMenu}
-                    />
+					<SettingsDrawer
+						drawerWidth={drawerWidth}
+						handleDrawerToggle={handleDrawerToggle}
+						mobileOpen={mobileOpen}
+						settingsDrawerMenu={settingsDrawerMenu}
+						handleSelectedMenu={handleSelectedMenu}
+					/>
 
-                    {/* content */}
-                    <Box
-                        component="main"
-                        sx={{
-                            flexGrow: 1,
-                            pt: 5,
-                            pb: 10,
-                            width: { sm: `calc(100% - ${drawerWidth}px)` },
-                        }}
-                    >
-                        <Toolbar />
+					{/* content */}
+					<Box
+						component="main"
+						sx={{
+							flexGrow: 1,
+							pt: 5,
+							pb: 10,
+							width: { sm: `calc(100% - ${drawerWidth}px)` },
+						}}
+					>
+						<Toolbar />
 
-                        {settingsDrawerMenu.map((item, index) => (
-                            <div key={index}>{item?.isSelected ? item?.page : null}</div>
-                        ))}
-                    </Box>
-                </Box>
-            )}
-        </>
-    );
+						{settingsDrawerMenu.map((item, index) => (
+							<div key={index}>{item?.isSelected ? item?.page : null}</div>
+						))}
+					</Box>
+				</Box>
+			)}
+		</>
+	);
 }
 
 export default SettingsPage;

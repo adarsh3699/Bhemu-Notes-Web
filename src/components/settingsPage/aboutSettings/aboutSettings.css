@@ -1,13 +1,13 @@
 .aboutSettings {
-    margin: 0 50px;
+	margin: 0 50px;
 }
 
 .aboutSettingsTitle {
-    font-size: 25px;
-    font-weight: 500;
-    margin-bottom: 20px;
+	font-size: 25px;
+	font-weight: 500;
+	margin-bottom: 20px;
 }
 
 li {
-    line-height: 32px;
+	line-height: 32px;
 }

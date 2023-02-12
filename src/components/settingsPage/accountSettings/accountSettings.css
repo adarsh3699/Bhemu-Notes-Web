@@ -1,38 +1,38 @@
 .accountSettings {
-    margin: 0 50px;
+	margin: 0 50px;
 }
 
 .userNameEmail {
-    display: flex;
-    align-items: center;
-    width: 100%;
+	display: flex;
+	align-items: center;
+	width: 100%;
 }
 
 .userFullName,
 .userEmail {
-    width: 50%;
+	width: 50%;
 }
 
 .userNameEmailTitle {
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 5px;
+	font-size: 17px;
+	font-weight: 600;
+	margin-bottom: 5px;
 }
 
 .accountSettingsInput {
-    font-size: 17px;
-    box-shadow: 0 2px 4px rgba(192, 192, 192, 0.1);
-    border: #2e2c2c 2px solid;
-    border-radius: 5px;
-    width: calc(100% - 16px);
-    height: 40px;
-    padding-left: 12px;
-    outline: unset;
+	font-size: 17px;
+	box-shadow: 0 2px 4px rgba(192, 192, 192, 0.1);
+	border: #2e2c2c 2px solid;
+	border-radius: 5px;
+	width: calc(100% - 16px);
+	height: 40px;
+	padding-left: 12px;
+	outline: unset;
 }
 
 .userFullName,
 .createPasswordInput1 {
-    margin-right: 10px;
+	margin-right: 10px;
 }
 
 .accountSettingsInput:hover,
@@ -41,166 +41,166 @@
 .createPasswordInput:focus,
 .changePasswordInput:hover,
 .changePasswordInput:focus {
-    border: #9e9e9e 2px solid;
+	border: #9e9e9e 2px solid;
 }
 
 .createPasswordSection,
 .changePasswordSection {
-    margin-top: 50px;
+	margin-top: 50px;
 }
 
 .createPasswordTitle {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
 }
 
 .createPasswordText,
 .linkWithGoogleTitleText,
 .changePasswordTitle {
-    font-size: 24px;
-    letter-spacing: 1px;
-    font-weight: 600;
-    margin-right: 5px;
+	font-size: 24px;
+	letter-spacing: 1px;
+	font-weight: 600;
+	margin-right: 5px;
 }
 
 .createPasswordArea {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .createPasswordInput,
 .changePasswordInput {
-    font-size: 17px;
-    box-shadow: 0 2px 4px rgba(192, 192, 192, 0.1);
-    border: #2e2c2c 2px solid;
-    border-radius: 5px;
-    width: calc(50% - 21px);
-    height: 40px;
-    padding-left: 12px;
-    outline: unset;
+	font-size: 17px;
+	box-shadow: 0 2px 4px rgba(192, 192, 192, 0.1);
+	border: #2e2c2c 2px solid;
+	border-radius: 5px;
+	width: calc(50% - 21px);
+	height: 40px;
+	padding-left: 12px;
+	outline: unset;
 }
 
 .createPasswordBtn {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 25px;
 }
 
 .createPasswordMsg {
-    font-size: 25px;
-    color: red;
-    margin-top: -10px;
-    padding-left: 5px;
-    padding-right: 20px;
-    word-break: break-word;
+	font-size: 25px;
+	color: red;
+	margin-top: -10px;
+	padding-left: 5px;
+	padding-right: 20px;
+	word-break: break-word;
 }
 
 .createPasswordMsg2 {
-    display: none;
+	display: none;
 }
 
 .linkWithGoogleSection {
-    margin-top: 40px;
+	margin-top: 40px;
 }
 
 .linkWithGoogleTitle {
-    display: flex;
-    align-items: center;
-    margin-right: 5px;
-    margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+	margin-right: 5px;
+	margin-bottom: 20px;
 }
 
 .linkWithGoogleBtnMSg {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .linkWithGoogleMSg,
 .changePasswordMsg {
-    font-size: 25px;
-    color: red;
-    word-wrap: normal;
-    margin-right: 20px;
-    word-break: break-word;
+	font-size: 25px;
+	color: red;
+	word-wrap: normal;
+	margin-right: 20px;
+	word-break: break-word;
 }
 
 .changePasswordTitle {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .changePasswordInput {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 @media screen and (max-width: 470px) {
-    .accountSettings {
-        margin: 0 30px;
-    }
+	.accountSettings {
+		margin: 0 30px;
+	}
 
-    .userNameEmail {
-        display: block;
-    }
+	.userNameEmail {
+		display: block;
+	}
 
-    .userFullName,
-    .userEmail {
-        width: 90%;
-    }
+	.userFullName,
+	.userEmail {
+		width: 90%;
+	}
 
-    .userFullName {
-        margin: 0 0 15px 0;
-    }
+	.userFullName {
+		margin: 0 0 15px 0;
+	}
 
-    .accountSettingsInput {
-        font-size: 15px;
-        height: 35px;
-    }
+	.accountSettingsInput {
+		font-size: 15px;
+		height: 35px;
+	}
 
-    .createPasswordText,
-    .linkWithGoogleTitleText,
-    .changePasswordTitle {
-        font-size: 20px;
-        letter-spacing: 1px;
-        font-weight: 600;
-        margin-right: 5px;
-    }
+	.createPasswordText,
+	.linkWithGoogleTitleText,
+	.changePasswordTitle {
+		font-size: 20px;
+		letter-spacing: 1px;
+		font-weight: 600;
+		margin-right: 5px;
+	}
 
-    .createPasswordArea {
-        display: block;
-    }
+	.createPasswordArea {
+		display: block;
+	}
 
-    .createPasswordInput,
-    .changePasswordInput {
-        font-size: 15px;
-        height: 35px;
-        width: calc(90% - 16px);
-    }
+	.createPasswordInput,
+	.changePasswordInput {
+		font-size: 15px;
+		height: 35px;
+		width: calc(90% - 16px);
+	}
 
-    .createPasswordInput1 {
-        margin-bottom: 10px;
-    }
+	.createPasswordInput1 {
+		margin-bottom: 10px;
+	}
 
-    .createPasswordBtn {
-        display: block;
-        margin: 30px 0 0 0;
-        align-items: center;
-    }
+	.createPasswordBtn {
+		display: block;
+		margin: 30px 0 0 0;
+		align-items: center;
+	}
 
-    .createPasswordMsg1 {
-        display: none;
-    }
+	.createPasswordMsg1 {
+		display: none;
+	}
 
-    .createPasswordMsg2 {
-        margin-top: 10px;
-        display: block;
-        font-size: 20px;
-    }
+	.createPasswordMsg2 {
+		margin-top: 10px;
+		display: block;
+		font-size: 20px;
+	}
 
-    .linkWithGoogleBtnMSg {
-        display: block;
-    }
+	.linkWithGoogleBtnMSg {
+		display: block;
+	}
 
-    .linkWithGoogleMSg {
-        margin-top: 10px;
-    }
+	.linkWithGoogleMSg {
+		margin-top: 10px;
+	}
 }

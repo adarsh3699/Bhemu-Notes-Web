@@ -1,77 +1,77 @@
 #userNotesContent {
-    max-height: calc(100vh - 85px);
-    min-height: calc(100vh - 85px);
-    overflow: auto;
+	max-height: calc(100vh - 85px);
+	min-height: calc(100vh - 85px);
+	overflow: auto;
 }
 
 #titleTextBox,
 .notesArea,
 .todosInputBox {
-    font-family: 'Google Sans', Roboto, Arial, sans-serif;
+	font-family: 'Google Sans', Roboto, Arial, sans-serif;
 }
 
 #titleTextBox {
-    display: block;
-    padding: 6px 15px 0 15px;
-    min-width: calc(100% - 30px);
-    max-width: calc(100% - 30px);
-    color: white;
-    font-size: 22px;
-    font-weight: 500;
-    border: unset;
-    outline: unset;
-    margin-bottom: 10px;
+	display: block;
+	padding: 6px 15px 0 15px;
+	min-width: calc(100% - 30px);
+	max-width: calc(100% - 30px);
+	color: white;
+	font-size: 22px;
+	font-weight: 500;
+	border: unset;
+	outline: unset;
+	margin-bottom: 10px;
 }
 
 #titleTextBox[placeholder]:empty:before {
-    content: attr(placeholder);
-    color: rgb(140, 138, 138);
+	content: attr(placeholder);
+	color: rgb(140, 138, 138);
 }
 
 .notesArea {
-    display: block;
-    padding: 7.5px 15px 7.5px 15px;
-    color: white;
-    font-size: 16px;
-    resize: unset;
-    width: calc(100% - 30px);
-    border: unset;
-    outline: unset;
-    background-color: unset;
+	display: block;
+	padding: 7.5px 15px 7.5px 15px;
+	color: white;
+	font-size: 16px;
+	resize: unset;
+	width: calc(100% - 30px);
+	border: unset;
+	outline: unset;
+	background-color: unset;
 }
 
 .lastNotesArea {
-    padding-bottom: 200px;
+	padding-bottom: 200px;
 }
 
 .toDosBox {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .toDosBox:focus-within {
-    background-color: rgb(58, 58, 58);
+	background-color: rgb(58, 58, 58);
 }
 
 .toDosBox:last-child {
-    margin-bottom: 200px;
+	margin-bottom: 200px;
 }
 
 .todosInputBox {
-    color: white;
-    font-size: 16px;
-    padding: 10px;
-    resize: vertical;
-    outline: unset;
-    width: 94%;
-    background-color: unset;
-    border: unset;
+	color: white;
+	font-size: 16px;
+	padding: 10px;
+	resize: vertical;
+	outline: unset;
+	width: 94%;
+	background-color: unset;
+	border: unset;
 }
 
 .todosIsDone {
-    text-decoration: line-through;
-    text-decoration-color: rgb(255, 182, 182);
-    text-decoration-thickness: 2px;
+	text-decoration: line-through;
+	text-decoration-color: rgb(255, 182, 182);
+	text-decoration-thickness: 2px;
 }
 
 /* ...............M-Web................ */
