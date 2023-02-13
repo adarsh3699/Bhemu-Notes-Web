@@ -45,7 +45,6 @@ function HomePage() {
 	const todoRef = useRef();
 	const lastTextBoxRef = useRef();
 
-	console.log(msg);
 	useEffect(() => {
 		handleUserState('homePage');
 		if (JSON.parse(localStorage.getItem('user_details'))) {
@@ -56,9 +55,9 @@ function HomePage() {
 	}, []);
 
 	// useEffect(function () {
-	//     setOpenedNoteData(allNotes[0]?.noteData || [])
-	//     setNotesTitle(allNotes[0]?.notesTitle || '')
-	//     setMyNotesId(allNotes[0]?.notesId || '')
+	// 	setOpenedNoteData(allNotes[0]?.noteData || [])
+	// 	setNotesTitle(allNotes[0]?.notesTitle || '')
+	// 	setMyNotesId(allNotes[0]?.notesId || '')
 	// }, [allNotes]);
 
 	const handleErrorShown = useCallback((msgText) => {
