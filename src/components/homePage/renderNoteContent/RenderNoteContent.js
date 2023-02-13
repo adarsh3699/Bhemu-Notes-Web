@@ -93,10 +93,7 @@ function RenderNoteContent({
 							value={item?.element}
 							ref={openedNoteData.length - 1 === index ? lastTextBoxRef : null}
 							onKeyDown={(e) => {
-								if (
-									(e.key === 'Backspace' || e.keyCode === 8 || e.which === 8) &&
-									openedNoteData.length - 1 !== index
-								) {
+								if (e.key === 'Backspace' || e.keyCode === 8 || e.which === 8) {
 									handleBackspaceClick(e, index);
 								}
 							}}

@@ -83,6 +83,12 @@ function HomePage() {
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
 	);
 
+	const handleNotesModalClosing = useCallback(() => {
+		setIsNotesModalOpen(false);
+		setfocusedInput(null);
+		if (getWindowDimensions()?.width <= 768) document.querySelector('body').style.overflow = null;
+	}, []);
+
 	//add Note Function
 	const addNotes = useCallback(
 		(e, notesTitle) => {
@@ -181,11 +187,6 @@ function HomePage() {
 		}
 	}, [handleSaveBtnClick, isNotesModalOpen]);
 
-	const handleNotesModalClosing = useCallback(() => {
-		setIsNotesModalOpen(false);
-		setfocusedInput(null);
-	}, []);
-
 	const handleAddTodoBtn = useCallback(
 		(e) => {
 			let tempData = [...openedNoteData];
@@ -222,12 +223,13 @@ function HomePage() {
 		(e, index) => {
 			if (e.target.value.trim() === '') {
 				e.preventDefault();
-				let newToDos = openedNoteData.filter((data, i) => {
-					return i !== index ? data : null;
-				});
 
-				setOpenedNoteData(newToDos);
-
+				if (openedNoteData.length - 1 !== index) { //for last textbox
+					let newToDos = openedNoteData.filter((data, i) => {
+						return i !== index ? data : null;
+					});
+					setOpenedNoteData(newToDos);
+				}
 				if (openedNoteData.length - 1 !== index) {
 					document.getElementById('textbox_' + (index - 1))?.focus();
 				} else {
