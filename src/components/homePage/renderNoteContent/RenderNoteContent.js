@@ -47,7 +47,7 @@ function RenderNoteContent({
 		const textBox = lastTextBoxRef?.current;
 		if (textBox && openedNoteData.length >= 1) {
 			const upperHeight = textBox?.getBoundingClientRect()?.top;
-			textBox.style.minHeight = 'calc(100vh - ' + (upperHeight + 15) + 'px)';
+			textBox.style.minHeight = 'calc(100vh - 250px - ' + (upperHeight + 15) + 'px)';
 		}
 	});
 
@@ -88,11 +88,7 @@ function RenderNoteContent({
 							id={'textbox_' + index}
 							key={index}
 							placeholder={openedNoteData.length === 1 ? 'Take a note' : null}
-							className={
-								openedNoteData.length > 7 && openedNoteData.length - 1 === index
-									? 'notesArea lastNotesArea'
-									: 'notesArea'
-							}
+							className={openedNoteData.length - 1 === index ? 'notesArea lastNotesArea' : 'notesArea'}
 							onChange={(e) => handleNoteTextChange(index, e)}
 							value={item?.element}
 							ref={openedNoteData.length - 1 === index ? lastTextBoxRef : null}

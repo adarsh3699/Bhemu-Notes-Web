@@ -78,6 +78,7 @@ function HomePage() {
 			setOpenedNoteData(data);
 			setIsNotesModalOpen(true);
 			setfocusedInput(null);
+			if (getWindowDimensions()?.width <= 768) document.querySelector('body').style.overflow = 'hidden';
 		},
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
 	);
@@ -241,9 +242,7 @@ function HomePage() {
 		isPageLoaded && (
 			<>
 				<div id="homePage">
-					<NavBar addNotes={addNotes} />
-
-					{/* <div id="msg">{msg}</div> */}
+					<NavBar NavBarType="homePage" addNotes={addNotes} />
 
 					<div id="allContent">
 						<div id="notesTitleContainer">
@@ -256,6 +255,9 @@ function HomePage() {
 						</div>
 						{isNotesModalOpen && (
 							<div id="noteContentContainer">
+								{getWindowDimensions()?.width <= 768 && (
+									<NavBar NavBarType="notesModal" addNotes={addNotes} />
+								)}
 								<RenderNoteContent
 									isNotesModalOpen={isNotesModalOpen}
 									isSaveBtnLoading={isSaveBtnLoading}

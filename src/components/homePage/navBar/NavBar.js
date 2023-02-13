@@ -12,13 +12,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Logout from '@mui/icons-material/Logout';
 import Settings from '@mui/icons-material/Settings';
 
-import './files/navBar.css';
-
 import logo from './files/logo.jpeg';
+
+import './files/navBar.css';
 
 const userName = JSON.parse(localStorage.getItem('user_details'))?.userName || 'Bhemu Notes';
 
-function NavBar({ handleAddNotesInputbox, addNotes }) {
+function NavBar({ NavBarType, addNotes }) {
 	const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
 
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
@@ -34,6 +34,35 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
 
 	return (
 		<>
+			<div className={NavBarType === 'homePage' ? 'navbar' : 'navbar navbarForNoteModal'}>
+				<div id="logo">
+					<IconButton
+						id="iconMenuBtn"
+						color="inherit"
+						size="small"
+						aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+						aria-haspopup="true"
+						aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+						onClick={toggleSettingsMenu}
+						sx={{ ml: 1.2 }}
+					>
+						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
+					</IconButton>
+					<div id="name">{userName ? userName : 'Bhemu Notes'}</div>
+				</div>
+
+				<Button
+					className="addNoteBtn"
+					variant="contained"
+					color="success"
+					id="basic-button"
+					aria-haspopup="true"
+					onClick={addNotes}
+				>
+					Add Note
+				</Button>
+			</div>
+
 			{/* settings notes */}
 			<Menu
 				anchorEl={settingMenuAnchorEl}
@@ -82,35 +111,6 @@ function NavBar({ handleAddNotesInputbox, addNotes }) {
 					Logout
 				</MenuItem>
 			</Menu>
-
-			<div className="navbar">
-				<div id="logo">
-					<IconButton
-						id="iconMenuBtn"
-						color="inherit"
-						size="small"
-						aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
-						aria-haspopup="true"
-						aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
-						onClick={toggleSettingsMenu}
-						sx={{ ml: 1.2 }}
-					>
-						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
-					</IconButton>
-					<div id="name">{userName ? userName : 'Bhemu Notes'}</div>
-				</div>
-
-				<Button
-					className="addNoteBtn"
-					variant="contained"
-					color="success"
-					id="basic-button"
-					aria-haspopup="true"
-					onClick={addNotes}
-				>
-					Add Note
-				</Button>
-			</div>
 		</>
 	);
 }

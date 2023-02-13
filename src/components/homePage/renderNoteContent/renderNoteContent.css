@@ -41,7 +41,7 @@
 }
 
 .lastNotesArea {
-	padding-bottom: 200px;
+	padding-bottom: 250px;
 }
 
 .toDosBox {
@@ -51,10 +51,6 @@
 
 .toDosBox:focus-within {
 	background-color: rgb(58, 58, 58);
-}
-
-.toDosBox:last-child {
-	margin-bottom: 200px;
 }
 
 .todosInputBox {
