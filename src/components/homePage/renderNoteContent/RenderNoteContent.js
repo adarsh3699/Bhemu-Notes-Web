@@ -118,6 +118,7 @@ function RenderNoteContent({
 								value={item.element || ''}
 								autoComplete="off"
 								spellCheck="false"
+								enterKeyHint="Next"
 								onChange={(e) => handleNoteTextChange(index, e)}
 								ref={focusedInput === index ? todoRef : null}
 								onKeyDown={(e) => {
