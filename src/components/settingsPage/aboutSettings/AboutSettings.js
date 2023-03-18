@@ -12,7 +12,9 @@ function AboutSettings() {
 			<li>You can now store both to-do and note types in the same file.</li>
 			<li>Optimize for fast and smooth performance.</li>
 
-			<a href='https://www.bhemu.me/about' target='_blank' className="aboutdeveloperTitle" rel="noreferrer">About developer 🔗</a>
+			<a href="https://www.bhemu.me/about" target="_blank" className="aboutdeveloperTitle" rel="noreferrer">
+				About developer 🔗
+			</a>
 		</div>
 	);
 }

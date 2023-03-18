@@ -224,7 +224,8 @@ function HomePage() {
 			if (e.target.value.trim() === '') {
 				e.preventDefault();
 
-				if (openedNoteData.length - 1 !== index) { //for last textbox
+				if (openedNoteData.length - 1 !== index) {
+					//for last textbox
 					let newToDos = openedNoteData.filter((data, i) => {
 						return i !== index ? data : null;
 					});
