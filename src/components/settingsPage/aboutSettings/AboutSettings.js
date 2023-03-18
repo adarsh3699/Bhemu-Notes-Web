@@ -11,6 +11,8 @@ function AboutSettings() {
 			<li>Now we have migrated to Firebase for fast and secure database connections.</li>
 			<li>You can now store both to-do and note types in the same file.</li>
 			<li>Optimize for fast and smooth performance.</li>
+
+			<a href='https://www.bhemu.me/about' target='_blank' className="aboutdeveloperTitle" rel="noreferrer">About developer 🔗</a>
 		</div>
 	);
 }
