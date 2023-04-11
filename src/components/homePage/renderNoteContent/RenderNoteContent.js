@@ -108,7 +108,7 @@ function RenderNoteContent({
 								size="small"
 								sx={{ p: 0.5, ml: 1 }}
 							/>
-							<input
+							<TextareaAutosize
 								type="text"
 								id={'textbox_' + index}
 								className={item?.isDone ? 'todosIsDone todosInputBox' : 'todosInputBox'}

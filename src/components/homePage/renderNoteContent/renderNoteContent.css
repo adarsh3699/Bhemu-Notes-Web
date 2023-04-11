@@ -38,6 +38,7 @@
 	border: unset;
 	outline: unset;
 	background-color: unset;
+	line-height: 20px;
 }
 
 .lastNotesArea {
@@ -56,12 +57,13 @@
 .todosInputBox {
 	color: white;
 	font-size: 16px;
-	padding: 10px;
+	padding: 9px;
 	resize: vertical;
 	outline: unset;
 	width: 94%;
 	background-color: unset;
 	border: unset;
+	line-height: 20px;
 }
 
 .todosIsDone {
