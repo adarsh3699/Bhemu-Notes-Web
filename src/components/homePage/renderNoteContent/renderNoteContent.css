@@ -64,6 +64,7 @@
 	background-color: unset;
 	border: unset;
 	line-height: 20px;
+	resize: unset;
 }
 
 .todosIsDone {
