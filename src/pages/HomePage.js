@@ -121,12 +121,12 @@ function HomePage() {
 	);
 
 	// handle note or todo title change
-	const handleTitleChange = useCallback(
-		(e) => {
-			setNotesTitle(e.target.value);
-		},
-		[setNotesTitle]
-	);
+	// const handleTitleChange = useCallback(
+	// 	(e) => {
+	// 		setNotesTitle(e.target.value);
+	// 	},
+	// 	[setNotesTitle]
+	// );
 
 	//handle note or todo save
 	const handleSaveBtnClick = useCallback(async () => {
@@ -219,6 +219,7 @@ function HomePage() {
 		[openedNoteData]
 	);
 
+	// handleBackspaceClick in todo and note
 	const handleBackspaceClick = useCallback(
 		(e, index) => {
 			if (e.target.value.trim() === '') {
@@ -262,12 +263,11 @@ function HomePage() {
 									<NavBar NavBarType="notesModal" addNotes={addNotes} />
 								)}
 								<RenderNoteContent
-									isNotesModalOpen={isNotesModalOpen}
 									isSaveBtnLoading={isSaveBtnLoading}
 									handleNotesModalClosing={handleNotesModalClosing}
 									toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+
 									notesTitle={notesTitle}
-									handleTitleChange={handleTitleChange}
 									handleDeleteBtnClick={handleDeleteBtnClick}
 									handleSaveBtnClick={handleSaveBtnClick}
 									openedNoteData={openedNoteData}

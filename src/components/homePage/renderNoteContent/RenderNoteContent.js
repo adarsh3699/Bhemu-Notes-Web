@@ -14,9 +14,9 @@ import './renderNoteContent.css';
 function RenderNoteContent({
 	isSaveBtnLoading,
 	handleNotesModalClosing,
+	toggleConfirmationDialogClosing,
 
 	notesTitle,
-	toggleConfirmationDialogClosing,
 	handleSaveBtnClick,
 
 	openedNoteData,
