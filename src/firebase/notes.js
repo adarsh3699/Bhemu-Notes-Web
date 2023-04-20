@@ -36,13 +36,15 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 						noteData.push({
 							notesId: doc.id,
 							notesTitle: decryptText(doc.data().notesTitle),
-							noteType: doc.data().noteType,
 							noteData: JSON.parse(decryptText(doc.data().noteData)),
 							updatedOn: doc.data().updatedOn,
 						});
 					});
 					setIsApiLoading(false);
 					setAllNotes(noteData);
+
+					const encryptNotesData = encryptText(JSON.stringify(noteData));
+					localStorage.setItem('note_data', encryptNotesData);
 				})
 				.catch((err) => {
 					setIsApiLoading(false);

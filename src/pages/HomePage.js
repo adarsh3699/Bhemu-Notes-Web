@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
+import { decryptText } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
@@ -28,9 +29,11 @@ document.addEventListener(
 	true
 );
 
+const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
+
 function HomePage() {
 	const [msg, setMsg] = useState('');
-	const [allNotes, setAllNotes] = useState([]);
+	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
 
 	const [myNotesId, setMyNotesId] = useState('');
 	const [notesTitle, setNotesTitle] = useState('');
@@ -266,7 +269,6 @@ function HomePage() {
 									isSaveBtnLoading={isSaveBtnLoading}
 									handleNotesModalClosing={handleNotesModalClosing}
 									toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
-
 									notesTitle={notesTitle}
 									handleDeleteBtnClick={handleDeleteBtnClick}
 									handleSaveBtnClick={handleSaveBtnClick}
