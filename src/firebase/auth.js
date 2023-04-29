@@ -24,6 +24,7 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
 	signInWithEmailAndPassword(auth, email, password)
 		.then((cred) => {
 			setIsApiLoading(false);
+			localStorage.setItem('user_profile_img', cred?.user?.photoURL);
 			localStorage.setItem(
 				'user_details',
 				JSON.stringify({

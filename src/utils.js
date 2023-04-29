@@ -22,7 +22,7 @@ function decryptText(enryptedValue) {
 		return null;
 	}
 
-	return value;
+	return value || [];
 }
 
 function md5Hash(text) {

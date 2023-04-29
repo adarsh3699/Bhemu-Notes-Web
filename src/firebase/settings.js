@@ -12,6 +12,7 @@ async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, im
 	const user = auth.currentUser;
 	if (userName === user.displayName) return;
 	if (!imageUpload) setIsSaveBtnLoading(true);
+
 	updateProfile(user, { displayName: userName })
 		.then(() => {
 			localStorage.setItem('user_details', JSON.stringify({ userName, email, userId }));
@@ -74,12 +75,25 @@ function handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setI
 		.then((snapshot) => {
 			setIsSaveBtnLoading(false);
 			console.log('Uploaded successfully a blob or file!');
+			console.log(snapshot);
 
 			getDownloadURL(snapshot.ref)
 				.then((downloadURL) => {
-					setMsg('Changed successfully');
 					setProfilePictureUrl(downloadURL);
 					localStorage.setItem('user_profile_img', downloadURL);
+
+					const user = auth.currentUser;
+
+					updateProfile(user, { photoURL: downloadURL })
+						.then(() => {
+							setMsg('Changed successfully');
+							setIsSaveBtnLoading(false);
+						})
+						.catch((err) => {
+							setMsg(err.code);
+							setIsSaveBtnLoading(false);
+							console.log(err.message);
+						});
 				})
 				.catch((err) => {
 					setIsSaveBtnLoading(false);
