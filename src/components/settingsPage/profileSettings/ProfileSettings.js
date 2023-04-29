@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import { handleUserNameChange } from '../../../firebase/settings';
+import { handleUserNameChange, handleUserProfileChange } from '../../../firebase/settings';
 
 import myLogo from '../../../img/logo.jpeg';
 import Button from '@mui/material/Button';
@@ -11,12 +11,14 @@ import './profileSettings.css';
 const localUserDetails = JSON.parse(localStorage.getItem('user_details'));
 
 function ProfileSettings() {
+	const [imageUpload, setImageUpload] = useState(null);
 	const [userDetails, setUserDetails] = useState({
 		userName: localUserDetails?.userName,
 		email: localUserDetails?.email,
 		profilePicture: localUserDetails?.photoURL,
 		userId: localUserDetails?.userId,
 	});
+	const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem('user_profile_img'));
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [msg, setMsg] = useState('');
 
@@ -30,15 +32,30 @@ function ProfileSettings() {
 		[userDetails, setUserDetails]
 	);
 
+	const handleImageUpload = useCallback(
+		(e) => {
+			setImageUpload(e.target.files[0]);
+		},
+		[setImageUpload]
+	);
+
+	const handleUserDetailsUpdate = useCallback(() => {
+		if (imageUpload) {
+			handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setIsSaveBtnLoading);
+		}
+		handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, imageUpload);
+	}, [userDetails, imageUpload]);
+
 	return (
 		<div className="profileSettings">
 			<div className="ProfilePictureTitle">Profile Picture</div>
 			<div className="userInfo">
 				<div>
-					<img src={myLogo} alt="" className="ProfilePictureImg" />
+					<img src={profilePictureUrl || myLogo} alt="" className="ProfilePictureImg" />
 				</div>
-
 				<div className="userDetails">
+					<input type="file" accept="image/png, image/gif, image/jpeg" onChange={handleImageUpload} />
+
 					<div className="userNameTitle">User Name →</div>
 					<div className="userName">
 						<input
@@ -57,7 +74,7 @@ function ProfileSettings() {
 							color="success"
 							id="basic-button"
 							aria-haspopup="true"
-							onClick={() => handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading)}
+							onClick={handleUserDetailsUpdate}
 							disabled={isSaveBtnLoading}
 							sx={{
 								fontWeight: 600,

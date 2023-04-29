@@ -1,21 +1,27 @@
+import { storage } from './initFirebase';
+
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updateProfile, updatePassword } from 'firebase/auth';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 const auth = getAuth();
+// const storage = getStorage(app);
 
-async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading) {
-	setIsSaveBtnLoading(true);
+async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, imageUpload) {
 	const { userName, email, userId } = userDetails;
 	if (!userName) return setMsg('User Name can not be empty');
 	const user = auth.currentUser;
+	if (userName === user.displayName) return;
+	if (!imageUpload) setIsSaveBtnLoading(true);
 	updateProfile(user, { displayName: userName })
 		.then(() => {
 			localStorage.setItem('user_details', JSON.stringify({ userName, email, userId }));
 			setMsg('Changed successfully');
-			setIsSaveBtnLoading(false);
+			if (!imageUpload) setIsSaveBtnLoading(false);
 		})
 		.catch((err) => {
 			setMsg(err.code);
-			setIsSaveBtnLoading(false);
+			if (!imageUpload) setIsSaveBtnLoading(false);
+			console.log(err.message);
 		});
 }
 
@@ -57,4 +63,35 @@ function handlePasswordChange(changePasswordData, setChangePasswordMsg, setIsCha
 		});
 }
 
-export { handleUserNameChange, handlePasswordChange };
+function handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setIsSaveBtnLoading) {
+	setIsSaveBtnLoading(true);
+	const imageRef = ref(
+		storage,
+		'profilePicture/' + auth.currentUser.uid + '/' + auth.currentUser.displayName.split(' ')[0] + '_profilePicture'
+	);
+
+	uploadBytesResumable(imageRef, imageUpload)
+		.then((snapshot) => {
+			setIsSaveBtnLoading(false);
+			console.log('Uploaded successfully a blob or file!');
+
+			getDownloadURL(snapshot.ref)
+				.then((downloadURL) => {
+					setMsg('Changed successfully');
+					setProfilePictureUrl(downloadURL);
+					localStorage.setItem('user_profile_img', downloadURL);
+				})
+				.catch((err) => {
+					setIsSaveBtnLoading(false);
+					console.log(err.message);
+					setMsg(err.code);
+				});
+		})
+		.catch((err) => {
+			setIsSaveBtnLoading(false);
+			console.log(err.message);
+			setMsg(err.code);
+		});
+}
+
+export { handleUserNameChange, handlePasswordChange, handleUserProfileChange };
