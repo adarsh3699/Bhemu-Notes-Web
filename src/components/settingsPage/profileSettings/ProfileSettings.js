@@ -54,7 +54,7 @@ function ProfileSettings() {
 					<img src={profilePictureUrl || myLogo} alt="" className="ProfilePictureImg" />
 				</div>
 				<div className="userDetails">
-					<input type="file" accept="image/png, image/gif, image/jpeg" onChange={handleImageUpload} />
+					<input type="file" className='ProfilePicUploadBtn' accept="image/png, image/gif, image/jpeg" onChange={handleImageUpload} />
 
 					<div className="userNameTitle">User Name →</div>
 					<div className="userName">

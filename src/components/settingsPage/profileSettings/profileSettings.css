@@ -24,6 +24,11 @@
 	width: 100%;
 }
 
+.ProfilePicUploadBtn {
+	font-size: unset;
+	margin-bottom: 10px;
+}
+
 .userNameTitle {
 	font-size: 17px;
 	font-weight: 600;
