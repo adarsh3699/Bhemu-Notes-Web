@@ -28,6 +28,17 @@
 }
 
 /* ...............M-Web................ */
+@media screen and (min-width: 1900px) {
+	#notesTitleContainer {
+		min-width: calc(20% - 0.5px);
+	}
+
+	#noteContentContainer {
+		min-width: calc(100% - 20%);
+		max-width: calc(100% - 20%);
+	}
+}
+
 @media screen and (max-width: 1200px) {
 	#notesTitleContainer {
 		min-width: calc(300px - 0.5px);
