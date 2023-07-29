@@ -34,10 +34,24 @@ function md5Hash(text) {
 	}
 }
 
-// function handleMsgAndBtnLoading(setMsg, msg, setIsApiLoading) {
-//     if (!msg) return console.log('Please set your msg');
-//     setIsApiLoading(false);
-//     setMsg(msg);
-// }
+function userDeviceType() {
+	const { innerWidth: width, innerHeight: height } = window;
+	if (width > 768) {
+		return { mobile: false, desktop: true, width, height };
+	} else {
+		return { mobile: true, desktop: false, width, height };
+	}
+}
 
-export { encryptText, decryptText, md5Hash };
+// function handleErrorShown(msgText, setMsg) {
+// 	if (msgText) {
+// 		setMsg(msgText);
+// 		setTimeout(() => {
+// 			setMsg('');
+// 		}, 2500);
+// 	} else {
+// 		console.log('Please Provide Text Msg');
+// 	}
+// };
+
+export { encryptText, decryptText, md5Hash, userDeviceType };

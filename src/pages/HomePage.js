@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
-import { decryptText } from '../utils';
+import { decryptText, userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
@@ -13,11 +13,6 @@ import ErrorMsg from '../components/errorMsg/ErrorMsg';
 import Hotkeys from 'react-hot-keys';
 
 import '../styles/homePage.css';
-
-function getWindowDimensions() {
-	const { innerWidth: width, innerHeight: height } = window;
-	return { width, height };
-}
 
 document.addEventListener(
 	'keydown',
@@ -39,7 +34,7 @@ function HomePage() {
 	const [notesTitle, setNotesTitle] = useState('');
 	const [openedNoteData, setOpenedNoteData] = useState([]);
 
-	const [isNotesModalOpen, setIsNotesModalOpen] = useState(getWindowDimensions()?.width > 768 ? true : false);
+	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 	const [isPageLoaded, setIsPageLoaded] = useState(false);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -47,6 +42,13 @@ function HomePage() {
 	const [focusedInput, setfocusedInput] = useState(null);
 	const todoRef = useRef();
 	const lastTextBoxRef = useRef();
+
+	const openFirstNote = useCallback(function (allNotesAtr) {
+		if (allNotesAtr.length === 0) return;
+		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
+		setNotesTitle(allNotesAtr[0]?.notesTitle || '');
+		setMyNotesId(allNotesAtr[0]?.notesId || '');
+	}, []);
 
 	useEffect(() => {
 		handleUserState('homePage');
@@ -57,11 +59,12 @@ function HomePage() {
 		}
 	}, []);
 
-	// useEffect(function () {
-	// 	setOpenedNoteData(allNotes[0]?.noteData || [])
-	// 	setNotesTitle(allNotes[0]?.notesTitle || '')
-	// 	setMyNotesId(allNotes[0]?.notesId || '')
-	// }, [allNotes]);
+	useEffect(() => {
+		if (isNotesModalOpen === false && userDeviceType().desktop) {
+			setIsNotesModalOpen(true);
+			openFirstNote(allNotes);
+		}
+	}, [openFirstNote, allNotes, isNotesModalOpen]);
 
 	const handleErrorShown = useCallback((msgText) => {
 		if (msgText) {
@@ -80,16 +83,14 @@ function HomePage() {
 			setNotesTitle(title);
 			setOpenedNoteData(data);
 			setIsNotesModalOpen(true);
-			setfocusedInput(null);
-			if (getWindowDimensions()?.width <= 768) document.querySelector('body').style.overflow = 'hidden';
+			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
 		},
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
 	);
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
-		setfocusedInput(null);
-		if (getWindowDimensions()?.width <= 768) document.querySelector('body').style.overflow = null;
+		if (userDeviceType().mobile) document.querySelector('body').style.overflow = null;
 	}, []);
 
 	//add Note Function
@@ -122,14 +123,6 @@ function HomePage() {
 		},
 		[handleNoteOpening, handleErrorShown]
 	);
-
-	// handle note or todo title change
-	// const handleTitleChange = useCallback(
-	// 	(e) => {
-	// 		setNotesTitle(e.target.value);
-	// 	},
-	// 	[setNotesTitle]
-	// );
 
 	//handle note or todo save
 	const handleSaveBtnClick = useCallback(async () => {
@@ -262,17 +255,16 @@ function HomePage() {
 						</div>
 						{isNotesModalOpen && (
 							<div id="noteContentContainer">
-								{getWindowDimensions()?.width <= 768 && (
-									<NavBar NavBarType="notesModal" addNotes={addNotes} />
-								)}
+								{userDeviceType().mobile && <NavBar NavBarType="notesModal" addNotes={addNotes} />}
 								<RenderNoteContent
 									isSaveBtnLoading={isSaveBtnLoading}
 									handleNotesModalClosing={handleNotesModalClosing}
 									toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+									myNotesId={myNotesId}
 									notesTitle={notesTitle}
-									handleDeleteBtnClick={handleDeleteBtnClick}
-									handleSaveBtnClick={handleSaveBtnClick}
 									openedNoteData={openedNoteData}
+									handleSaveBtnClick={handleSaveBtnClick}
+									handleDeleteBtnClick={handleDeleteBtnClick}
 									handleNoteTextChange={handleNoteTextChange}
 									handleCheckboxClick={handleCheckboxClick}
 									handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}

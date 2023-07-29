@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import NoteContainerBar from './noteContainerBar/NoteContainerBar';
 
 import { IconButton } from '@mui/material';
@@ -16,13 +16,14 @@ function RenderNoteContent({
 	handleNotesModalClosing,
 	toggleConfirmationDialogClosing,
 
+	myNotesId,
 	notesTitle,
-	handleSaveBtnClick,
-
 	openedNoteData,
+
+	handleSaveBtnClick,
+	handleDeleteToDoBtnClick,
 	handleNoteTextChange,
 	handleCheckboxClick,
-	handleDeleteToDoBtnClick,
 	handleAddTodoBtn,
 	handleAddNoteBtn,
 	handleTodoEnterClick,
@@ -32,11 +33,15 @@ function RenderNoteContent({
 	setfocusedInput,
 	lastTextBoxRef,
 }) {
+	const lastTodoRef = useRef(null);
+
 	useEffect(() => {
-		if (lastTextBoxRef.current) {
+		if (lastTextBoxRef.current && lastTextBoxRef.current.value !== '') {
 			lastTextBoxRef.current.focus();
+		} else {
+			lastTodoRef.current?.children[1].focus();
 		}
-	}, [lastTextBoxRef]);
+	}, [lastTextBoxRef, myNotesId]);
 
 	useEffect(() => {
 		if (focusedInput) todoRef?.current?.focus();
@@ -47,7 +52,7 @@ function RenderNoteContent({
 		const textBox = lastTextBoxRef?.current;
 		if (textBox && openedNoteData.length >= 1) {
 			const upperHeight = textBox?.getBoundingClientRect()?.top;
-			textBox.style.minHeight = 'calc(100vh - 250px - ' + (upperHeight + 15) + 'px)';
+			textBox.style.minHeight = 'calc(100vh - 300px - ' + (upperHeight + 15) + 'px)';
 		}
 	});
 
@@ -99,7 +104,11 @@ function RenderNoteContent({
 							}}
 						/>
 					) : item?.type === 'todo' ? ( //type todo/////////
-						<div className="toDosBox" key={index}>
+						<div
+							className="toDosBox"
+							key={index}
+							ref={openedNoteData.length - 2 === index ? lastTodoRef : null}
+						>
 							<Checkbox
 								icon={<CircleOutlinedIcon />}
 								checkedIcon={<CheckCircleOutlineIcon />}
