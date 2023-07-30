@@ -1,39 +1,53 @@
-import React from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material/';
+import './confirmationDialogBox.css';
 
-function ConfirmationDialog({ title, message, isOpen, onCancel, onYesClick }) {
+function ConfirmationDialogBox({ title, message, onYesClick, setIsConfirmationDialogOpen, sx }) {
+	const backgroundRef = useRef();
+
+	const handleDialogBoxClosing = useCallback(() => {
+		setIsConfirmationDialogOpen(false);
+	}, [setIsConfirmationDialogOpen]);
+
+	const handleClickOutside = useCallback(
+		(e) => {
+			if (backgroundRef.current && !backgroundRef.current.contains(e.target)) {
+				handleDialogBoxClosing();
+			}
+		},
+		[handleDialogBoxClosing]
+	);
+
+	useEffect(
+		function () {
+			// document.body.style.overflow = 'hidden';
+			document.addEventListener('click', handleClickOutside, true);
+
+			//component did un-mount
+			return function () {
+				document.removeEventListener('click', handleClickOutside, true);
+			};
+		},
+		[handleClickOutside]
+	);
+
 	return (
-		<Dialog
-			open={isOpen}
-			onClose={onCancel}
-			fullWidth
-			maxWidth="xs"
-			aria-labelledby="alert-dialog-title"
-			aria-describedby="alert-dialog-description"
-			keepMounted={false}
-		>
-			<DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-description">{message}</DialogContentText>
-			</DialogContent>
-			<DialogActions
-				style={{
-					display: 'flex}',
-					justifyContent: 'space-around',
-					margin: '0 12px 12px 12px',
-				}}
-			>
-				<Button variant="contained" color="primary" size="medium" fullWidth={true} onClick={onCancel}>
-					No
-				</Button>
+		<div className="ConfirmationDialogBoxBg">
+			<div className="ConfirmationDialogBox" ref={backgroundRef} style={sx}>
+				<div className="ConfirmationDialogBoxTitle">{title}</div>
+				<div className="ConfirmationDialogBoxMessage">{message}</div>
 
-				<Button variant="contained" color="error" size="medium" fullWidth={true} onClick={onYesClick}>
-					Yes
-				</Button>
-			</DialogActions>
-		</Dialog>
+				<div className="ConfirmationDialogBoxBtns">
+					<button className="ConfirmationDialogBoxYesBtn" onClick={onYesClick}>
+						Yes
+					</button>
+					<button className="ConfirmationDialogBoxNoBtn" onClick={handleDialogBoxClosing}>
+						No
+					</button>
+				</div>
+			</div>
+		</div>
 	);
 }
 
-export default ConfirmationDialog;
+export default ConfirmationDialogBox;

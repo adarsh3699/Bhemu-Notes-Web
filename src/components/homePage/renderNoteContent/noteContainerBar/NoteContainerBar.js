@@ -16,7 +16,7 @@ function NoteContainerBar({
 	isSaveBtnLoading,
 	handleAddTodoBtn,
 	handleSaveBtnClick,
-	toggleConfirmationDialogClosing,
+	openConfirmationDialog,
 }) {
 	return (
 		<div id="noteContainerBar">
@@ -37,7 +37,7 @@ function NoteContainerBar({
 						color="inherit"
 						aria-label="delete"
 						aria-haspopup="true"
-						onClick={toggleConfirmationDialogClosing}
+						onClick={openConfirmationDialog}
 						sx={{ ml: 1 }}
 					>
 						<DeleteIcon fontSize="inherit" />

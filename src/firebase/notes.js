@@ -87,8 +87,9 @@ function addNewNote(upcomingData, setMyNotesId, setMsg, setIsApiLoading) {
 }
 //delete Notes
 function deleteData(noteId, setIsApiLoading, setMsg) {
+	if (!noteId) return setMsg('Please Provide all details');
 	const docRef = doc(database, 'user_notes', noteId);
-
+	setIsApiLoading(true);
 	deleteDoc(docRef)
 		.then((e) => {
 			setIsApiLoading(false);
