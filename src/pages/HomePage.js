@@ -90,7 +90,7 @@ function HomePage() {
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
-		if (userDeviceType().mobile) document.querySelector('body').style.overflow = null;
+		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
 	}, []);
 
 	//add Note Function
@@ -137,12 +137,12 @@ function HomePage() {
 
 	//handle note or todo delete
 	const handleDeleteBtnClick = useCallback(async () => {
-		setIsApiLoading(true);
-		setIsNotesModalOpen(false);
+		handleNotesModalClosing();
+		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
 		setIsConfirmationDialogOpen(false);
 
 		deleteData(myNotesId, setIsApiLoading, handleErrorShown);
-	}, [handleErrorShown, myNotesId]);
+	}, [handleErrorShown, myNotesId, handleNotesModalClosing]);
 
 	//handle todo checkbo click
 	const handleCheckboxClick = useCallback(
@@ -190,8 +190,10 @@ function HomePage() {
 				lastTextBoxRef.current.style.minHeight = '';
 				if (!lastTextBoxRef.current?.value.trim()) {
 					tempData.splice(openedNoteData.length - 1, 0, { element: '', isDone: false, type: 'todo' });
+					setfocusedInput(openedNoteData.length - 1);
 				} else {
 					tempData.push({ element: '', isDone: false, type: 'todo' }, { element: '', type: 'note' });
+					setfocusedInput(openedNoteData.length);
 				}
 			}
 
@@ -259,7 +261,7 @@ function HomePage() {
 								<RenderNoteContent
 									isSaveBtnLoading={isSaveBtnLoading}
 									handleNotesModalClosing={handleNotesModalClosing}
-									toggleConfirmationDialogClosing={() => setIsConfirmationDialogOpen(true)}
+									openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
 									myNotesId={myNotesId}
 									notesTitle={notesTitle}
 									openedNoteData={openedNoteData}

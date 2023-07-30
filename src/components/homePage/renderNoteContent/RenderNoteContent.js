@@ -14,7 +14,7 @@ import './renderNoteContent.css';
 function RenderNoteContent({
 	isSaveBtnLoading,
 	handleNotesModalClosing,
-	toggleConfirmationDialogClosing,
+	openConfirmationDialog,
 
 	myNotesId,
 	notesTitle,
@@ -36,11 +36,12 @@ function RenderNoteContent({
 	const lastTodoRef = useRef(null);
 
 	useEffect(() => {
-		if (lastTextBoxRef.current && lastTextBoxRef.current.value !== '') {
-			lastTextBoxRef.current.focus();
-		} else {
-			lastTodoRef.current?.children[1].focus();
+		if ((lastTextBoxRef?.current && lastTextBoxRef?.current.value !== '') || openedNoteData?.length === 1) {
+			lastTextBoxRef?.current?.focus();
+		} else if (lastTextBoxRef.current && openedNoteData.length > 1) {
+			lastTodoRef?.current?.children[1]?.focus();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [lastTextBoxRef, myNotesId]);
 
 	useEffect(() => {
@@ -63,7 +64,7 @@ function RenderNoteContent({
 				isSaveBtnLoading={isSaveBtnLoading}
 				handleAddTodoBtn={handleAddTodoBtn}
 				handleAddNoteBtn={handleAddNoteBtn}
-				toggleConfirmationDialogClosing={toggleConfirmationDialogClosing}
+				openConfirmationDialog={openConfirmationDialog}
 				handleSaveBtnClick={handleSaveBtnClick}
 			/>
 			<div id="userNotesContent">
