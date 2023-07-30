@@ -138,7 +138,6 @@ function HomePage() {
 	//handle note or todo delete
 	const handleDeleteBtnClick = useCallback(async () => {
 		handleNotesModalClosing();
-		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
 		setIsConfirmationDialogOpen(false);
 
 		deleteData(myNotesId, setIsApiLoading, handleErrorShown);
@@ -296,7 +295,7 @@ function HomePage() {
 						title="Are You Sure?"
 						message="You can't undo this action."
 						isOpen={isConfirmationDialogOpen}
-						onCancel={() => setIsConfirmationDialogOpen(false)}
+						setIsConfirmationDialogOpen={setIsConfirmationDialogOpen}
 						onYesClick={handleDeleteBtnClick}
 					/>
 				)}
