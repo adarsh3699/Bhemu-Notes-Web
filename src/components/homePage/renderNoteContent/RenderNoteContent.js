@@ -45,7 +45,7 @@ function RenderNoteContent({
 	}, [lastTextBoxRef, myNotesId]);
 
 	useEffect(() => {
-		if (focusedInput) todoRef?.current?.focus();
+		if (focusedInput || focusedInput === 0) todoRef?.current?.focus();
 		setfocusedInput(null);
 	}, [focusedInput, todoRef, setfocusedInput]);
 
