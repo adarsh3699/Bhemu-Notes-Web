@@ -45,7 +45,8 @@ function SettingsDrawer(
 						key={index}
 						disablePadding
 						selected={item.isSelected}
-						onClick={() => handleSelectedMenu(item?.name, index)}
+						// eslint-disable-next-line no-sequences
+						onClick={() => (handleSelectedMenu(item?.name, index), handleDrawerToggle())}
 					>
 						<ListItemButton sx={{ py: 1.7, pl: 4 }}>
 							<ListItemIcon>{item.icon}</ListItemIcon>

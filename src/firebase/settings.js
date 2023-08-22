@@ -73,7 +73,6 @@ function handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setI
 
 	uploadBytesResumable(imageRef, imageUpload)
 		.then((snapshot) => {
-			setIsSaveBtnLoading(false);
 			console.log('Uploaded successfully a blob or file!');
 			console.log(snapshot);
 
