@@ -51,7 +51,7 @@ function HomePage() {
 	}, []);
 
 	useEffect(() => {
-		handleUserState('homePage');
+		handleUserState(true);
 		if (JSON.parse(localStorage.getItem('user_details'))) {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg);
 			setIsPageLoaded(true);

@@ -116,11 +116,11 @@ function handleUserState(currentPage) {
 	if (!currentPage) return console.log('Missing currentPage');
 
 	onAuthStateChanged(auth, (user) => {
-		if (currentPage === 'loginPage' && user !== null) {
+		if (currentPage && user === null) {
+			handleSignOut();
+		} else if (!currentPage && user !== null) {
 			document.location.href = '/home';
 		} else if (user_details?.email !== user?.email || user_details?.userId !== user?.uid) {
-			handleSignOut();
-		} else if ((currentPage === 'homePage' && user === null) || (currentPage === 'settingsPage' && user === null)) {
 			handleSignOut();
 		}
 	});

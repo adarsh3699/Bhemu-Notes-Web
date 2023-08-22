@@ -58,7 +58,7 @@ function SettingsPage() {
 	]);
 
 	useEffect(() => {
-		handleUserState('settingsPage');
+		handleUserState(true);
 		if (JSON.parse(localStorage.getItem('user_details'))) {
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes | Settings ';

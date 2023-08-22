@@ -17,7 +17,7 @@ function LoginPage() {
 	const [ispasswordVisible, setIspasswordVisible] = useState(false);
 
 	useEffect(() => {
-		handleUserState('loginPage');
+		handleUserState(false);
 		if (JSON.parse(localStorage.getItem('user_details'))) {
 			document.location.href = '/home';
 		} else {
