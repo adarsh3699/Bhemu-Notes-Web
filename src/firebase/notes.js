@@ -38,6 +38,7 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 							notesTitle: decryptText(doc.data().notesTitle),
 							noteData: JSON.parse(decryptText(doc.data().noteData)),
 							updatedOn: doc.data().updatedOn,
+							noteSharedWith: doc.data().noteSharedWith || [],
 						});
 					});
 					setIsApiLoading(false);
@@ -102,8 +103,8 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
 
 //update notes
 function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg) {
-	const { noteId, notesTitle, noteData } = upcomingData;
-	if (!noteId || !notesTitle || !noteData) {
+	const { noteId, notesTitle, noteData, noteSharedWith } = upcomingData;
+	if (!noteId || !notesTitle || !noteData || !noteSharedWith) {
 		setMsg('Please Provide all details (noteId, notesTitle, noteData)');
 		setIsSaveBtnLoading(false);
 		return;
@@ -117,6 +118,7 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 	updateDoc(docRef, {
 		notesTitle: encryptTitle,
 		noteData: encryptNoteData,
+		noteSharedWith,
 		updatedOn: serverTimestamp(),
 	})
 		.then(() => {

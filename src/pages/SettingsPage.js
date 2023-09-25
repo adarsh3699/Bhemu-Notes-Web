@@ -81,9 +81,9 @@ function SettingsPage() {
 			const newSettingsDrawerMenu = settingsDrawerMenu.map(function (items, i) {
 				return i === index
 					? {
-						...items,
-						isSelected: settingsDrawerMenu.i === menuName ? false : true,
-					}
+							...items,
+							isSelected: settingsDrawerMenu.i === menuName ? false : true,
+					  }
 					: { ...items, isSelected: false };
 			});
 
@@ -153,11 +153,9 @@ function SettingsPage() {
 					>
 						<Toolbar />
 
-						{settingsDrawerMenu.map((item, index) => (
-							item?.isSelected
-								? <div key={index}>{item?.page}</div>
-								: null
-						))}
+						{settingsDrawerMenu.map((item, index) =>
+							item?.isSelected ? <div key={index}>{item?.page}</div> : null
+						)}
 					</Box>
 				</Box>
 			)}

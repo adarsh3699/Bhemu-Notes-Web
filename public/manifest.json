@@ -1,27 +1,27 @@
 {
-    "short_name": "Bhemu Notes",
-    "name": "Bhemu Notes",
-    "description": "This is a notes app, which allows multiple user to keep their notes and to-dos. Where user data and their notes store in encrypted form in Database.",
-    "version": "2.1.0",
-    "icons": [
-        {
-            "src": "logo64.png",
-            "type": "image/png",
-            "sizes": "64x64 32x32 24x24 16x16"
-        },
-        {
-            "src": "logo192.png",
-            "type": "image/png",
-            "sizes": "192x192"
-        },
-        {
-            "src": "logo512.png",
-            "type": "image/png",
-            "sizes": "512x512"
-        }
-    ],
-    "start_url": ".",
-    "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#ffffff"
+	"short_name": "Bhemu Notes",
+	"name": "Bhemu Notes",
+	"description": "This is a notes app, which allows multiple user to keep their notes and to-dos. Where user data and their notes store in encrypted form in Database.",
+	"version": "2.1.0",
+	"icons": [
+		{
+			"src": "logo64.png",
+			"type": "image/png",
+			"sizes": "64x64 32x32 24x24 16x16"
+		},
+		{
+			"src": "logo192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "logo512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": ".",
+	"display": "standalone",
+	"theme_color": "#000000",
+	"background_color": "#ffffff"
 }

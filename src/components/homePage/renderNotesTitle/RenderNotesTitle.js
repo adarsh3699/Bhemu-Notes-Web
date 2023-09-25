@@ -30,7 +30,9 @@ function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading, handleAdd
 						<div
 							className="noteBox"
 							key={items.notesId}
-							onClick={() => handleNoteOpening(items.notesId, items.notesTitle, items.noteData)}
+							onClick={() =>
+								handleNoteOpening(items.notesId, items.notesTitle, items.noteData, items.noteSharedWith)
+							}
 						>
 							<div className="noteTitle">{items.notesTitle}</div>
 							<div className="noteContent">

@@ -33,9 +33,11 @@ function HomePage() {
 	const [myNotesId, setMyNotesId] = useState('');
 	const [notesTitle, setNotesTitle] = useState('');
 	const [openedNoteData, setOpenedNoteData] = useState([]);
+	const [noteSharedWith, setNoteSharedWith] = useState([]);
 
 	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
 	const [isPageLoaded, setIsPageLoaded] = useState(false);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isApiLoading, setIsApiLoading] = useState(false);
@@ -48,12 +50,14 @@ function HomePage() {
 		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
 		setNotesTitle(allNotesAtr[0]?.notesTitle || '');
 		setMyNotesId(allNotesAtr[0]?.notesId || '');
+		setNoteSharedWith(allNotesAtr[0]?.noteSharedWith || []);
 	}, []);
 
+	// fetch All noteData
 	useEffect(() => {
 		handleUserState(true);
 		if (JSON.parse(localStorage.getItem('user_details'))) {
-			getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg);
+			getUserAllNoteData(setAllNotes, setIsApiLoading, handleErrorShown);
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes';
 		}
@@ -78,11 +82,12 @@ function HomePage() {
 	}, []);
 
 	const handleNoteOpening = useCallback(
-		(noteId, title, data) => {
+		(noteId, title, data, shareWith) => {
 			if (noteId) setMyNotesId(noteId);
 			setNotesTitle(title);
 			setOpenedNoteData(data);
 			setIsNotesModalOpen(true);
+			setNoteSharedWith(shareWith || []);
 			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
 		},
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
@@ -131,9 +136,10 @@ function HomePage() {
 			noteId: myNotesId,
 			notesTitle: document.getElementById('titleTextBox')?.innerText,
 			noteData: openedNoteData,
+			noteSharedWith: noteSharedWith,
 		};
 		updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleErrorShown);
-	}, [handleErrorShown, myNotesId, openedNoteData]);
+	}, [handleErrorShown, myNotesId, openedNoteData, noteSharedWith]);
 
 	//handle note or todo delete
 	const handleDeleteBtnClick = useCallback(async () => {
@@ -201,6 +207,16 @@ function HomePage() {
 		[openedNoteData]
 	);
 
+	const handleAddShareNoteUser = useCallback(
+		(e) => {
+			e.preventDefault();
+			if (e.target.shareEmailInput.value.trim() === '') return;
+			setNoteSharedWith([...noteSharedWith, { userEmail: e.target.shareEmailInput.value, canEdit: false }]);
+			e.target.reset();
+		},
+		[noteSharedWith]
+	);
+
 	const handleTodoEnterClick = useCallback(
 		(e, index) => {
 			e.preventDefault();
@@ -264,12 +280,15 @@ function HomePage() {
 									myNotesId={myNotesId}
 									notesTitle={notesTitle}
 									openedNoteData={openedNoteData}
+									noteSharedWith={noteSharedWith}
+
 									handleSaveBtnClick={handleSaveBtnClick}
 									handleDeleteBtnClick={handleDeleteBtnClick}
 									handleNoteTextChange={handleNoteTextChange}
 									handleCheckboxClick={handleCheckboxClick}
 									handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
 									handleAddTodoBtn={handleAddTodoBtn}
+									handleAddShareNoteUser={handleAddShareNoteUser}
 									handleTodoEnterClick={handleTodoEnterClick}
 									handleBackspaceClick={handleBackspaceClick}
 									todoRef={todoRef}

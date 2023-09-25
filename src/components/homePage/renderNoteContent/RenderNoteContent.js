@@ -19,6 +19,7 @@ function RenderNoteContent({
 	myNotesId,
 	notesTitle,
 	openedNoteData,
+	noteSharedWith,
 
 	handleSaveBtnClick,
 	handleDeleteToDoBtnClick,
@@ -28,6 +29,8 @@ function RenderNoteContent({
 	handleAddNoteBtn,
 	handleTodoEnterClick,
 	handleBackspaceClick,
+	handleAddShareNoteUser,
+
 	todoRef,
 	focusedInput,
 	setfocusedInput,
@@ -66,6 +69,8 @@ function RenderNoteContent({
 				handleAddNoteBtn={handleAddNoteBtn}
 				openConfirmationDialog={openConfirmationDialog}
 				handleSaveBtnClick={handleSaveBtnClick}
+				handleAddShareNoteUser={handleAddShareNoteUser}
+				noteSharedWith={noteSharedWith}
 			/>
 			<div id="userNotesContent">
 				<div
