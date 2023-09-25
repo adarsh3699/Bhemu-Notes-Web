@@ -45,6 +45,17 @@ function HomePage() {
 	const todoRef = useRef();
 	const lastTextBoxRef = useRef();
 
+	const handleErrorShown = useCallback((msgText) => {
+		if (msgText) {
+			setMsg(msgText);
+			setTimeout(() => {
+				setMsg('');
+			}, 2500);
+		} else {
+			console.log('Please Provide Text Msg');
+		}
+	}, []);
+
 	const openFirstNote = useCallback(function (allNotesAtr) {
 		if (allNotesAtr.length === 0) return;
 		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
@@ -61,7 +72,7 @@ function HomePage() {
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes';
 		}
-	}, []);
+	}, [handleErrorShown]);
 
 	useEffect(() => {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
@@ -69,17 +80,6 @@ function HomePage() {
 			openFirstNote(allNotes);
 		}
 	}, [openFirstNote, allNotes, isNotesModalOpen]);
-
-	const handleErrorShown = useCallback((msgText) => {
-		if (msgText) {
-			setMsg(msgText);
-			setTimeout(() => {
-				setMsg('');
-			}, 2500);
-		} else {
-			console.log('Please Provide Text Msg');
-		}
-	}, []);
 
 	const handleNoteOpening = useCallback(
 		(noteId, title, data, shareWith) => {
@@ -281,7 +281,6 @@ function HomePage() {
 									notesTitle={notesTitle}
 									openedNoteData={openedNoteData}
 									noteSharedWith={noteSharedWith}
-
 									handleSaveBtnClick={handleSaveBtnClick}
 									handleDeleteBtnClick={handleDeleteBtnClick}
 									handleNoteTextChange={handleNoteTextChange}

@@ -82,8 +82,7 @@ function ShareDialogBox({ title, message, toggleBtn, handleAddShareNoteUser, not
 						<ManageAccountsIcon fontSize="inherit" />
 						<select className="shareUserAccessSelect">
 							<option value="age">Only invited people can access</option>
-							<option value="age">Anyone with the link can comment
-							</option>
+							<option value="age">Anyone with the link can comment</option>
 						</select>
 					</div>
 					<div className="shareCopySaveBtns">
