@@ -69,8 +69,8 @@ function ShareDialogBox({ title, message, toggleBtn, handleAddShareNoteUser, not
 								</div>
 
 								<select className="shareUserPermission">
-									<option value="age">Read</option>
-									<option value="age">Editor</option>
+									<option value="age">Can Read</option>
+									<option value="age">Can Edit</option>
 								</select>
 							</div>
 						</div>
@@ -81,8 +81,9 @@ function ShareDialogBox({ title, message, toggleBtn, handleAddShareNoteUser, not
 					<div className="shareUserAccess">
 						<ManageAccountsIcon fontSize="inherit" />
 						<select className="shareUserAccessSelect">
-							<option value="age">Read</option>
-							<option value="age">Editor</option>
+							<option value="age">Only invited people can access</option>
+							<option value="age">Anyone with the link can comment
+							</option>
 						</select>
 					</div>
 					<div className="shareCopySaveBtns">
@@ -94,7 +95,7 @@ function ShareDialogBox({ title, message, toggleBtn, handleAddShareNoteUser, not
 						</Button>
 					</div>
 				</div>
-				<h1>Feature Coming Soon</h1>
+				<h1>This Feature Coming Soon</h1>
 			</div>
 		</div>
 	);

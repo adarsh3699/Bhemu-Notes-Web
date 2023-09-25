@@ -124,6 +124,7 @@
 	border-radius: 5px;
 	padding: 5px 10px;
 	flex-grow: 1;
+	outline: none;
 }
 
 .shareCopySaveBtns {
