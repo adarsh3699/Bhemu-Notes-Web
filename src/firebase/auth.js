@@ -9,6 +9,18 @@ import {
 	sendPasswordResetEmail,
 } from 'firebase/auth';
 
+import {
+	getFirestore,
+	getDoc,
+	setDoc,
+	// updateDoc,
+	doc,
+	serverTimestamp,
+} from 'firebase/firestore';
+
+const database = getFirestore();
+
+
 const auth = getAuth();
 
 const user_details = JSON.parse(localStorage.getItem('user_details'));
@@ -41,7 +53,7 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
 		});
 }
 
-function handleSignUpForm(e, setMsg, setIsApiLoading) {
+async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 	e.preventDefault();
 
 	const email = e.target.email.value;
@@ -54,34 +66,59 @@ function handleSignUpForm(e, setMsg, setIsApiLoading) {
 
 	setIsApiLoading(true);
 
-	createUserWithEmailAndPassword(auth, email, password)
-		.then((cred) => {
-			sendEmailVerification(cred.user).then(() => {
-				// setMsg('Email verification sent. Please also check in spam');
-			});
+	const docRef = doc(database, 'user_details', email);
+	const docSnap = await getDoc(docRef);
 
-			updateProfile(cred.user, { displayName: userName })
-				.then(() => {
-					setIsApiLoading(false);
-					localStorage.setItem(
-						'user_details',
-						JSON.stringify({
+	if (docSnap.exists()) {
+		setMsg('Email already exists');
+		console.log('Email already exists');
+		setIsApiLoading(false);
+	} else {
+		createUserWithEmailAndPassword(auth, email, password)
+			.then((cred) => {
+				sendEmailVerification(cred.user).then(() => {
+					// setMsg('Email verification sent. Please also check in spam');
+				});
+
+				updateProfile(cred.user, { displayName: userName })
+					.then(() => {
+
+						setDoc(docRef, {
 							userName,
 							email,
-							userId: cred?.user?.uid,
+							createdOn: serverTimestamp(),
+							lastloginedOn: serverTimestamp(),
 						})
-					);
-					document.location.href = '/home';
-				})
-				.catch((err) => {
-					setIsApiLoading(false);
-					setMsg(err.code);
-				});
-		})
-		.catch((err) => {
-			setMsg(err.code);
-			setIsApiLoading(false);
-		});
+							.then(() => {
+								setIsApiLoading(false);
+								localStorage.setItem(
+									'user_details',
+									JSON.stringify({
+										userName,
+										email,
+										userId: cred?.user?.uid,
+									})
+								);
+								document.location.href = '/home';
+							})
+							.catch((err) => {
+								setIsApiLoading(false);
+								setMsg(err.code);
+								console.log(err.code);
+							});
+					})
+					.catch((err) => {
+						setIsApiLoading(false);
+						setMsg(err.code);
+						console.log(err.code);
+					});
+			})
+			.catch((err) => {
+				setIsApiLoading(false);
+				setMsg(err.code);
+				console.log(err.code);
+			});
+	}
 }
 
 function handleSignOut() {
