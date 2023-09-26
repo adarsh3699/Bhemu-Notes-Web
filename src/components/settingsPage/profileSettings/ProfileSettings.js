@@ -26,10 +26,11 @@ function ProfileSettings() {
 		(e) => {
 			setUserDetails({
 				...userDetails,
-				[e.target.name]: e.target.value.trim(),
+				[e.target.name]: e.target.value,
 			});
+			if (msg) setMsg('');
 		},
-		[userDetails, setUserDetails]
+		[userDetails, setUserDetails, msg]
 	);
 
 	const handleImageUpload = useCallback(
@@ -72,6 +73,7 @@ function ProfileSettings() {
 							type="text"
 							name="userName"
 							placeholder="User Name"
+							autoComplete='off'
 							value={userDetails?.userName ? userDetails.userName : ''}
 							onChange={handleUserDetailsChange}
 						/>

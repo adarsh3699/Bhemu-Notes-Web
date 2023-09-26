@@ -3,21 +3,38 @@ import { storage } from './initFirebase';
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updateProfile, updatePassword } from 'firebase/auth';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
+import {
+	getFirestore,
+	updateDoc,
+	doc,
+	serverTimestamp,
+} from 'firebase/firestore';
+
 const auth = getAuth();
-// const storage = getStorage(app);
+const database = getFirestore();
+
 
 async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, imageUpload) {
 	const { userName, email, userId } = userDetails;
-	if (!userName) return setMsg('User Name can not be empty');
+	if (!userName?.trim()) return setMsg('User Name can not be empty');
 	const user = auth.currentUser;
 	if (userName === user.displayName) return;
 	if (!imageUpload) setIsSaveBtnLoading(true);
+
+	const docRef = doc(database, 'user_details', auth?.currentUser?.email);
+
 
 	updateProfile(user, { displayName: userName })
 		.then(() => {
 			localStorage.setItem('user_details', JSON.stringify({ userName, email, userId }));
 			setMsg('Changed successfully');
 			if (!imageUpload) setIsSaveBtnLoading(false);
+
+
+			updateDoc(docRef, {
+				userName: userName.trim(),
+				updatedOn: serverTimestamp(),
+			});
 		})
 		.catch((err) => {
 			setMsg(err.code);
@@ -64,17 +81,17 @@ function handlePasswordChange(changePasswordData, setChangePasswordMsg, setIsCha
 		});
 }
 
-function handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setIsSaveBtnLoading) {
+async function handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setIsSaveBtnLoading) {
 	setIsSaveBtnLoading(true);
 	const imageRef = ref(
 		storage,
 		'profilePicture/' + auth.currentUser.uid + '/' + auth.currentUser.displayName.split(' ')[0] + '_profilePicture'
 	);
+	const docRef = doc(database, 'user_details', auth?.currentUser?.email);
 
 	uploadBytesResumable(imageRef, imageUpload)
 		.then((snapshot) => {
 			console.log('Uploaded successfully a blob or file!');
-			console.log(snapshot);
 
 			getDownloadURL(snapshot.ref)
 				.then((downloadURL) => {
@@ -87,6 +104,11 @@ function handleUserProfileChange(imageUpload, setProfilePictureUrl, setMsg, setI
 						.then(() => {
 							setMsg('Changed successfully');
 							setIsSaveBtnLoading(false);
+
+							updateDoc(docRef, {
+								profilePicture: downloadURL,
+								updatedOn: serverTimestamp(),
+							});
 						})
 						.catch((err) => {
 							setMsg(err.code);

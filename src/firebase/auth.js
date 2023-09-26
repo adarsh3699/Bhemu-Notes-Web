@@ -20,7 +20,6 @@ import {
 
 const database = getFirestore();
 
-
 const auth = getAuth();
 
 const user_details = JSON.parse(localStorage.getItem('user_details'));
