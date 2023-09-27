@@ -104,8 +104,8 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
 
 //update notes
 function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg) {
-	const { noteId, notesTitle, noteData, isNoteSharedWithAll } = upcomingData;
-	if (!noteId || !notesTitle || !noteData || !isNoteSharedWithAll) {
+	const { noteId, notesTitle, noteData, } = upcomingData;
+	if (!noteId || !notesTitle || !noteData) {
 		setMsg('Please Provide all details (noteId, notesTitle, noteData)');
 		setIsSaveBtnLoading(false);
 		return;
@@ -119,7 +119,6 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 	updateDoc(docRef, {
 		notesTitle: encryptTitle,
 		noteData: encryptNoteData,
-		// isNoteSharedWithAll,
 		updatedOn: serverTimestamp(),
 	})
 		.then(() => {
