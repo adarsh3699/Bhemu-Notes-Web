@@ -3,16 +3,10 @@ import { storage } from './initFirebase';
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updateProfile, updatePassword } from 'firebase/auth';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-import {
-	getFirestore,
-	updateDoc,
-	doc,
-	serverTimestamp,
-} from 'firebase/firestore';
+import { getFirestore, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 const auth = getAuth();
 const database = getFirestore();
-
 
 async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, imageUpload) {
 	const { userName, email, userId } = userDetails;
@@ -23,13 +17,11 @@ async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, im
 
 	const docRef = doc(database, 'user_details', auth?.currentUser?.email);
 
-
 	updateProfile(user, { displayName: userName })
 		.then(() => {
 			localStorage.setItem('user_details', JSON.stringify({ userName, email, userId }));
 			setMsg('Changed successfully');
 			if (!imageUpload) setIsSaveBtnLoading(false);
-
 
 			updateDoc(docRef, {
 				userName: userName.trim(),

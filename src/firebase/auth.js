@@ -81,7 +81,6 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 
 				updateProfile(cred.user, { displayName: userName })
 					.then(() => {
-
 						setDoc(docRef, {
 							userName,
 							email,

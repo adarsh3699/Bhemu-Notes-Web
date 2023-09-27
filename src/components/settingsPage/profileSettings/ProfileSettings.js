@@ -73,7 +73,7 @@ function ProfileSettings() {
 							type="text"
 							name="userName"
 							placeholder="User Name"
-							autoComplete='off'
+							autoComplete="off"
 							value={userDetails?.userName ? userDetails.userName : ''}
 							onChange={handleUserDetailsChange}
 						/>

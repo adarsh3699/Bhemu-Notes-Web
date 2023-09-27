@@ -15,11 +15,11 @@ function RenderNoteContent({
 	isSaveBtnLoading,
 	handleNotesModalClosing,
 	openConfirmationDialog,
+	toggleShareDialogBox,
 
 	myNotesId,
 	notesTitle,
 	openedNoteData,
-	noteSharedWith,
 
 	handleSaveBtnClick,
 	handleDeleteToDoBtnClick,
@@ -70,7 +70,7 @@ function RenderNoteContent({
 				openConfirmationDialog={openConfirmationDialog}
 				handleSaveBtnClick={handleSaveBtnClick}
 				handleAddShareNoteUser={handleAddShareNoteUser}
-				noteSharedWith={noteSharedWith}
+				toggleShareDialogBox={toggleShareDialogBox}
 			/>
 			<div id="userNotesContent">
 				<div

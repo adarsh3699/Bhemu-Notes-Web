@@ -8,6 +8,7 @@ import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
+import ShareDialogBox from '../components/shareDialog/ShareDialogBox';
 import ErrorMsg from '../components/errorMsg/ErrorMsg';
 
 import Hotkeys from 'react-hot-keys';
@@ -25,6 +26,7 @@ document.addEventListener(
 );
 
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
+const user_details = JSON.parse(localStorage.getItem('user_details'));
 
 function HomePage() {
 	const [msg, setMsg] = useState('');
@@ -33,10 +35,12 @@ function HomePage() {
 	const [myNotesId, setMyNotesId] = useState('');
 	const [notesTitle, setNotesTitle] = useState('');
 	const [openedNoteData, setOpenedNoteData] = useState([]);
-	const [noteSharedWith, setNoteSharedWith] = useState([]);
+	const [noteSharedUsers, setNoteSharedUsers] = useState([]);
+	const [isNoteSharedWithAll, setIsNoteSharedWithAll] = useState(false);
 
 	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+	const [isShareDialogBoxOpen, setIsShareDialogBoxOpen] = useState(false);
 
 	const [isPageLoaded, setIsPageLoaded] = useState(false);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -56,12 +60,15 @@ function HomePage() {
 		}
 	}, []);
 
+	console.log(noteSharedUsers);
+
 	const openFirstNote = useCallback(function (allNotesAtr) {
 		if (allNotesAtr.length === 0) return;
 		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
 		setNotesTitle(allNotesAtr[0]?.notesTitle || '');
 		setMyNotesId(allNotesAtr[0]?.notesId || '');
-		setNoteSharedWith(allNotesAtr[0]?.noteSharedWith || []);
+		setNoteSharedUsers(allNotesAtr[0]?.noteSharedUsers || []);
+		setIsNoteSharedWithAll(allNotesAtr[0]?.isNoteSharedWithAll || false);
 	}, []);
 
 	// fetch All noteData
@@ -82,12 +89,13 @@ function HomePage() {
 	}, [openFirstNote, allNotes, isNotesModalOpen]);
 
 	const handleNoteOpening = useCallback(
-		(noteId, title, data, shareWith) => {
+		(noteId, title, data, shareWith, userPermission) => {
 			if (noteId) setMyNotesId(noteId);
 			setNotesTitle(title);
 			setOpenedNoteData(data);
 			setIsNotesModalOpen(true);
-			setNoteSharedWith(shareWith || []);
+			setNoteSharedUsers(shareWith || []);
+			setIsNoteSharedWithAll(userPermission || false);
 			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
 		},
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
@@ -136,10 +144,9 @@ function HomePage() {
 			noteId: myNotesId,
 			notesTitle: document.getElementById('titleTextBox')?.innerText,
 			noteData: openedNoteData,
-			noteSharedWith: noteSharedWith,
 		};
 		updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleErrorShown);
-	}, [handleErrorShown, myNotesId, openedNoteData, noteSharedWith]);
+	}, [handleErrorShown, myNotesId, openedNoteData]);
 
 	//handle note or todo delete
 	const handleDeleteBtnClick = useCallback(async () => {
@@ -210,11 +217,20 @@ function HomePage() {
 	const handleAddShareNoteUser = useCallback(
 		(e) => {
 			e.preventDefault();
-			if (e.target.shareEmailInput.value.trim() === '') return;
-			setNoteSharedWith([...noteSharedWith, { userEmail: e.target.shareEmailInput.value, canEdit: false }]);
+			const email = e.target.shareEmailInput.value.trim();
+			if (email === '' || user_details?.email === email) return;
+
+			for (let i = 0; i < noteSharedUsers.length; i++) {
+				if (noteSharedUsers[i]?.email === email) {
+					handleErrorShown('User Already Added');
+					return;
+				}
+			}
+
+			setNoteSharedUsers([...noteSharedUsers, { email, canEdit: false }]);
 			e.target.reset();
 		},
-		[noteSharedWith]
+		[noteSharedUsers, handleErrorShown]
 	);
 
 	const handleTodoEnterClick = useCallback(
@@ -255,6 +271,10 @@ function HomePage() {
 		[openedNoteData]
 	);
 
+	const toggleShareDialogBox = useCallback(() => {
+		setIsShareDialogBoxOpen((prev) => !prev);
+	}, []);
+
 	return (
 		isPageLoaded && (
 			<>
@@ -277,10 +297,10 @@ function HomePage() {
 									isSaveBtnLoading={isSaveBtnLoading}
 									handleNotesModalClosing={handleNotesModalClosing}
 									openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
+									toggleShareDialogBox={toggleShareDialogBox}
 									myNotesId={myNotesId}
 									notesTitle={notesTitle}
 									openedNoteData={openedNoteData}
-									noteSharedWith={noteSharedWith}
 									handleSaveBtnClick={handleSaveBtnClick}
 									handleDeleteBtnClick={handleDeleteBtnClick}
 									handleNoteTextChange={handleNoteTextChange}
@@ -317,6 +337,20 @@ function HomePage() {
 						onYesClick={handleDeleteBtnClick}
 					/>
 				)}
+
+				{isShareDialogBoxOpen && (
+					<ShareDialogBox
+						title="Share Note"
+						toggleBtn={toggleShareDialogBox}
+						handleAddShareNoteUser={handleAddShareNoteUser}
+						noteSharedUsers={noteSharedUsers}
+						myNotesId={myNotesId}
+						handleErrorShown={handleErrorShown}
+						isNoteSharedWithAll={isNoteSharedWithAll}
+						setIsNoteSharedWithAll={setIsNoteSharedWithAll}
+					/>
+				)}
+
 				{msg && <ErrorMsg isError={msg ? true : false} msgText={msg} />}
 			</>
 		)

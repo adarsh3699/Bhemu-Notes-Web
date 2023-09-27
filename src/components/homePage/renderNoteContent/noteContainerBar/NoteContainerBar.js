@@ -1,6 +1,4 @@
-import React, { useState, useCallback } from 'react';
-
-import ShareDialogBox from '../../../shareDialog/ShareDialogBox';
+import React, { useState } from 'react';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,20 +23,14 @@ function NoteContainerBar({
 	handleAddTodoBtn,
 	handleSaveBtnClick,
 	openConfirmationDialog,
-	handleAddShareNoteUser,
-	noteSharedWith,
+	toggleShareDialogBox,
 }) {
-	const [isShareDialogBoxOpen, setIsShareDialogBoxOpen] = useState(false);
 	const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
 
 	const toggleSettingsMenu = (event) => {
 		setSettingMenuAddNotesAnchorEl(event.currentTarget);
 	};
-
-	const toggleShareDialogBox = useCallback(() => {
-		setIsShareDialogBoxOpen((prev) => !prev);
-	}, []);
 
 	return (
 		<>
@@ -88,16 +80,6 @@ function NoteContainerBar({
 					</IconButton>
 				</div>
 			</div>
-
-			{isShareDialogBoxOpen && (
-				<ShareDialogBox
-					title="Share Note"
-					message="Are you sure you want to delete this note?"
-					toggleBtn={toggleShareDialogBox}
-					handleAddShareNoteUser={handleAddShareNoteUser}
-					noteSharedWith={noteSharedWith}
-				/>
-			)}
 
 			<Menu
 				anchorEl={settingMenuAnchorEl}
