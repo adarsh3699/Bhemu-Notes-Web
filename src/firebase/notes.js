@@ -104,7 +104,7 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
 
 //update notes
 function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg) {
-	const { noteId, notesTitle, noteData, } = upcomingData;
+	const { noteId, notesTitle, noteData } = upcomingData;
 	if (!noteId || !notesTitle || !noteData) {
 		setMsg('Please Provide all details (noteId, notesTitle, noteData)');
 		setIsSaveBtnLoading(false);

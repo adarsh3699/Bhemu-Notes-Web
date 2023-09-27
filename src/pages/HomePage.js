@@ -32,6 +32,7 @@ function HomePage() {
 	const [msg, setMsg] = useState('');
 	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
 
+	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
 	const [myNotesId, setMyNotesId] = useState('');
 	const [notesTitle, setNotesTitle] = useState('');
 	const [openedNoteData, setOpenedNoteData] = useState([]);
@@ -69,6 +70,7 @@ function HomePage() {
 		setMyNotesId(allNotesAtr[0]?.notesId || '');
 		setNoteSharedUsers(allNotesAtr[0]?.noteSharedUsers || []);
 		setIsNoteSharedWithAll(allNotesAtr[0]?.isNoteSharedWithAll || false);
+		setCurrentNoteIndex(0)
 	}, []);
 
 	// fetch All noteData
@@ -89,13 +91,14 @@ function HomePage() {
 	}, [openFirstNote, allNotes, isNotesModalOpen]);
 
 	const handleNoteOpening = useCallback(
-		(noteId, title, data, shareWith, userPermission) => {
+		(index, noteId, title, data, shareWith, userPermission) => {
 			if (noteId) setMyNotesId(noteId);
 			setNotesTitle(title);
 			setOpenedNoteData(data);
 			setIsNotesModalOpen(true);
 			setNoteSharedUsers(shareWith || []);
 			setIsNoteSharedWithAll(userPermission || false);
+			setCurrentNoteIndex(index)
 			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
 		},
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
@@ -214,6 +217,7 @@ function HomePage() {
 		[openedNoteData]
 	);
 
+	/// handle add share note user
 	const handleAddShareNoteUser = useCallback(
 		(e) => {
 			e.preventDefault();
@@ -227,7 +231,7 @@ function HomePage() {
 				}
 			}
 
-			setNoteSharedUsers([...noteSharedUsers, { email, canEdit: false }]);
+			setNoteSharedUsers([{ email, canEdit: false }, ...noteSharedUsers]);
 			e.target.reset();
 		},
 		[noteSharedUsers, handleErrorShown]
@@ -272,8 +276,12 @@ function HomePage() {
 	);
 
 	const toggleShareDialogBox = useCallback(() => {
+		if (isShareDialogBoxOpen) {
+			setIsNoteSharedWithAll(allNotes[currentNoteIndex]?.isNoteSharedWithAll || false)
+			setNoteSharedUsers(allNotes[currentNoteIndex]?.noteSharedUsers || [])
+		}
 		setIsShareDialogBoxOpen((prev) => !prev);
-	}, []);
+	}, [allNotes, currentNoteIndex, isShareDialogBoxOpen]);
 
 	return (
 		isPageLoaded && (
@@ -343,11 +351,12 @@ function HomePage() {
 						title="Share Note"
 						toggleBtn={toggleShareDialogBox}
 						handleAddShareNoteUser={handleAddShareNoteUser}
-						noteSharedUsers={noteSharedUsers}
 						myNotesId={myNotesId}
-						handleErrorShown={handleErrorShown}
+						noteSharedUsers={noteSharedUsers}
+						setNoteSharedUsers={setNoteSharedUsers}
 						isNoteSharedWithAll={isNoteSharedWithAll}
 						setIsNoteSharedWithAll={setIsNoteSharedWithAll}
+						handleErrorShown={handleErrorShown}
 					/>
 				)}
 

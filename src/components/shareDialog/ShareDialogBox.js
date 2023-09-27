@@ -18,10 +18,11 @@ function ShareDialogBox({
 	handleErrorShown,
 	toggleBtn,
 	handleAddShareNoteUser,
+	myNotesId,
 	noteSharedUsers,
+	setNoteSharedUsers,
 	isNoteSharedWithAll,
 	setIsNoteSharedWithAll,
-	myNotesId,
 	sx,
 }) {
 	const backgroundRef = useRef();
@@ -47,6 +48,18 @@ function ShareDialogBox({
 			};
 		},
 		[handleClickOutside]
+	);
+
+	const handleSpecificUserPermissionChange = useCallback(
+		(index, canEdit) => {
+			console.log(canEdit);
+			const newToDos = noteSharedUsers.map(function (item, i) {
+				return i === index ? { ...item, canEdit: canEdit ? false : true } : item;
+			});
+
+			setNoteSharedUsers(newToDos);
+		},
+		[noteSharedUsers, setNoteSharedUsers]
 	);
 
 	const handleAllUserPermissionChange = useCallback(
@@ -100,7 +113,11 @@ function ShareDialogBox({
 									<div className="shareUserOthersEmail">{item?.email}</div>
 								</div>
 
-								<select className="shareUserPermission">
+								<select
+									className="shareUserPermission"
+									value={item?.canEdit}
+									onChange={() => handleSpecificUserPermissionChange(index, item?.canEdit)}
+								>
 									<option value={false}>Can Read</option>
 									<option value={true}>Can Edit</option>
 									<option value="remove">Remove</option>
@@ -137,6 +154,7 @@ function ShareDialogBox({
 						</Button>
 					</div>
 				</div>
+				<h1>This feature comming soon</h1>
 			</div>
 		</div>
 	);
