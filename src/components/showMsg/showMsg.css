@@ -21,17 +21,17 @@
 }
 
 .error {
-	background-color: red;
+	background-color: red !important;
 }
 
 .success {
-	background-color: green;
+	background-color: green !important;
 }
 
 .warning {
-	background-color: orange;
+	background-color: orange !important;
 }
 
 .info {
-	background-color: blue;
+	background-color: blue !important;
 }

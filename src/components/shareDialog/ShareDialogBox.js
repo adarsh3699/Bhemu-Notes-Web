@@ -15,7 +15,7 @@ const userProfileImg = localStorage.getItem('user_profile_img');
 
 function ShareDialogBox({
 	title,
-	handleErrorShown,
+	handleMsgShown,
 	toggleBtn,
 	handleAddShareNoteUser,
 	myNotesId,
@@ -79,6 +79,11 @@ function ShareDialogBox({
 		[setIsNoteSharedWithAll]
 	);
 
+	const handleCopyLinkBtnClick = useCallback(() => {
+		navigator.clipboard.writeText(window.location.origin + '/share/' + myNotesId);
+		handleMsgShown('Copied to clipboard', 'success');
+	}, [handleMsgShown, myNotesId]);
+
 	const handleSaveBtnClick = useCallback(() => {
 		if (!myNotesId) return console.log('Please Provide noteId');
 		const data = {
@@ -86,9 +91,9 @@ function ShareDialogBox({
 			noteSharedUsers,
 			isNoteSharedWithAll,
 		};
-		updateNoteShareAccess(data, setIsSaveBtnLoading, handleErrorShown);
-		updateUserShareList(data, setIsSaveBtnLoading, handleErrorShown);
-	}, [myNotesId, isNoteSharedWithAll, noteSharedUsers, handleErrorShown]);
+		updateNoteShareAccess(data, setIsSaveBtnLoading, handleMsgShown);
+		updateUserShareList(data, setIsSaveBtnLoading, handleMsgShown);
+	}, [myNotesId, isNoteSharedWithAll, noteSharedUsers, handleMsgShown]);
 
 	return (
 		<div className="shareDialogBoxBg">
@@ -150,7 +155,11 @@ function ShareDialogBox({
 						</select>
 					</div>
 					<div className="shareCopySaveBtns">
-						<Button variant="contained" sx={{ my: 2, mr: 2, width: '50%' }}>
+						<Button
+							variant="contained"
+							onClick={handleCopyLinkBtnClick}
+							sx={{ my: 2, mr: 2, width: '50%' }}
+						>
 							Copy Link
 						</Button>
 						<Button

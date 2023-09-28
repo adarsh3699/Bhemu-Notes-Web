@@ -9,7 +9,7 @@ import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNote
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 import ShareDialogBox from '../components/shareDialog/ShareDialogBox';
-import ErrorMsg from '../components/showMsg/ShowMsg';
+import ShowMsg from '../components/showMsg/ShowMsg';
 
 import Hotkeys from 'react-hot-keys';
 
@@ -29,7 +29,7 @@ const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_
 const user_details = JSON.parse(localStorage.getItem('user_details'));
 
 function HomePage() {
-	const [msg, setMsg] = useState('');
+	const [msg, setMsg] = useState({ text: '', type: '' });
 	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
 
 	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
@@ -50,11 +50,11 @@ function HomePage() {
 	const todoRef = useRef();
 	const lastTextBoxRef = useRef();
 
-	const handleErrorShown = useCallback((msgText) => {
+	const handleMsgShown = useCallback((msgText, type) => {
 		if (msgText) {
-			setMsg(msgText);
+			setMsg({ text: msgText, type: type });
 			setTimeout(() => {
-				setMsg('');
+				setMsg({ text: '', type: '' });
 			}, 2500);
 		} else {
 			console.log('Please Provide Text Msg');
@@ -75,11 +75,11 @@ function HomePage() {
 	useEffect(() => {
 		handleUserState(true);
 		if (JSON.parse(localStorage.getItem('user_details'))) {
-			getUserAllNoteData(setAllNotes, setIsApiLoading, handleErrorShown);
+			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes';
 		}
-	}, [handleErrorShown]);
+	}, [handleMsgShown]);
 
 	useEffect(() => {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
@@ -116,9 +116,9 @@ function HomePage() {
 
 			const toSendNoteData = { newNotesTitle, newNoteData };
 			handleNoteOpening(0, '', newNotesTitle, newNoteData);
-			addNewNote(toSendNoteData, setMyNotesId, handleErrorShown, setIsApiLoading);
+			addNewNote(toSendNoteData, setMyNotesId, handleMsgShown, setIsApiLoading);
 		},
-		[handleNoteOpening, handleErrorShown]
+		[handleNoteOpening, handleMsgShown]
 	);
 
 	const handleAddNoteInputBox = useCallback(
@@ -131,11 +131,11 @@ function HomePage() {
 
 				const toSendNoteData = { newNotesTitle, newNoteData };
 				handleNoteOpening('', newNotesTitle, newNoteData);
-				addNewNote(toSendNoteData, setMyNotesId, handleErrorShown, setIsApiLoading);
+				addNewNote(toSendNoteData, setMyNotesId, handleMsgShown, setIsApiLoading);
 				e.target.reset();
 			}
 		},
-		[handleNoteOpening, handleErrorShown]
+		[handleNoteOpening, handleMsgShown]
 	);
 
 	//handle note or todo save
@@ -146,16 +146,16 @@ function HomePage() {
 			notesTitle: document.getElementById('titleTextBox')?.innerText,
 			noteData: openedNoteData,
 		};
-		updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleErrorShown);
-	}, [handleErrorShown, myNotesId, openedNoteData]);
+		updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleMsgShown);
+	}, [handleMsgShown, myNotesId, openedNoteData]);
 
 	//handle note or todo delete
 	const handleDeleteBtnClick = useCallback(async () => {
 		handleNotesModalClosing();
 		setIsConfirmationDialogOpen(false);
 
-		deleteData(myNotesId, setIsApiLoading, handleErrorShown);
-	}, [handleErrorShown, myNotesId, handleNotesModalClosing]);
+		deleteData(myNotesId, setIsApiLoading, handleMsgShown);
+	}, [handleMsgShown, myNotesId, handleNotesModalClosing]);
 
 	//handle todo checkbo click
 	const handleCheckboxClick = useCallback(
@@ -224,7 +224,7 @@ function HomePage() {
 
 			for (let i = 0; i < noteSharedUsers.length; i++) {
 				if (noteSharedUsers[i]?.email === email) {
-					handleErrorShown('User Already Added');
+					handleMsgShown('User Already Added');
 					return;
 				}
 			}
@@ -232,7 +232,7 @@ function HomePage() {
 			setNoteSharedUsers([{ email, canEdit: false }, ...noteSharedUsers]);
 			e.target.reset();
 		},
-		[noteSharedUsers, handleErrorShown]
+		[noteSharedUsers, handleMsgShown]
 	);
 
 	const handleTodoEnterClick = useCallback(
@@ -354,11 +354,11 @@ function HomePage() {
 						setNoteSharedUsers={setNoteSharedUsers}
 						isNoteSharedWithAll={isNoteSharedWithAll}
 						setIsNoteSharedWithAll={setIsNoteSharedWithAll}
-						handleErrorShown={handleErrorShown}
+						handleMsgShown={handleMsgShown}
 					/>
 				)}
 
-				{msg && <ErrorMsg isError={msg ? true : false} msgText={msg} />}
+				{msg && <ShowMsg isError={msg?.text ? true : false} msgText={msg?.text} type={msg?.type} />}
 			</>
 		)
 	);
