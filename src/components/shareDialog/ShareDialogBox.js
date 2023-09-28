@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateShareNote } from '../../firebase/shareNote';
+import { updateNoteShareAccess, updateUserShareList } from '../../firebase/shareNote';
 
 import Button from '@mui/material/Button';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -86,7 +86,8 @@ function ShareDialogBox({
 			noteSharedUsers,
 			isNoteSharedWithAll,
 		};
-		updateShareNote(data, setIsSaveBtnLoading, handleErrorShown);
+		updateNoteShareAccess(data, setIsSaveBtnLoading, handleErrorShown);
+		updateUserShareList(data, setIsSaveBtnLoading, handleErrorShown);
 	}, [myNotesId, isNoteSharedWithAll, noteSharedUsers, handleErrorShown]);
 
 	return (

@@ -61,8 +61,6 @@ function HomePage() {
 		}
 	}, []);
 
-	console.log(noteSharedUsers);
-
 	const openFirstNote = useCallback(function (allNotesAtr) {
 		if (allNotesAtr.length === 0) return;
 		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
