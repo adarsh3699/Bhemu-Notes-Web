@@ -1,5 +1,5 @@
 // import { getAuth } from 'firebase/auth';
-// import { encryptText, decryptText } from '../utils';
+import { encryptText, decryptText } from '../utils';
 
 import {
 	getFirestore,
@@ -33,7 +33,7 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 		// setIsSaveBtnLoading(false);
 		return;
 	}
-	// setIsSaveBtnLoading(true);
+	setIsSaveBtnLoading(true);
 
 	const docRef = doc(database, 'user_notes', noteId);
 
@@ -43,10 +43,10 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 		lastSharedAt: serverTimestamp(),
 	})
 		.then(() => {
-			// setIsSaveBtnLoading(false);
+			setIsSaveBtnLoading(false);
 		})
 		.catch((err) => {
-			// setIsSaveBtnLoading(false);
+			setIsSaveBtnLoading(false);
 			console.log(err.message);
 		});
 }
@@ -113,30 +113,31 @@ function updateUserShareList(incomingData, setIsSaveBtnLoading, handleErrorShown
 	});
 }
 
-// async function addNoteToUserShareList(noteId, email, handleErrorShown) {
-// 	console.log(noteId, email);
+async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, setIsGetApiLoading) {
+	setIsGetApiLoading(true);
+	const docRef = doc(database, 'user_notes', noteId);
+	await getDoc(docRef)
+		.then((docSnap) => {
+			if (!docSnap?.data()?.isNoteSharedWithAll) window.location.href = "/";
 
-// 	if (!noteId || !email) {
-// 		handleErrorShown('Please Provide all details (userId, email)');
-// 		// setIsSaveBtnLoading(false);
-// 		return;
-// 	}
+			const noteData = {
+				notesId: docSnap.id,
+				notesTitle: decryptText(docSnap.data().notesTitle),
+				noteData: JSON.parse(decryptText(docSnap.data().noteData)),
+				updatedOn: docSnap.data().updatedOn,
+				noteSharedUsers: docSnap.data().noteSharedUsers || [],
+				isNoteSharedWithAll: docSnap.data().isNoteSharedWithAll,
+			};
 
-// 	// setIsSaveBtnLoading(true);
+			setSearchedUserData(noteData);
 
-// 	const docRef = doc(database, 'user_details', email);
+			setIsGetApiLoading(false);
+		})
+		.catch((error) => {
+			handleMsgShown(error, 'error');
+			console.log(error);
+			setIsGetApiLoading(false);
+		});
+}
 
-// 	await updateDoc(docRef, {
-// 		notesSharedWithYou: arrayUnion({ noteId, canEdit: false }),
-// 	})
-// 		.then(() => {
-// 			// setIsSaveBtnLoading(false);
-// 			console.log('User Updated');
-// 		})
-// 		.catch((err) => {
-// 			// setIsSaveBtnLoading(false);
-// 			console.log(err.message);
-// 		});
-// }
-
-export { updateNoteShareAccess, updateUserShareList };
+export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData };

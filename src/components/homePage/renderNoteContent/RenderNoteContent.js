@@ -37,7 +37,7 @@ function RenderNoteContent({
 	lastTextBoxRef,
 }) {
 	const lastTodoRef = useRef(null);
-
+	console.log(openedNoteData);
 	useEffect(() => {
 		if ((lastTextBoxRef?.current && lastTextBoxRef?.current.value !== '') || openedNoteData?.length === 1) {
 			lastTextBoxRef?.current?.focus();
@@ -72,6 +72,7 @@ function RenderNoteContent({
 				handleAddShareNoteUser={handleAddShareNoteUser}
 				toggleShareDialogBox={toggleShareDialogBox}
 			/>
+
 			<div id="userNotesContent">
 				<div
 					id="titleTextBox"

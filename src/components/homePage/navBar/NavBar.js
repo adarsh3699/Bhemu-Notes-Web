@@ -34,7 +34,7 @@ function NavBar({ NavBarType, addNotes }) {
 
 	return (
 		<>
-			<div className={NavBarType === 'homePage' ? 'navbar' : 'navbar navbarForNoteModal'}>
+			<div className='navbar'>
 				<div id="logo">
 					<IconButton
 						id="iconMenuBtn"
@@ -43,7 +43,7 @@ function NavBar({ NavBarType, addNotes }) {
 						aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
 						aria-haspopup="true"
 						aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
-						onClick={toggleSettingsMenu}
+						onClick={NavBarType === 'homePage' ? toggleSettingsMenu : null}
 						sx={{ ml: 1.2 }}
 					>
 						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />

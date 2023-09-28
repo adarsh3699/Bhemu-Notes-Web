@@ -9,7 +9,7 @@ import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNote
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 import ShareDialogBox from '../components/shareDialog/ShareDialogBox';
-import ErrorMsg from '../components/errorMsg/ErrorMsg';
+import ErrorMsg from '../components/showMsg/ShowMsg';
 
 import Hotkeys from 'react-hot-keys';
 
@@ -115,7 +115,7 @@ function HomePage() {
 			const newNoteData = [{ element: '', type: 'note' }];
 
 			const toSendNoteData = { newNotesTitle, newNoteData };
-			handleNoteOpening('', newNotesTitle, newNoteData);
+			handleNoteOpening(0, '', newNotesTitle, newNoteData);
 			addNewNote(toSendNoteData, setMyNotesId, handleErrorShown, setIsApiLoading);
 		},
 		[handleNoteOpening, handleErrorShown]
