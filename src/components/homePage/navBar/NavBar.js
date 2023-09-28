@@ -34,7 +34,7 @@ function NavBar({ NavBarType, addNotes }) {
 
 	return (
 		<>
-			<div className='navbar'>
+			<div className="navbar">
 				<div id="logo">
 					<IconButton
 						id="iconMenuBtn"

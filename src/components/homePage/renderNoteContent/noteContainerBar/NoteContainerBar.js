@@ -24,6 +24,7 @@ function NoteContainerBar({
 	handleSaveBtnClick,
 	openConfirmationDialog,
 	toggleShareDialogBox,
+	isShareNoteType,
 }) {
 	const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
@@ -67,17 +68,30 @@ function NoteContainerBar({
 				</div>
 
 				<div id="deleteAndSaveBtnSection">
-					<IconButton
-						id="noteMenuBtn"
-						color="inherit"
-						aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
-						aria-haspopup="true"
-						aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
-						onClick={toggleSettingsMenu}
-						sx={{ mr: 1.2 }}
-					>
-						<MenuIcon fontSize="inherit" />
-					</IconButton>
+					{isShareNoteType ? (
+						<IconButton
+							id="noteMenuBtn"
+							color="inherit"
+							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+							aria-haspopup="true"
+							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+							sx={{ mr: 1.2 }}
+						>
+							<DeleteIcon fontSize="inherit" />
+						</IconButton>
+					) : (
+						<IconButton
+							id="noteMenuBtn"
+							color="inherit"
+							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+							aria-haspopup="true"
+							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+							onClick={toggleSettingsMenu}
+							sx={{ mr: 1.2 }}
+						>
+							<MenuIcon fontSize="inherit" />
+						</IconButton>
+					)}
 				</div>
 			</div>
 
@@ -119,6 +133,7 @@ function NoteContainerBar({
 					</ListItemIcon>
 					Share
 				</MenuItem>
+
 				<MenuItem onClick={openConfirmationDialog}>
 					<ListItemIcon>
 						<DeleteIcon fontSize="small" />

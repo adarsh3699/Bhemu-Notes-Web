@@ -20,13 +20,6 @@
 	background: rgb(30, 30, 30);
 }
 
-#msg {
-	text-align: center;
-	color: red;
-	font-size: 18px;
-	font-weight: bold;
-}
-
 /* ...............M-Web................ */
 @media screen and (min-width: 1900px) {
 	#notesTitleContainer {

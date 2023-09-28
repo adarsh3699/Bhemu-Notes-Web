@@ -12,6 +12,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import './renderNoteContent.css';
 
 function RenderNoteContent({
+	isShareNoteType,
 	isSaveBtnLoading,
 	handleNotesModalClosing,
 	openConfirmationDialog,
@@ -37,8 +38,9 @@ function RenderNoteContent({
 	lastTextBoxRef,
 }) {
 	const lastTodoRef = useRef(null);
-	console.log(openedNoteData);
+
 	useEffect(() => {
+		if (isShareNoteType) return;
 		if ((lastTextBoxRef?.current && lastTextBoxRef?.current.value !== '') || openedNoteData?.length === 1) {
 			lastTextBoxRef?.current?.focus();
 		} else if (lastTextBoxRef.current && openedNoteData.length > 1) {
@@ -48,9 +50,10 @@ function RenderNoteContent({
 	}, [lastTextBoxRef, myNotesId]);
 
 	useEffect(() => {
+		if (isShareNoteType) return;
 		if (focusedInput || focusedInput === 0) todoRef?.current?.focus();
 		setfocusedInput(null);
-	}, [focusedInput, todoRef, setfocusedInput]);
+	}, [focusedInput, todoRef, setfocusedInput, isShareNoteType]);
 
 	useEffect(() => {
 		const textBox = lastTextBoxRef?.current;
@@ -71,6 +74,7 @@ function RenderNoteContent({
 				handleSaveBtnClick={handleSaveBtnClick}
 				handleAddShareNoteUser={handleAddShareNoteUser}
 				toggleShareDialogBox={toggleShareDialogBox}
+				isShareNoteType={isShareNoteType}
 			/>
 
 			<div id="userNotesContent">
@@ -104,6 +108,7 @@ function RenderNoteContent({
 							onChange={(e) => handleNoteTextChange(index, e)}
 							value={item?.element}
 							ref={openedNoteData.length - 1 === index ? lastTextBoxRef : null}
+							readOnly={isShareNoteType}
 							onKeyDown={(e) => {
 								if (e.key === 'Backspace' || e.keyCode === 8 || e.which === 8) {
 									handleBackspaceClick(e, index);
@@ -120,7 +125,7 @@ function RenderNoteContent({
 								icon={<CircleOutlinedIcon />}
 								checkedIcon={<CheckCircleOutlineIcon />}
 								checked={item?.isDone}
-								onChange={() => handleCheckboxClick(index, item.isDone)}
+								onChange={() => (isShareNoteType ? null : handleCheckboxClick(index, item.isDone))}
 								size="small"
 								sx={{ p: 0.5, ml: 1 }}
 							/>
@@ -133,6 +138,7 @@ function RenderNoteContent({
 								spellCheck="false"
 								enterKeyHint="Next"
 								onChange={(e) => handleNoteTextChange(index, e)}
+								readOnly={isShareNoteType}
 								ref={focusedInput === index ? todoRef : null}
 								onKeyDown={(e) => {
 									if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
@@ -145,7 +151,7 @@ function RenderNoteContent({
 							<IconButton
 								sx={{ color: '#F1F1F1', p: '5px', mr: 1 }}
 								aria-label="delete"
-								onClick={() => handleDeleteToDoBtnClick(index)}
+								onClick={() => (isShareNoteType ? null : handleDeleteToDoBtnClick(index))}
 							>
 								<CloseIcon fontSize="inherit" />
 							</IconButton>
