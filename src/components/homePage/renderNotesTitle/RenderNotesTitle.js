@@ -70,31 +70,31 @@ function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading, handleAdd
 							<div className="date">
 								<div>
 									{new Date(items.updatedOn?.seconds * 1000).toLocaleString('en-US') !==
-										'Invalid Date'
+									'Invalid Date'
 										? new Date(items.updatedOn?.seconds * 1000).toLocaleString('en-US', {
-											hour: '2-digit',
-											minute: '2-digit',
-											hour12: true,
-										})
+												hour: '2-digit',
+												minute: '2-digit',
+												hour12: true,
+										  })
 										: new Date().toLocaleString('en-US', {
-											hour: '2-digit',
-											minute: '2-digit',
-											hour12: true,
-										})}
+												hour: '2-digit',
+												minute: '2-digit',
+												hour12: true,
+										  })}
 								</div>
 								<div>
 									{new Date(items.updatedOn?.seconds * 1000)?.toLocaleDateString('en-US') !==
-										'Invalid Date'
+									'Invalid Date'
 										? new Date(items.updatedOn?.seconds * 1000)?.toLocaleDateString(undefined, {
-											day: '2-digit',
-											month: 'long',
-											year: 'numeric',
-										})
+												day: '2-digit',
+												month: 'long',
+												year: 'numeric',
+										  })
 										: new Date()?.toLocaleDateString('en-US', {
-											day: '2-digit',
-											month: 'long',
-											year: 'numeric',
-										})}
+												day: '2-digit',
+												month: 'long',
+												year: 'numeric',
+										  })}
 								</div>
 							</div>
 						</div>

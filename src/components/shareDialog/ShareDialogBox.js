@@ -51,10 +51,19 @@ function ShareDialogBox({
 	);
 
 	const handleSpecificUserPermissionChange = useCallback(
-		(index, canEdit) => {
-			console.log(canEdit);
+		(e, index) => {
+			const toBoolean = e.target.value === 'true' ? true : e.target.value === 'false' ? false : 'remove';
+
+			if (toBoolean === 'remove') {
+				let newToDos = noteSharedUsers.filter((data, i) => {
+					return i !== index ? data : null;
+				});
+
+				return setNoteSharedUsers(newToDos);
+			}
+
 			const newToDos = noteSharedUsers.map(function (item, i) {
-				return i === index ? { ...item, canEdit: canEdit ? false : true } : item;
+				return i === index ? { ...item, canEdit: toBoolean } : item;
 			});
 
 			setNoteSharedUsers(newToDos);
@@ -116,7 +125,7 @@ function ShareDialogBox({
 								<select
 									className="shareUserPermission"
 									value={item?.canEdit}
-									onChange={() => handleSpecificUserPermissionChange(index, item?.canEdit)}
+									onChange={(e) => handleSpecificUserPermissionChange(e, index)}
 								>
 									<option value={false}>Can Read</option>
 									<option value={true}>Can Edit</option>

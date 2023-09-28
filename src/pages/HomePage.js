@@ -70,7 +70,7 @@ function HomePage() {
 		setMyNotesId(allNotesAtr[0]?.notesId || '');
 		setNoteSharedUsers(allNotesAtr[0]?.noteSharedUsers || []);
 		setIsNoteSharedWithAll(allNotesAtr[0]?.isNoteSharedWithAll || false);
-		setCurrentNoteIndex(0)
+		setCurrentNoteIndex(0);
 	}, []);
 
 	// fetch All noteData
@@ -98,7 +98,7 @@ function HomePage() {
 			setIsNotesModalOpen(true);
 			setNoteSharedUsers(shareWith || []);
 			setIsNoteSharedWithAll(userPermission || false);
-			setCurrentNoteIndex(index)
+			setCurrentNoteIndex(index);
 			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
 		},
 		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
@@ -277,8 +277,8 @@ function HomePage() {
 
 	const toggleShareDialogBox = useCallback(() => {
 		if (isShareDialogBoxOpen) {
-			setIsNoteSharedWithAll(allNotes[currentNoteIndex]?.isNoteSharedWithAll || false)
-			setNoteSharedUsers(allNotes[currentNoteIndex]?.noteSharedUsers || [])
+			setIsNoteSharedWithAll(allNotes[currentNoteIndex]?.isNoteSharedWithAll || false);
+			setNoteSharedUsers(allNotes[currentNoteIndex]?.noteSharedUsers || []);
 		}
 		setIsShareDialogBoxOpen((prev) => !prev);
 	}, [allNotes, currentNoteIndex, isShareDialogBoxOpen]);
