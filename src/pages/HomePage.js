@@ -11,7 +11,7 @@ import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDia
 import ShareDialogBox from '../components/shareDialog/ShareDialogBox';
 import ShowMsg from '../components/showMsg/ShowMsg';
 
-import Hotkeys from 'react-hot-keys';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import '../styles/homePage.css';
 
@@ -130,7 +130,7 @@ function HomePage() {
 				const newNoteData = [{ element: '', type: 'note' }];
 
 				const toSendNoteData = { newNotesTitle, newNoteData };
-				handleNoteOpening('', newNotesTitle, newNoteData);
+				handleNoteOpening(0, '', newNotesTitle, newNoteData);
 				addNewNote(toSendNoteData, setMyNotesId, handleMsgShown, setIsApiLoading);
 				e.target.reset();
 			}
@@ -189,12 +189,16 @@ function HomePage() {
 		[openedNoteData]
 	);
 
-	//function to handle when "ctrl + s" is pressed
-	const handleShortcutKeyPress = useCallback(() => {
-		if (isNotesModalOpen) {
-			handleSaveBtnClick();
-		}
-	}, [handleSaveBtnClick, isNotesModalOpen]);
+	//handle Save when "ctrl + s" is pressed
+	useHotkeys(
+		['ctrl + s', 'meta + s'],
+		() => {
+			if (isNotesModalOpen) {
+				handleSaveBtnClick();
+			}
+		},
+		{ enableOnFormTags: true }
+	);
 
 	const handleAddTodoBtn = useCallback(
 		(e) => {
@@ -326,14 +330,6 @@ function HomePage() {
 					</div>
 				</div>
 
-				<Hotkeys
-					keyName="ctrl+s,control+s,⌘+s,ctrl+⇪+s,control+⇪+s,⌘+⇪+s"
-					onKeyDown={handleShortcutKeyPress}
-					// onKeyUp={onKeyUp}
-					filter={(event) => {
-						return true; //to enable shortcut key inside input, textarea and select too
-					}}
-				/>
 				{isConfirmationDialogOpen && (
 					<ConfirmationDialog
 						title="Are You Sure?"

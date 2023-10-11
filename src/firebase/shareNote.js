@@ -118,7 +118,7 @@ async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, 
 	const docRef = doc(database, 'user_notes', noteId);
 	await getDoc(docRef)
 		.then((docSnap) => {
-			if (!docSnap?.data()?.isNoteSharedWithAll) return window.location.href = '/';
+			if (!docSnap?.data()?.isNoteSharedWithAll) return (window.location.href = '/');
 
 			const noteData = [
 				{

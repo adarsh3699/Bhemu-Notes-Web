@@ -60,6 +60,10 @@
 	margin: 5px auto;
 }
 
+.noteBox:first-child {
+	margin-top: 10px;
+}
+
 .noteBox:last-child {
 	margin-bottom: 150px;
 }
