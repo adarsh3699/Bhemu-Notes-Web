@@ -14,7 +14,7 @@ function ShareNotePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
 	const [searchedNoteData, setSearchedNoteData] = useState([]);
 
-	const [isGetApiLoading, setIsGetApiLoading] = useState(false);
+	const [isGetApiLoading, setIsGetApiLoading] = useState(true);
 	const [isNotesModalOpen, setIsNotesModalOpen] = useState(true);
 
 	const handleMsgShown = useCallback((msgText, type) => {
@@ -31,7 +31,7 @@ function ShareNotePage() {
 	useEffect(() => {
 		const noteId = window.location?.pathname?.split('/')?.[2];
 		getSearchedNoteData(noteId, setSearchedNoteData, handleMsgShown, setIsGetApiLoading);
-		document.title = 'SmartBCA | Search';
+		document.title = 'Bhemu Notes | Share';
 	}, [handleMsgShown]);
 
 	return (
@@ -43,8 +43,8 @@ function ShareNotePage() {
 					<RenderNotesTitle
 						isShareNoteType={true}
 						allNotes={searchedNoteData}
+						isApiLoading={isGetApiLoading}
 						// handleNoteOpening={handleNoteOpening}
-						// isApiLoading={isApiLoading}
 						// handleAddNoteInputBox={handleAddNoteInputBox}
 					/>
 				</div>
@@ -80,7 +80,7 @@ function ShareNotePage() {
 				)}
 			</div>
 
-			{msg && <ShowMsg isError={msg?.text ? true : false} msgText={msg?.text} type={msg?.type} />}
+			{msg && <ShowMsg msgText={msg?.text} type={msg?.type} />}
 		</div>
 	);
 }

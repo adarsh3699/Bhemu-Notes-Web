@@ -2,9 +2,9 @@ import React from 'react';
 
 import './showMsg.css';
 
-function ShowMsg({ isError, msgText, type }) {
+function ShowMsg({ msgText, type }) {
 	return (
-		isError && (
+		msgText && (
 			<div id="msgBox">
 				<div id="textMsg" className={type}>
 					{msgText}

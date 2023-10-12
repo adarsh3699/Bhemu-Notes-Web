@@ -354,7 +354,7 @@ function HomePage() {
 					/>
 				)}
 
-				{msg && <ShowMsg isError={msg?.text ? true : false} msgText={msg?.text} type={msg?.type} />}
+				{msg && <ShowMsg msgText={msg?.text} type={msg?.type} />}
 			</>
 		)
 	);

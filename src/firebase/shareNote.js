@@ -1,10 +1,11 @@
 // import { getAuth } from 'firebase/auth';
-import { encryptText, decryptText } from '../utils';
+import { decryptText } from '../utils';
 
 import {
 	getFirestore,
 	// collection,
-	// onSnapshot,
+	onSnapshot,
+	// getDocFromCache,
 	getDoc,
 	// addDoc,
 	// deleteDoc,
@@ -116,30 +117,33 @@ function updateUserShareList(incomingData, setIsSaveBtnLoading, handleErrorShown
 async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, setIsGetApiLoading) {
 	setIsGetApiLoading(true);
 	const docRef = doc(database, 'user_notes', noteId);
-	await getDoc(docRef)
-		.then((docSnap) => {
-			if (!docSnap?.data()?.isNoteSharedWithAll) return (window.location.href = '/');
+
+	onSnapshot(
+		docRef,
+		async (realSnapshot) => {
+			if (!realSnapshot?.data()?.isNoteSharedWithAll) return (window.location.href = '/');
 
 			const noteData = [
 				{
-					notesId: docSnap.id,
-					notesTitle: decryptText(docSnap.data().notesTitle),
-					noteData: JSON.parse(decryptText(docSnap.data().noteData)),
-					updatedOn: docSnap.data().updatedOn,
-					noteSharedUsers: docSnap.data().noteSharedUsers || [],
-					isNoteSharedWithAll: docSnap.data().isNoteSharedWithAll,
+					notesId: realSnapshot.id,
+					notesTitle: decryptText(realSnapshot.data().notesTitle),
+					noteData: JSON.parse(decryptText(realSnapshot.data().noteData)),
+					updatedOn: realSnapshot.data().updatedOn,
+					noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
+					isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
 				},
 			];
 
 			setSearchedUserData(noteData);
 
 			setIsGetApiLoading(false);
-		})
-		.catch((error) => {
-			handleMsgShown(error, 'error');
-			console.log(error);
+		},
+		(err) => {
 			setIsGetApiLoading(false);
-		});
+			console.log(err);
+			handleMsgShown(err.code, 'error');
+		}
+	);
 }
 
 export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData };
