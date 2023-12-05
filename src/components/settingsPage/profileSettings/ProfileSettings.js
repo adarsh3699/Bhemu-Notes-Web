@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 
 import { handleUserNameChange, handleUserProfileChange } from '../../../firebase/settings';
 
-import myLogo from '../../../img/logo.jpeg';
+import myLogo from '../../../img/newLogo.webp';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -18,7 +18,7 @@ function ProfileSettings() {
 		profilePicture: localUserDetails?.photoURL,
 		userId: localUserDetails?.userId,
 	});
-	const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem('user_profile_img'));
+	const [profilePictureUrl, setProfilePictureUrl] = useState(JSON.parse(localStorage.getItem('user_profile_img')));
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [msg, setMsg] = useState('');
 

@@ -12,7 +12,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Logout from '@mui/icons-material/Logout';
 import Settings from '@mui/icons-material/Settings';
 
-import logo from './files/logo.jpeg';
+// import logo from './files/logo.jpeg';
+import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 

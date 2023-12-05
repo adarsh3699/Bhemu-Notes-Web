@@ -7,8 +7,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
 
+import logo from '../img/newLogo.webp';
 import '../styles/loginPage.css';
-import logo from '../img/logoBig.png';
 
 function LoginPage() {
 	const [msg, setMsg] = useState('');

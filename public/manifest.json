@@ -5,18 +5,18 @@
 	"version": "2.1.0",
 	"icons": [
 		{
-			"src": "logo64.png",
-			"type": "image/png",
+			"src": "newLogo64.webp",
+			"type": "image/webp",
 			"sizes": "64x64 32x32 24x24 16x16"
 		},
 		{
-			"src": "logo192.png",
-			"type": "image/png",
+			"src": "newLogo192.webp",
+			"type": "image/webp",
 			"sizes": "192x192"
 		},
 		{
-			"src": "logo512.png",
-			"type": "image/png",
+			"src": "newLogo512.webp",
+			"type": "image/webp",
 			"sizes": "512x512"
 		}
 	],
