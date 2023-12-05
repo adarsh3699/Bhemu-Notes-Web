@@ -18,7 +18,7 @@ function ProfileSettings() {
 		profilePicture: localUserDetails?.photoURL,
 		userId: localUserDetails?.userId,
 	});
-	const [profilePictureUrl, setProfilePictureUrl] = useState(JSON.parse(localStorage.getItem('user_profile_img')));
+	const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem('user_profile_img'));
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [msg, setMsg] = useState('');
 
@@ -53,7 +53,13 @@ function ProfileSettings() {
 			<div className="userInfo">
 				<div>
 					<img
-						src={imageUpload ? URL.createObjectURL(imageUpload) : profilePictureUrl || myLogo}
+						src={
+							imageUpload
+								? URL.createObjectURL(imageUpload)
+								: profilePictureUrl === 'null'
+								? myLogo
+								: profilePictureUrl
+						}
 						alt=""
 						className="ProfilePictureImg"
 					/>
