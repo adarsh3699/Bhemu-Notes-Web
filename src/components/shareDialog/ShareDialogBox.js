@@ -106,7 +106,7 @@ function ShareDialogBox({
 				</form>
 				<div className="shareUserDetailsBox">
 					<img
-						src={userProfileImg === null ? userProflie : userProfileImg}
+						src={userProfileImg === 'null' ? userProflie : userProfileImg}
 						className="shareUserProflie"
 						alt=""
 					/>

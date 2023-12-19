@@ -8,10 +8,10 @@
 		"url": "https://bhemu.me"
 	},
 	"dependencies": {
-		"@emotion/react": "^11.10.5",
-		"@emotion/styled": "^11.10.5",
+		"@emotion/react": "^11.11.1",
+		"@emotion/styled": "^11.11.0",
 		"@mui/icons-material": "^5.10.9",
-		"@mui/material": "^5.10.12",
+		"@mui/material": "^5.15.0",
 		"crypto-js": "^4.1.1",
 		"firebase": "^9.15.0",
 		"react": "^18.2.0",
