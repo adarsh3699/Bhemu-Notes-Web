@@ -151,7 +151,15 @@ function NavBar({ NavBarType, addNotes }) {
 								{noteFolders.map((name, index) => {
 									return (
 										<ListItemButton key={index} sx={{ pl: 4 }}>
-											<ListItemText primary={name} />
+											<ListItemText
+												primary={name}
+												primaryTypographyProps={{
+													style: {
+														overflow: 'hidden',
+														textOverflow: 'ellipsis',
+													},
+												}}
+											/>
 										</ListItemButton>
 									);
 								})}

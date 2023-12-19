@@ -54,11 +54,6 @@
 	margin: 20px;
 }
 
-.css-10hburv-MuiTypography-root {
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
 @media screen and (max-width: 768px) {
 	.navbarForNoteModal {
 		display: flex;
