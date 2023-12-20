@@ -10,6 +10,7 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Checkbox from '@mui/material/Checkbox';
 
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -19,27 +20,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-
-import userProflie from '../../img/userProfile.svg';
 
 import './folderDialog.css';
 
-const userDetails = JSON.parse(localStorage.getItem('user_details')) || {};
-const userProfileImg = localStorage.getItem('user_profile_img');
+// const userDetails = JSON.parse(localStorage.getItem('user_details')) || {};
 
-function FolderDialog({
-	title,
-	message,
-	handleMsgShown,
-	toggleFolderDialog,
-	myNotesId,
-	noteSharedUsers,
-	isNoteSharedWithAll,
-	noteFolders,
-	sx,
-}) {
+function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allNotes, myNotesId, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -47,7 +33,13 @@ function FolderDialog({
 
 	const handleClickOutside = useCallback(
 		(e) => {
-			if (backgroundRef.current && !backgroundRef.current.contains(e.target) && !isDrawerAllNoteOpen) {
+			if (
+				backgroundRef.current &&
+				!backgroundRef.current.contains(e.target) &&
+				!isDrawerAllNoteOpen &&
+				e.target.ariaHidden !== 'true' &&
+				e.target.localName !== 'body'
+			) {
 				toggleFolderDialog();
 			}
 		},
@@ -92,9 +84,9 @@ function FolderDialog({
 					style={{ justifyContent: 'space-between' }}
 					onClick={() => setIsEditFolderOpen(true)}
 				>
-					<div style={{ display: 'flex', alignItems: 'center' }}>
+					<div className="colIconTitle">
 						<CreateNewFolderIcon sx={{ fontSize: 30, mr: 2 }} />
-						Add Folder
+						<div>New Folder</div>
 					</div>
 					<KeyboardArrowRightIcon sx={{ fontSize: 30, ml: 2 }} />
 				</div>
@@ -105,9 +97,9 @@ function FolderDialog({
 							style={{ justifyContent: 'space-between' }}
 							key={index}
 						>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<div className="colIconTitle">
 								<FolderIcon sx={{ fontSize: 30, mr: 2 }} />
-								{item}
+								<div className="colTitle">{item}</div>
 							</div>
 							<KeyboardArrowRightIcon sx={{ fontSize: 30, ml: 2 }} />
 						</div>
@@ -151,32 +143,6 @@ function FolderDialog({
 		</div>
 	);
 
-	const list = () => (
-		<Box sx={{ width: 'auto' }} role="presentation" onClick={toggleDrawer} onKeyDown={toggleDrawer}>
-			<List>
-				{['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton>
-							<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-			<Divider />
-			<List>
-				{['All mail', 'Trash', 'Spam'].map((text, index) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton>
-							<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-		</Box>
-	);
-
 	return (
 		<div className="folderDialogBoxBg">
 			<div className="folderDialogBox" ref={backgroundRef} style={sx}>
@@ -195,16 +161,45 @@ function FolderDialog({
 				{!isEditFolderOpen ? viewFolderContain : editFolderContain}
 
 				<SwipeableDrawer
-					anchor={'bottom'}
+					anchor="bottom"
 					open={isDrawerAllNoteOpen}
-					onClose={toggleDrawer}
+					onClose={() => setIsDrawerAllNoteOpen(false)}
 					onOpen={toggleDrawer}
 					className="huhuhu"
-					name="sdfbg"
-					aria-labelledby="alert-dialog-title"
-					aria-describedby="alert-dialog-description"
+					sx={{
+						'.MuiDrawer-paper': {
+							sm: {
+								boxSizing: 'border-box',
+								margin: 'auto',
+								width: '700px',
+								borderTopLeftRadius: 10,
+								borderTopRightRadius: 10,
+							},
+						},
+					}}
 				>
-					{list()}
+					<Box sx={{ width: 'auto' }} role="presentation">
+						<div className="allNotesListDrawer">
+							<div>Select Notes</div>
+							<Button variant="text" onClick={toggleDrawer}>
+								Done
+							</Button>
+						</div>
+						<Divider />
+						<List sx={{ mb: 5 }}>
+							{allNotes.map((item, index) => (
+								<ListItem key={'list' + index} disablePadding>
+									<ListItemButton>
+										<ListItemIcon>
+											<NotesIcon />
+										</ListItemIcon>
+										<ListItemText primary={item.notesTitle} />
+										<Checkbox />
+									</ListItemButton>
+								</ListItem>
+							))}
+						</List>
+					</Box>
 				</SwipeableDrawer>
 			</div>
 		</div>

@@ -289,7 +289,7 @@ function HomePage() {
 		isPageLoaded && (
 			<>
 				<div id="homePage">
-					<NavBar NavBarType="homePage" addNotes={addNotes} />
+					<NavBar NavBarType="homePage" addNotes={addNotes} allNotes={allNotes} />
 
 					<div id="allContent">
 						<div id="notesTitleContainer">

@@ -83,12 +83,23 @@
 	align-items: center;
 	padding: 6px 0;
 	border-top: 1px solid rgba(255, 255, 255, 0.12);
-	/* overflow: hidden;
-	text-overflow: ellipsis; */
+	width: 100%;
 }
 
 .folderDialogBoxTableCol:hover {
 	background-color: rgb(75, 75, 75);
+}
+
+.colIconTitle {
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+}
+
+.colTitle {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .folderDialogBoxTableColAddBtn {
@@ -142,12 +153,23 @@
 	color: #2894d1;
 }
 
-@media screen and (max-width: 768px) {
+/* -------------drawer---------------- */
+.allNotesListDrawer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-weight: 500;
+	padding: 10px 15px;
+}
+
+@media screen and (max-width: 750px) {
 	.folderDialogBox {
 		width: 90%;
 		padding: 10px;
 	}
-
+	.folderDialogBoxTable {
+		padding: 0 10px;
+	}
 	.folderDialogBoxTableCol {
 		font-size: 15px;
 	}

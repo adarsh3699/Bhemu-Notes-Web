@@ -33,7 +33,7 @@ import './files/navBar.css';
 
 const userName = JSON.parse(localStorage.getItem('user_details'))?.userName || 'Bhemu Notes';
 
-function NavBar({ NavBarType, addNotes }) {
+function NavBar({ NavBarType, addNotes, allNotes }) {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
@@ -93,9 +93,9 @@ function NavBar({ NavBarType, addNotes }) {
 		setIsFolderDialogOpen((prevState) => !prevState);
 	}, []);
 
-	const renderDrawerListBtns = (name, icon, func) => {
+	const renderDrawerListBtns = (name, icon, func, sx) => {
 		return (
-			<ListItem disablePadding onClick={func}>
+			<ListItem disablePadding onClick={func} sx={sx}>
 				<ListItemButton>
 					<ListItemIcon>{icon}</ListItemIcon>
 					<ListItemText primary={name} />
@@ -148,6 +148,14 @@ function NavBar({ NavBarType, addNotes }) {
 
 						<Collapse in={isNoteFolderListOpen} timeout="auto" unmountOnExit>
 							<List component="div" disablePadding onClick={toggleDrawer}>
+								<ListItemButton
+									sx={{ pl: 4 }}
+									onClick={() => setIsFolderDialogOpen((prevState) => !prevState)}
+								>
+									<ListItemText primary="Edit Folder" />
+									<EditIcon />
+								</ListItemButton>
+
 								{noteFolders.map((name, index) => {
 									return (
 										<ListItemButton key={index} sx={{ pl: 4 }}>
@@ -165,7 +173,7 @@ function NavBar({ NavBarType, addNotes }) {
 								})}
 							</List>
 						</Collapse>
-						{renderDrawerListBtns('Edit Folder', <EditIcon />, handleEditFolderListBtnClick)}
+						{/* {renderDrawerListBtns('Edit Folder', <EditIcon />, handleEditFolderListBtnClick)} */}
 					</List>
 					<Divider />
 
@@ -200,6 +208,7 @@ function NavBar({ NavBarType, addNotes }) {
 					noteFolders={noteFolders}
 					isFolderDialogOpen={isFolderDialogOpen}
 					toggleFolderDialog={toggleFolderDialog}
+					allNotes={allNotes}
 				/>
 			)}
 		</>
