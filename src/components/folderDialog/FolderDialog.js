@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateNoteShareAccess, updateUserShareList } from '../../firebase/shareNote';
+// import { updateNoteShareAccess, updateUserShareList } from '../../firebase/shareNote';
 
 import Button from '@mui/material/Button';
 import NotesIcon from '@mui/icons-material/Notes';
@@ -25,11 +25,14 @@ import './folderDialog.css';
 
 // const userDetails = JSON.parse(localStorage.getItem('user_details')) || {};
 
-function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allNotes, myNotesId, noteFolders, sx }) {
+function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allNotes, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
+	const [selectedNotes, setSelectedNotes] = useState([]);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isEditFolderOpen, setIsEditFolderOpen] = useState(false);
+
+	// console.log(allNotes);
 
 	const handleClickOutside = useCallback(
 		(e) => {
