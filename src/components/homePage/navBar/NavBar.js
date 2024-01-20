@@ -90,34 +90,12 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 
 	useEffect(() => {
 		const openFolderFromURL = userAllDetails?.userFolders?.filter((item) => item.folderName === currentFolderHash);
-		if (openFolderFromURL.length > 0) {
+		if (openFolderFromURL?.length > 0) {
 			handleFolderChange(openFolderFromURL?.[0]);
 		} else {
 			navigate('/home');
 		}
 	}, [currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
-
-	useEffect(() => {
-		const openFolderFromURL = userAllDetails?.userFolders?.filter(
-			(item) => item.folderName === window.location?.href?.split('#')[1]
-		);
-		if (openFolderFromURL.length > 0) {
-			handleFolderChange(openFolderFromURL?.[0]);
-		} else {
-			navigate('/home');
-		}
-	}, [handleFolderChange, navigate, userAllDetails?.userFolders]);
-
-	useEffect(() => {
-		const openFolderFromURL = userAllDetails?.userFolders?.filter(
-			(item) => item.folderName === window.location?.href?.split('#')[1]
-		);
-		if (openFolderFromURL.length > 0) {
-			handleFolderChange(openFolderFromURL?.[0]);
-		} else {
-			navigate('/home');
-		}
-	}, [handleFolderChange, navigate, userAllDetails?.userFolders]);
 
 	const toggleDrawer = useCallback(() => {
 		setIsDrawerOpen((prevState) => !prevState);
