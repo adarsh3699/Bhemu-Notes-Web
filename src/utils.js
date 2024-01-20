@@ -43,6 +43,12 @@ function userDeviceType() {
 	}
 }
 
-const USER_DETAILS = JSON.parse(decryptText(localStorage.getItem('user_details')));
+let USER_DETAILS = localStorage.getItem('user_details')
+	? JSON?.parse(
+			decryptText(localStorage.getItem('user_details'))?.length === 0
+				? '{}'
+				: decryptText(localStorage.getItem('user_details'))
+	  )
+	: {};
 
 export { encryptText, decryptText, md5Hash, userDeviceType, USER_DETAILS };

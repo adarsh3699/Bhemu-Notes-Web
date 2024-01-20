@@ -91,7 +91,7 @@ function HomePage() {
 	// fetch All noteData
 	useEffect(() => {
 		handleUserState(true);
-		if (USER_DETAILS) {
+		if (USER_DETAILS?.userId) {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
 			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
 			setIsPageLoaded(true);
