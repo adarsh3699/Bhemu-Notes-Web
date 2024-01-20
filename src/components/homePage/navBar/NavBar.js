@@ -2,9 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { handleSignOut } from '../../../firebase/auth';
 import FolderDialog from '../../folderDialog/FolderDialog';
-import { USER_DETAILS } from '../../../utils';
-
-import { unsubscribeAll } from '../../../firebase/notes';
+import { USER_DETAILS, decryptText } from '../../../utils';
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -34,13 +32,12 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderChange, handleMsgShown }) {
-	const navigate = useNavigate();
+function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
 	const noteFolders = userAllDetails?.userFolders || [];
-	const currentFolderHash = window.location.hash.slice(1);
+	// console.log(noteFolders);
 
 	const handleLogoutBtnClick = useCallback(() => {
 		localStorage.clear();
@@ -85,16 +82,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 			icon: <Logout />,
 			function: handleLogoutBtnClick,
 		},
-	];
-
-	useEffect(() => {
-		const openFolderFromURL = userAllDetails?.userFolders?.filter((item) => item.folderName === currentFolderHash);
-		if (openFolderFromURL.length > 0) {
-			handleFolderChange(openFolderFromURL?.[0]);
-		} else {
-			navigate('/home');
-		}
-	}, [currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
+	]);
 
 	useEffect(() => {
 		const openFolderFromURL = userAllDetails?.userFolders?.filter(
@@ -185,12 +173,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 
 								{noteFolders.map((item, index) => {
 									return (
-										<ListItemButton
-											key={index}
-											onClick={() => handleFolderChange(item)}
-											sx={{ pl: 4 }}
-											selected={currentFolderHash === item?.folderName}
-										>
+										<ListItemButton key={index} sx={{ pl: 4 }}>
 											<ListItemText
 												primary={item?.folderName}
 												primaryTypographyProps={{
