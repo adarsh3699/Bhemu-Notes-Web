@@ -158,7 +158,7 @@ function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
 	);
 }
 
-function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, isDeleteFolder) {
+function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackBtnClick, isDeleteFolder) {
 	const myEmail = auth?.currentUser.email;
 	setIsSaveBtnLoading(true);
 
@@ -167,6 +167,7 @@ function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, isDeleteFol
 		userFolders: incomingData,
 	})
 		.then(() => {
+			handleBackBtnClick();
 			isDeleteFolder
 				? setMsg('Folder deleted successfully', 'success')
 				: setMsg('Folder save successfully', 'success');

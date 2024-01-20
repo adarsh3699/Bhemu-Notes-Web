@@ -118,15 +118,8 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 		});
 }
 
-<<<<<<< HEAD
-function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, setMsg) {
-	// console.log('folder', folder);
-	const noteIds = folder.folderData.map((item) => item.notesId);
-	console.log(noteIds);
-=======
 function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown) {
 	const noteIds = folder.folderData.map((item) => item.notesId);
->>>>>>> 2d75ce5 (Refactor code and update folder functionality)
 
 	const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
 	const unsubscribe = onSnapshot(
@@ -143,36 +136,23 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShow
 					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
 				});
 			});
-<<<<<<< HEAD
-			console.log(noteData);
-=======
+
 			setAllNotes(noteData);
 
 			const encryptNotesData = encryptText(JSON.stringify(noteData));
 			localStorage.setItem(folder.folderName, encryptNotesData);
->>>>>>> 2d75ce5 (Refactor code and update folder functionality)
 
 			unsubscribeFunctionsArray.push(unsubscribe);
 		},
 		(err) => {
-<<<<<<< HEAD
-			// setIsApiLoading(false);
-			console.log(err);
-			// setMsg(err.code);
-=======
 			setIsApiLoading(false);
 			console.log(err);
 			handleMsgShown(err.code);
->>>>>>> 2d75ce5 (Refactor code and update folder functionality)
 		}
 	);
 }
 
 function unsubscribeAll() {
-<<<<<<< HEAD
-	console.log('unsubscribeFunctions', unsubscribeFunctionsArray);
-=======
->>>>>>> 2d75ce5 (Refactor code and update folder functionality)
 	unsubscribeFunctionsArray.forEach((unsubscribe) => unsubscribe());
 	// Clear the array after unsubscribing all listeners
 	unsubscribeFunctionsArray = [];

@@ -2,7 +2,9 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { handleSignOut } from '../../../firebase/auth';
 import FolderDialog from '../../folderDialog/FolderDialog';
-import { USER_DETAILS, decryptText } from '../../../utils';
+import { USER_DETAILS } from '../../../utils';
+
+import { unsubscribeAll } from '../../../firebase/notes';
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -32,12 +34,14 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
+function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderChange, handleMsgShown }) {
+	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
 	const noteFolders = userAllDetails?.userFolders || [];
-	// console.log(noteFolders);
+
+	const currentFolderHash = window.location.hash.slice(1);
 
 	const handleLogoutBtnClick = useCallback(() => {
 		localStorage.clear();
@@ -82,7 +86,27 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 			icon: <Logout />,
 			function: handleLogoutBtnClick,
 		},
-	]);
+	];
+
+	useEffect(() => {
+		const openFolderFromURL = userAllDetails?.userFolders?.filter((item) => item.folderName === currentFolderHash);
+		if (openFolderFromURL.length > 0) {
+			handleFolderChange(openFolderFromURL?.[0]);
+		} else {
+			navigate('/home');
+		}
+	}, [currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
+
+	useEffect(() => {
+		const openFolderFromURL = userAllDetails?.userFolders?.filter(
+			(item) => item.folderName === window.location?.href?.split('#')[1]
+		);
+		if (openFolderFromURL.length > 0) {
+			handleFolderChange(openFolderFromURL?.[0]);
+		} else {
+			navigate('/home');
+		}
+	}, [handleFolderChange, navigate, userAllDetails?.userFolders]);
 
 	useEffect(() => {
 		const openFolderFromURL = userAllDetails?.userFolders?.filter(
@@ -162,7 +186,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 						)}
 
 						<Collapse in={isNoteFolderListOpen} timeout="auto" unmountOnExit>
-							<List component="div" disablePadding>
+							<List component="div" disablePadding onClick={toggleDrawer}>
 								<ListItemButton
 									sx={{ pl: 4 }}
 									onClick={() => setIsFolderDialogOpen((prevState) => !prevState)}
@@ -173,7 +197,12 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 
 								{noteFolders.map((item, index) => {
 									return (
-										<ListItemButton key={index} sx={{ pl: 4 }}>
+										<ListItemButton
+											key={index}
+											onClick={() => handleFolderChange(item)}
+											sx={{ pl: 4 }}
+											selected={currentFolderHash === item?.folderName}
+										>
 											<ListItemText
 												primary={item?.folderName}
 												primaryTypographyProps={{

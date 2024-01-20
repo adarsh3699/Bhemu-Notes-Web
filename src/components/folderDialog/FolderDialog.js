@@ -139,13 +139,20 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolder
 			);
 		}
 
-		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown);
-	}, [allNoteFolders, currentFolderId, folderName, handleMsgShown, isEditFolderDialogOpen.openAsEdit, selectedNotes]);
+		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, handleBackBtnClick);
+	}, [
+		allNoteFolders,
+		currentFolderId,
+		folderName,
+		handleBackBtnClick,
+		handleMsgShown,
+		isEditFolderDialogOpen.openAsEdit,
+		selectedNotes,
+	]);
 
 	const handleDeleteFolderBtnClick = useCallback(() => {
 		let temp = allNoteFolders.filter((item) => item.folderId !== currentFolderId);
-		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, true);
-		handleBackBtnClick();
+		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, handleBackBtnClick, true);
 	}, [allNoteFolders, currentFolderId, handleBackBtnClick, handleMsgShown]);
 
 	const viewFolderContain = (
