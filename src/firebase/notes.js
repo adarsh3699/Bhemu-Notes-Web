@@ -121,35 +121,40 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown) {
 	const noteIds = folder.folderData.map((item) => item.notesId);
 
-	const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
-	const unsubscribe = onSnapshot(
-		getDataQuery,
-		async (realSnapshot) => {
-			let noteData = [];
-			realSnapshot.forEach((doc) => {
-				noteData.push({
-					notesId: doc.id,
-					notesTitle: decryptText(doc.data().notesTitle),
-					noteData: JSON.parse(decryptText(doc.data().noteData)),
-					updatedOn: doc.data().updatedOn,
-					noteSharedUsers: doc.data().noteSharedUsers || [],
-					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
+	try {
+		const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
+		const unsubscribe = onSnapshot(
+			getDataQuery,
+			async (realSnapshot) => {
+				let noteData = [];
+				realSnapshot.forEach((doc) => {
+					noteData.push({
+						notesId: doc.id,
+						notesTitle: decryptText(doc.data().notesTitle),
+						noteData: JSON.parse(decryptText(doc.data().noteData)),
+						updatedOn: doc.data().updatedOn,
+						noteSharedUsers: doc.data().noteSharedUsers || [],
+						isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
+					});
 				});
-			});
 
-			setAllNotes(noteData);
+				setAllNotes(noteData);
 
-			const encryptNotesData = encryptText(JSON.stringify(noteData));
-			localStorage.setItem(folder.folderName, encryptNotesData);
+				const encryptNotesData = encryptText(JSON.stringify(noteData));
+				localStorage.setItem(folder.folderName, encryptNotesData);
 
-			unsubscribeFunctionsArray.push(unsubscribe);
-		},
-		(err) => {
-			setIsApiLoading(false);
-			console.log(err);
-			handleMsgShown(err.code);
-		}
-	);
+				unsubscribeFunctionsArray.push(unsubscribe);
+			},
+			(err) => {
+				setIsApiLoading(false);
+				console.log(err);
+				handleMsgShown(err.code);
+			}
+		);
+	} catch (error) {
+		console.log(error);
+		handleMsgShown(error.message);
+	}
 }
 
 function unsubscribeAll() {
