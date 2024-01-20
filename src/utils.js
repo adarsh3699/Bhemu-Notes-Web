@@ -45,15 +45,4 @@ function userDeviceType() {
 
 const USER_DETAILS = JSON.parse(decryptText(localStorage.getItem('user_details')));
 
-// function handleErrorShown(msgText, setMsg) {
-// 	if (msgText) {
-// 		setMsg(msgText);
-// 		setTimeout(() => {
-// 			setMsg('');
-// 		}, 2500);
-// 	} else {
-// 		console.log('Please Provide Text Msg');
-// 	}
-// };
-
 export { encryptText, decryptText, md5Hash, userDeviceType, USER_DETAILS };

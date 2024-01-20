@@ -4,7 +4,6 @@ import { encryptText, decryptText, USER_DETAILS } from '../utils';
 import {
 	collection,
 	onSnapshot,
-	getDocs,
 	addDoc,
 	deleteDoc,
 	updateDoc,
@@ -38,7 +37,6 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 			});
 			setIsApiLoading(false);
 			setAllNotes(noteData);
-			console.log(noteData);
 
 			const encryptNotesData = encryptText(JSON.stringify(noteData));
 			localStorage.setItem('note_data', encryptNotesData);
@@ -120,10 +118,8 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 		});
 }
 
-function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, setMsg) {
-	// console.log('folder', folder);
+function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown) {
 	const noteIds = folder.folderData.map((item) => item.notesId);
-	console.log(noteIds);
 
 	const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
 	const unsubscribe = onSnapshot(
@@ -140,20 +136,22 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, setMsg) {
 					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
 				});
 			});
-			console.log(noteData);
+			setAllNotes(noteData);
+
+			const encryptNotesData = encryptText(JSON.stringify(noteData));
+			localStorage.setItem(folder.folderName, encryptNotesData);
 
 			unsubscribeFunctionsArray.push(unsubscribe);
 		},
 		(err) => {
-			// setIsApiLoading(false);
+			setIsApiLoading(false);
 			console.log(err);
-			// setMsg(err.code);
+			handleMsgShown(err.code);
 		}
 	);
 }
 
 function unsubscribeAll() {
-	console.log('unsubscribeFunctions', unsubscribeFunctionsArray);
 	unsubscribeFunctionsArray.forEach((unsubscribe) => unsubscribe());
 	// Clear the array after unsubscribing all listeners
 	unsubscribeFunctionsArray = [];

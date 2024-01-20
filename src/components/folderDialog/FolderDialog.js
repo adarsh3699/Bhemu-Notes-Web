@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { createNewFolder } from '../../firebase/features';
+import { updateUserFolder } from '../../firebase/features';
 import { uid } from 'uid';
 
 import Button from '@mui/material/Button';
@@ -24,7 +24,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import './folderDialog.css';
 
-function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allNotes, noteFolders, sx }) {
+function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
 	const [allNoteFolders, setAllNoteFolders] = useState(noteFolders || []);
@@ -33,9 +33,6 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 	const [folderName, setFolderName] = useState('');
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isEditFolderDialogOpen, setIsEditFolderDialogOpen] = useState({ isOpen: false, openAsEdit: false });
-
-	console.log('allNotes', allNotes);
-	// console.log('selectedNotes', selectedNotes);
 
 	const handleClickOutside = useCallback(
 		(e) => {
@@ -116,6 +113,10 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 	);
 
 	const handleSaveBtnClick = useCallback(() => {
+		if (!folderName) return handleMsgShown('Folder name is required');
+		if (!selectedNotes.filter((item) => item.isNoteSelected).length)
+			return handleMsgShown('Please select atleast one note');
+
 		let temp;
 		if (!isEditFolderDialogOpen.openAsEdit) {
 			temp = [
@@ -127,29 +128,29 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 				...allNoteFolders,
 			];
 		} else {
-			temp = allNoteFolders.map((item) => {
-				return item.folderId === currentFolderId
+			temp = allNoteFolders.map((item) =>
+				item.folderId === currentFolderId
 					? {
 							folderName,
 							folderId: currentFolderId,
 							folderData: selectedNotes.filter((item) => item.isNoteSelected),
 					  }
-					: item;
-			});
+					: item
+			);
 		}
 
-		createNewFolder(temp, setIsSaveBtnLoading, handleMsgShown);
+		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown);
 	}, [allNoteFolders, currentFolderId, folderName, handleMsgShown, isEditFolderDialogOpen.openAsEdit, selectedNotes]);
 
 	const handleDeleteFolderBtnClick = useCallback(() => {
 		let temp = allNoteFolders.filter((item) => item.folderId !== currentFolderId);
-		createNewFolder(temp, setIsSaveBtnLoading, handleMsgShown);
+		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, true);
 		handleBackBtnClick();
 	}, [allNoteFolders, currentFolderId, handleBackBtnClick, handleMsgShown]);
 
 	const viewFolderContain = (
 		<div className="folderDialogBoxContainer">
-			<div className="folderDialogBoxMessage">{message}</div>
+			<div className="folderDialogBoxMessage">Edit folders and quickly switch between them.</div>
 			<div className="folderDialogTableTitle">Folders</div>
 
 			<div className="folderDialogBoxTable">
@@ -186,7 +187,9 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 
 	const editFolderContain = (
 		<div className="folderDialogBoxContainer">
-			<div className="folderDialogBoxMessage">{message}</div>
+			<div className="folderDialogBoxMessage">
+				Create new folders for different Notes and quickly switch between them.
+			</div>
 			<div className="folderDialogInputLable">Folder Name</div>
 			<input
 				type="text"
@@ -220,7 +223,7 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 							fullWidth
 							color="error"
 							disabled={isSaveBtnLoading}
-							sx={{ my: 2, mr: 2 }}
+							sx={{ my: 2, mr: 2, py: 1.2 }}
 						>
 							Delete
 						</Button>
@@ -244,7 +247,7 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 		<div className="folderDialogBoxBg">
 			<div className="folderDialogBox" ref={backgroundRef} style={sx}>
 				<div className="folderDialogBoxNavBar">
-					<div className="folderDialogBoxTitle">{title}</div>
+					<div className="folderDialogBoxTitle">Note Folders</div>
 					<Button
 						size="small"
 						sx={{ color: '#2894d1' }}

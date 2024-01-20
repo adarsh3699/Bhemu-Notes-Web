@@ -158,26 +158,26 @@ function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
 	);
 }
 
-function createNewFolder(incomingData, setIsFolderDialogOpen, setIsApiLoading, setMsg) {
+function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, isDeleteFolder) {
 	const myEmail = auth?.currentUser.email;
-	console.log(myEmail);
-	console.log(incomingData);
+	setIsSaveBtnLoading(true);
 
 	const docRef = doc(database, 'user_details', myEmail);
-	// setIsApiLoading(true);
 	updateDoc(docRef, {
 		userFolders: incomingData,
 	})
 		.then(() => {
-			console.log('Document successfully updated!');
-			// setIsFolderDialogOpen(false);
-			// setIsApiLoading(false);
+			isDeleteFolder
+				? setMsg('Folder deleted successfully', 'success')
+				: setMsg('Folder save successfully', 'success');
 		})
 		.catch((err) => {
-			// setIsApiLoading(false);
 			console.log(err.message);
-			// setMsg(err.code);
+			setMsg(err.code);
+		})
+		.finally(() => {
+			setIsSaveBtnLoading(false);
 		});
 }
 
-export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData, createNewFolder, getUserAllData };
+export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData, updateUserFolder, getUserAllData };

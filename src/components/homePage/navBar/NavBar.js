@@ -4,7 +4,7 @@ import { handleSignOut } from '../../../firebase/auth';
 import FolderDialog from '../../folderDialog/FolderDialog';
 import { USER_DETAILS } from '../../../utils';
 
-import { getAllNotesOfFolder, unsubscribeAll } from '../../../firebase/notes';
+import { unsubscribeAll } from '../../../firebase/notes';
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -34,12 +34,13 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
+function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderChange, handleMsgShown }) {
 	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
 	const noteFolders = userAllDetails?.userFolders || [];
+	const currentFolderHash = window.location.hash.slice(1);
 
 	const handleLogoutBtnClick = useCallback(() => {
 		localStorage.clear();
@@ -68,11 +69,11 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 	// 	},
 	// ]);
 
-	const [drawerList2, setDrawerList2] = useState([
+	const drawerList2 = [
 		{
 			name: 'Deleted',
 			icon: <DeleteIcon />,
-			// function: <ProfileSettings />,
+			function: () => handleMsgShown('Coming Soon', 'warning'),
 		},
 		{
 			name: 'Settings',
@@ -84,16 +85,16 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 			icon: <Logout />,
 			function: handleLogoutBtnClick,
 		},
-	]);
+	];
 
-	const handleFolderChange = useCallback(
-		(item) => {
-			unsubscribeAll();
-			navigate('#' + item?.folderName);
-			getAllNotesOfFolder(item, true);
-		},
-		[navigate]
-	);
+	useEffect(() => {
+		const openFolderFromURL = userAllDetails?.userFolders?.filter((item) => item.folderName === currentFolderHash);
+		if (openFolderFromURL.length > 0) {
+			handleFolderChange(openFolderFromURL?.[0]);
+		} else {
+			navigate('/home');
+		}
+	}, [currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
 
 	useEffect(() => {
 		const openFolderFromURL = userAllDetails?.userFolders?.filter(
@@ -161,7 +162,11 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 
 				<Box sx={{ width: 250 }} role="presentation">
 					<List>
-						{renderDrawerListBtns('All Notes', <BallotIcon />, toggleDrawer)}
+						{renderDrawerListBtns('All Notes', <BallotIcon />, () => {
+							toggleDrawer();
+							navigate('/home');
+							unsubscribeAll();
+						})}
 						{renderDrawerListBtns(
 							'Show Folders',
 							isNoteFolderListOpen ? <ExpandLess /> : <ExpandMore />,
@@ -184,6 +189,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 											key={index}
 											onClick={() => handleFolderChange(item)}
 											sx={{ pl: 4 }}
+											selected={currentFolderHash === item?.folderName}
 										>
 											<ListItemText
 												primary={item?.folderName}
@@ -229,12 +235,11 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 
 			{isFolderDialogOpen && (
 				<FolderDialog
-					title="Note Folder"
-					message="Create folders for different Notes and quickly switch between them."
-					noteFolders={noteFolders}
-					isFolderDialogOpen={isFolderDialogOpen}
+					handleMsgShown={handleMsgShown}
 					toggleFolderDialog={toggleFolderDialog}
 					allNotes={allNotes}
+					noteFolders={noteFolders}
+					// isFolderDialogOpen={isFolderDialogOpen}
 				/>
 			)}
 		</>
