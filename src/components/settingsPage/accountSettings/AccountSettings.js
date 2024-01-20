@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { handlePasswordChange } from '../../../firebase/settings';
+import { USER_DETAILS } from '../../../utils';
 
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import './accountSettings.css';
 
-const userDetails = JSON.parse(localStorage.getItem('user_details'));
+const userDetails = USER_DETAILS;
 
 function AccountSettings() {
 	//change password

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import { handleUserState } from '../firebase/auth';
 import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
-import { decryptText, userDeviceType } from '../utils';
+import { getUserAllData } from '../firebase/features';
+import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
@@ -26,11 +27,11 @@ document.addEventListener(
 );
 
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
-const user_details = JSON.parse(localStorage.getItem('user_details'));
 
 function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
 	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
+	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 
 	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
 	const [myNotesId, setMyNotesId] = useState('');
@@ -74,8 +75,9 @@ function HomePage() {
 	// fetch All noteData
 	useEffect(() => {
 		handleUserState(true);
-		if (JSON.parse(localStorage.getItem('user_details'))) {
+		if (USER_DETAILS) {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
+			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes';
 		}
@@ -224,7 +226,7 @@ function HomePage() {
 		(e) => {
 			e.preventDefault();
 			const email = e.target.shareEmailInput.value.trim();
-			if (email === '' || user_details?.email === email) return;
+			if (email === '' || USER_DETAILS?.email === email) return;
 
 			for (let i = 0; i < noteSharedUsers.length; i++) {
 				if (noteSharedUsers[i]?.email === email) {
@@ -289,7 +291,12 @@ function HomePage() {
 		isPageLoaded && (
 			<>
 				<div id="homePage">
-					<NavBar NavBarType="homePage" addNotes={addNotes} allNotes={allNotes} />
+					<NavBar
+						NavBarType="homePage"
+						addNotes={addNotes}
+						allNotes={allNotes}
+						userAllDetails={userAllDetails}
+					/>
 
 					<div id="allContent">
 						<div id="notesTitleContainer">

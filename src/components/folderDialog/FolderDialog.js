@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-// import { updateNoteShareAccess, updateUserShareList } from '../../firebase/shareNote';
+import { createNewFolder } from '../../firebase/features';
+import { uid } from 'uid';
 
 import Button from '@mui/material/Button';
 import NotesIcon from '@mui/icons-material/Notes';
@@ -23,16 +24,18 @@ import ListItemText from '@mui/material/ListItemText';
 
 import './folderDialog.css';
 
-// const userDetails = JSON.parse(localStorage.getItem('user_details')) || {};
-
 function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allNotes, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
-	const [selectedNotes, setSelectedNotes] = useState([]);
+	const [allNoteFolders, setAllNoteFolders] = useState(noteFolders || []);
+	const [currentFolderId, setCurrentFolderId] = useState('');
+	const [selectedNotes, setSelectedNotes] = useState(allNotes || []);
+	const [folderName, setFolderName] = useState('');
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
-	const [isEditFolderOpen, setIsEditFolderOpen] = useState(false);
+	const [isEditFolderDialogOpen, setIsEditFolderDialogOpen] = useState({ isOpen: false, openAsEdit: false });
 
-	// console.log(allNotes);
+	console.log('allNotes', allNotes);
+	// console.log('selectedNotes', selectedNotes);
 
 	const handleClickOutside = useCallback(
 		(e) => {
@@ -67,14 +70,82 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 	};
 
 	const handleBackBtnClick = useCallback(() => {
-		if (isEditFolderOpen) {
-			setIsEditFolderOpen(false);
+		if (isEditFolderDialogOpen.isOpen) {
+			setIsEditFolderDialogOpen({ isOpen: false, openAsEdit: false });
+			setCurrentFolderId('');
+			setSelectedNotes(allNotes);
+			setAllNoteFolders(noteFolders);
+			setFolderName('');
 		} else {
 			toggleFolderDialog();
 		}
-	}, [isEditFolderOpen, toggleFolderDialog]);
+	}, [allNotes, isEditFolderDialogOpen.isOpen, noteFolders, toggleFolderDialog]);
 
-	const handleSaveBtnClick = useCallback(() => {}, []);
+	//handleCreateNewFolder btn click
+	const handleCreateNewFolder = useCallback(() => {
+		setCurrentFolderId(uid(16));
+		setAllNoteFolders(noteFolders);
+		setIsEditFolderDialogOpen({ isOpen: true, openAsEdit: false });
+	}, [noteFolders]);
+
+	const handleFolderEditBtnClick = useCallback(
+		(itemOrg) => {
+			setCurrentFolderId(itemOrg.folderId);
+			setFolderName(itemOrg.folderName);
+			setIsEditFolderDialogOpen({ isOpen: true, openAsEdit: true });
+			const temp = allNotes.map((i) => itemOrg.folderData.find((j) => j.notesId === i.notesId) || i);
+			setSelectedNotes(temp);
+		},
+		[allNotes]
+	);
+
+	const handleSelectNote = useCallback(
+		(index, isSelected) => {
+			const newToDos = selectedNotes.map(function (item, i) {
+				return i === index
+					? { isNoteSelected: isSelected ? false : true, notesTitle: item.notesTitle, notesId: item.notesId }
+					: {
+							isNoteSelected: item.isNoteSelected || false,
+							notesTitle: item.notesTitle,
+							notesId: item.notesId,
+					  };
+			});
+			setSelectedNotes(newToDos);
+		},
+		[selectedNotes]
+	);
+
+	const handleSaveBtnClick = useCallback(() => {
+		let temp;
+		if (!isEditFolderDialogOpen.openAsEdit) {
+			temp = [
+				{
+					folderName,
+					folderId: currentFolderId,
+					folderData: selectedNotes.filter((item) => item.isNoteSelected),
+				},
+				...allNoteFolders,
+			];
+		} else {
+			temp = allNoteFolders.map((item) => {
+				return item.folderId === currentFolderId
+					? {
+							folderName,
+							folderId: currentFolderId,
+							folderData: selectedNotes.filter((item) => item.isNoteSelected),
+					  }
+					: item;
+			});
+		}
+
+		createNewFolder(temp, setIsSaveBtnLoading, handleMsgShown);
+	}, [allNoteFolders, currentFolderId, folderName, handleMsgShown, isEditFolderDialogOpen.openAsEdit, selectedNotes]);
+
+	const handleDeleteFolderBtnClick = useCallback(() => {
+		let temp = allNoteFolders.filter((item) => item.folderId !== currentFolderId);
+		createNewFolder(temp, setIsSaveBtnLoading, handleMsgShown);
+		handleBackBtnClick();
+	}, [allNoteFolders, currentFolderId, handleBackBtnClick, handleMsgShown]);
 
 	const viewFolderContain = (
 		<div className="folderDialogBoxContainer">
@@ -85,11 +156,11 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 				<div
 					className="folderDialogBoxTableColAddBtn"
 					style={{ justifyContent: 'space-between' }}
-					onClick={() => setIsEditFolderOpen(true)}
+					onClick={handleCreateNewFolder}
 				>
 					<div className="colIconTitle">
 						<CreateNewFolderIcon sx={{ fontSize: 30, mr: 2 }} />
-						<div>New Folder</div>
+						<div>Create New Folder</div>
 					</div>
 					<KeyboardArrowRightIcon sx={{ fontSize: 30, ml: 2 }} />
 				</div>
@@ -99,10 +170,11 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 							className="folderDialogBoxTableCol"
 							style={{ justifyContent: 'space-between' }}
 							key={index}
+							onClick={() => handleFolderEditBtnClick(item, index)}
 						>
 							<div className="colIconTitle">
 								<FolderIcon sx={{ fontSize: 30, mr: 2 }} />
-								<div className="colTitle">{item}</div>
+								<div className="colTitle">{item.folderName}</div>
 							</div>
 							<KeyboardArrowRightIcon sx={{ fontSize: 30, ml: 2 }} />
 						</div>
@@ -116,32 +188,54 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 		<div className="folderDialogBoxContainer">
 			<div className="folderDialogBoxMessage">{message}</div>
 			<div className="folderDialogInputLable">Folder Name</div>
-			<input type="text" className="folderDialogInput" placeholder="Enter Folder Name" />
+			<input
+				type="text"
+				className="folderDialogInput"
+				value={folderName}
+				onChange={(e) => setFolderName(e.target.value)}
+				placeholder="Enter Folder Name"
+			/>
 			<div className="folderDialogInputLable">Add Notes</div>
 
 			<div className="folderDialogBoxTable">
 				<div className="folderDialogBoxTableColAddBtn" onClick={toggleDrawer}>
 					<AddToPhotosIcon sx={{ fontSize: 30, mr: 2 }} />
-					Add Notes
+					{isEditFolderDialogOpen.openAsEdit ? 'Edit Notes' : 'Select Notes'}
 				</div>
-				{noteFolders?.map((item, index) => {
+				{selectedNotes.map((item, index) => {
 					return (
-						<div className="folderDialogBoxTableCol" key={index}>
-							<NotesIcon sx={{ fontSize: 30, mr: 2 }} />
-							{item}
-						</div>
+						item.isNoteSelected && (
+							<div className="folderDialogBoxTableCol" key={index}>
+								<NotesIcon sx={{ fontSize: 30, mr: 2 }} />
+								{item.notesTitle}
+							</div>
+						)
 					);
 				})}
-				<Button
-					variant="contained"
-					onClick={handleSaveBtnClick}
-					fullWidth
-					color="success"
-					disabled={isSaveBtnLoading}
-					sx={{ my: 2 }}
-				>
-					{isSaveBtnLoading ? <CircularProgress color="success" size={30} /> : ' Save'}
-				</Button>
+				<div className="folderDialogBoxBtnAlign" style={{ justifyContent: 'space-between' }}>
+					{isEditFolderDialogOpen.openAsEdit && (
+						<Button
+							variant="contained"
+							onClick={handleDeleteFolderBtnClick}
+							fullWidth
+							color="error"
+							disabled={isSaveBtnLoading}
+							sx={{ my: 2, mr: 2 }}
+						>
+							Delete
+						</Button>
+					)}
+					<Button
+						variant="contained"
+						onClick={handleSaveBtnClick}
+						fullWidth
+						color="success"
+						disabled={isSaveBtnLoading}
+						sx={{ my: 2 }}
+					>
+						{isSaveBtnLoading ? <CircularProgress color="success" size={30} /> : ' Save'}
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
@@ -161,7 +255,7 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 					</Button>
 				</div>
 
-				{!isEditFolderOpen ? viewFolderContain : editFolderContain}
+				{!isEditFolderDialogOpen.isOpen ? viewFolderContain : editFolderContain}
 
 				<SwipeableDrawer
 					anchor="bottom"
@@ -190,14 +284,14 @@ function FolderDialog({ title, message, handleMsgShown, toggleFolderDialog, allN
 						</div>
 						<Divider />
 						<List sx={{ mb: 5 }}>
-							{allNotes.map((item, index) => (
+							{selectedNotes.map((item, index) => (
 								<ListItem key={'list' + index} disablePadding>
-									<ListItemButton>
+									<ListItemButton onClick={() => handleSelectNote(index, item?.isNoteSelected)}>
 										<ListItemIcon>
 											<NotesIcon />
 										</ListItemIcon>
 										<ListItemText primary={item.notesTitle} />
-										<Checkbox />
+										<Checkbox checked={item?.isNoteSelected || false} onChange={() => {}} />
 									</ListItemButton>
 								</ListItem>
 							))}

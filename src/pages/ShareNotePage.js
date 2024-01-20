@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 import ShowMsg from '../components/showMsg/ShowMsg.js';
-import { getSearchedNoteData } from '../firebase/shareNote.js';
+import { getSearchedNoteData } from '../firebase/features.js';
 import { userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';

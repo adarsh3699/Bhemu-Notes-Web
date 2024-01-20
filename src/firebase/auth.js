@@ -1,5 +1,6 @@
+import { database, auth } from './initFirebase';
+
 import {
-	getAuth,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	updateProfile,
@@ -10,7 +11,6 @@ import {
 } from 'firebase/auth';
 
 import {
-	getFirestore,
 	getDoc,
 	setDoc,
 	// updateDoc,
@@ -18,11 +18,7 @@ import {
 	serverTimestamp,
 } from 'firebase/firestore';
 
-const database = getFirestore();
-
-const auth = getAuth();
-
-const user_details = JSON.parse(localStorage.getItem('user_details'));
+import { encryptText, decryptText, USER_DETAILS } from '../utils';
 
 function handleLoginForm(e, setMsg, setIsApiLoading) {
 	e.preventDefault();
@@ -38,11 +34,13 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
 			localStorage.setItem('user_profile_img', cred?.user?.photoURL);
 			localStorage.setItem(
 				'user_details',
-				JSON.stringify({
-					userName: cred?.user?.displayName,
-					email,
-					userId: cred?.user?.uid,
-				})
+				encryptText(
+					JSON.stringify({
+						userName: cred?.user?.displayName,
+						email,
+						userId: cred?.user?.uid,
+					})
+				)
 			);
 			document.location.href = '/home';
 		})
@@ -84,6 +82,7 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 						setDoc(docRef, {
 							userName,
 							email,
+							userId: cred?.user?.uid,
 							createdOn: serverTimestamp(),
 							lastloginedOn: serverTimestamp(),
 						})
@@ -91,11 +90,13 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 								setIsApiLoading(false);
 								localStorage.setItem(
 									'user_details',
-									JSON.stringify({
-										userName,
-										email,
-										userId: cred?.user?.uid,
-									})
+									encryptText(
+										JSON.stringify({
+											userName,
+											email,
+											userId: cred?.user?.uid,
+										})
+									)
 								);
 								document.location.href = '/home';
 							})
@@ -155,7 +156,7 @@ function handleUserState(currentPage) {
 			handleSignOut();
 		} else if (!currentPage && user !== null) {
 			document.location.href = '/home';
-		} else if (user_details?.email !== user?.email || user_details?.userId !== user?.uid) {
+		} else if (USER_DETAILS?.email !== user?.email || USER_DETAILS?.userId !== user?.uid) {
 			handleSignOut();
 		}
 	});

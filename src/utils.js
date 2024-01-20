@@ -43,6 +43,8 @@ function userDeviceType() {
 	}
 }
 
+const USER_DETAILS = JSON.parse(decryptText(localStorage.getItem('user_details')));
+
 // function handleErrorShown(msgText, setMsg) {
 // 	if (msgText) {
 // 		setMsg(msgText);
@@ -54,4 +56,4 @@ function userDeviceType() {
 // 	}
 // };
 
-export { encryptText, decryptText, md5Hash, userDeviceType };
+export { encryptText, decryptText, md5Hash, userDeviceType, USER_DETAILS };

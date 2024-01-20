@@ -153,6 +153,11 @@
 	color: #2894d1;
 }
 
+.folderDialogBoxBtnAlign {
+	display: flex;
+	justify-content: space-between;
+}
+
 /* -------------drawer---------------- */
 .allNotesListDrawer {
 	display: flex;

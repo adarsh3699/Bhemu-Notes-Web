@@ -1,33 +1,11 @@
-// import { getAuth } from 'firebase/auth';
-import { decryptText } from '../utils';
+import { database, auth } from './initFirebase';
+import { encryptText, decryptText, USER_DETAILS } from '../utils';
 
-import {
-	getFirestore,
-	// collection,
-	onSnapshot,
-	// getDocFromCache,
-	getDoc,
-	// addDoc,
-	// deleteDoc,
-	updateDoc,
-	doc,
-	// arrayUnion,
-	// arrayRemove,
-	// query,
-	// where,
-	serverTimestamp,
-	// orderBy,
-} from 'firebase/firestore';
-
-// const auth = getAuth();
-const database = getFirestore();
-// collection ref
-// const colRef = collection(database, 'user_notes');
-
-// const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
+import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp, arrayUnion } from 'firebase/firestore';
 
 function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorShown) {
 	const { noteId, noteSharedUsers, isNoteSharedWithAll } = incomingData;
+	console.log(noteId);
 
 	if (!noteId || noteSharedUsers === '') {
 		handleErrorShown('Please Provide all details (noteId, isNoteSharedWithAll)');
@@ -35,7 +13,6 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 		return;
 	}
 	setIsSaveBtnLoading(true);
-
 	const docRef = doc(database, 'user_notes', noteId);
 
 	updateDoc(docRef, {
@@ -114,6 +91,7 @@ function updateUserShareList(incomingData, setIsSaveBtnLoading, handleErrorShown
 	});
 }
 
+//open anonymous sharenote
 async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, setIsGetApiLoading) {
 	setIsGetApiLoading(true);
 	const docRef = doc(database, 'user_notes', noteId);
@@ -146,4 +124,60 @@ async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, 
 	);
 }
 
-export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData };
+//get user all info like share, folders, etc
+function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
+	const myEmail = auth?.currentUser?.email || USER_DETAILS?.email;
+	if (!myEmail) return;
+	const docRef = doc(database, 'user_details', myEmail);
+
+	setIsApiLoading(true);
+	onSnapshot(
+		docRef,
+		async (realSnapshot) => {
+			await getDoc(docRef)
+				.then((snapshot) => {
+					const data = snapshot.data();
+					setIsApiLoading(false);
+					setUserAllDetails(data);
+
+					// const encryptNotesData = encryptText(JSON.stringify(noteData));
+					// localStorage.setItem('note_data', encryptNotesData);
+					localStorage.setItem('user_details', encryptText(JSON.stringify(data)));
+				})
+				.catch((err) => {
+					setIsApiLoading(false);
+					console.log(err.message);
+					setMsg(err.code);
+				});
+		},
+		(err) => {
+			setIsApiLoading(false);
+			console.log(err);
+			setMsg(err.code);
+		}
+	);
+}
+
+function createNewFolder(incomingData, setIsFolderDialogOpen, setIsApiLoading, setMsg) {
+	const myEmail = auth?.currentUser.email;
+	console.log(myEmail);
+	console.log(incomingData);
+
+	const docRef = doc(database, 'user_details', myEmail);
+	// setIsApiLoading(true);
+	updateDoc(docRef, {
+		userFolders: incomingData,
+	})
+		.then(() => {
+			console.log('Document successfully updated!');
+			// setIsFolderDialogOpen(false);
+			// setIsApiLoading(false);
+		})
+		.catch((err) => {
+			// setIsApiLoading(false);
+			console.log(err.message);
+			// setMsg(err.code);
+		});
+}
+
+export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData, createNewFolder, getUserAllData };

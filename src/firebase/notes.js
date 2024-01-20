@@ -1,8 +1,7 @@
-import { getAuth } from 'firebase/auth';
-import { encryptText, decryptText } from '../utils';
+import { auth, database } from './initFirebase';
+import { encryptText, decryptText, USER_DETAILS } from '../utils';
 
 import {
-	getFirestore,
 	collection,
 	onSnapshot,
 	getDocs,
@@ -14,17 +13,15 @@ import {
 	where,
 	serverTimestamp,
 	orderBy,
+	arrayUnion,
+	getDoc,
 } from 'firebase/firestore';
 
-const auth = getAuth();
-const database = getFirestore();
 // collection ref
 const colRef = collection(database, 'user_notes');
 
-const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
-
 function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
-	const getDataQuery = query(colRef, where('userId', '==', userId), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
+	const getDataQuery = query(colRef, where('userId', '==', USER_DETAILS?.userId || ''), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
 	setIsApiLoading(true);
 	onSnapshot(
 		colRef,

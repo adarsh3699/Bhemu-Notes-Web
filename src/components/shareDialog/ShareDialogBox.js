@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateNoteShareAccess, updateUserShareList } from '../../firebase/shareNote';
+import { updateNoteShareAccess, updateUserShareList } from '../../firebase/features';
+import { USER_DETAILS } from '../../utils';
 
 import Button from '@mui/material/Button';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -10,7 +11,7 @@ import userProflie from '../../img/userProfile.svg';
 
 import './shareDialogBox.css';
 
-const userDetails = JSON.parse(localStorage.getItem('user_details')) || {};
+const userDetails = USER_DETAILS || {};
 const userProfileImg = localStorage.getItem('user_profile_img');
 
 function ShareDialogBox({

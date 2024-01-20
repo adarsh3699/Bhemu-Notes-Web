@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { handleSignOut } from '../../../firebase/auth';
 import FolderDialog from '../../folderDialog/FolderDialog';
+import { USER_DETAILS, decryptText } from '../../../utils';
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -31,13 +32,12 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-const userName = JSON.parse(localStorage.getItem('user_details'))?.userName || 'Bhemu Notes';
-
-function NavBar({ NavBarType, addNotes, allNotes }) {
+function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
-	const noteFolders = [1, 2, 3, 4, 5, '678sdafsghjkujhgf90678sdafsghjkujhgf90', 23, 6, 54, 2, 345, 6, 2, 3];
+	const noteFolders = userAllDetails?.userFolders || [];
+	// console.log(noteFolders);
 
 	const handleLogoutBtnClick = useCallback(() => {
 		localStorage.clear();
@@ -118,7 +118,7 @@ function NavBar({ NavBarType, addNotes, allNotes }) {
 					>
 						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
 					</IconButton>
-					<div id="name">{userName ? userName : 'Bhemu Notes'}</div>
+					<div id="name">{USER_DETAILS?.userName || 'Bhemu Notes'}</div>
 				</div>
 
 				<Button
@@ -156,11 +156,11 @@ function NavBar({ NavBarType, addNotes, allNotes }) {
 									<EditIcon />
 								</ListItemButton>
 
-								{noteFolders.map((name, index) => {
+								{noteFolders.map((item, index) => {
 									return (
 										<ListItemButton key={index} sx={{ pl: 4 }}>
 											<ListItemText
-												primary={name}
+												primary={item?.folderName}
 												primaryTypographyProps={{
 													style: {
 														overflow: 'hidden',
