@@ -1,7 +1,7 @@
 import { database, auth } from './initFirebase';
 import { encryptText, decryptText, USER_DETAILS } from '../utils';
 
-import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp, arrayUnion } from 'firebase/firestore';
+import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorShown) {
 	const { noteId, noteSharedUsers, isNoteSharedWithAll } = incomingData;

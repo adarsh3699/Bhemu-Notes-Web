@@ -18,7 +18,7 @@ import {
 	serverTimestamp,
 } from 'firebase/firestore';
 
-import { encryptText, decryptText, USER_DETAILS } from '../utils';
+import { encryptText, USER_DETAILS } from '../utils';
 
 function handleLoginForm(e, setMsg, setIsApiLoading) {
 	e.preventDefault();

@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { handleSignOut } from '../../../firebase/auth';
 import FolderDialog from '../../folderDialog/FolderDialog';
-import { USER_DETAILS, decryptText } from '../../../utils';
+import { USER_DETAILS } from '../../../utils';
+
+import { getAllNotesOfFolder, unsubscribeAll } from '../../../firebase/notes';
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -33,11 +35,11 @@ import logo from './files/newLogoNav.webp';
 import './files/navBar.css';
 
 function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
+	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
 	const noteFolders = userAllDetails?.userFolders || [];
-	// console.log(noteFolders);
 
 	const handleLogoutBtnClick = useCallback(() => {
 		localStorage.clear();
@@ -48,23 +50,23 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 		setIsFolderDialogOpen((prevState) => !prevState);
 	}, []);
 
-	const [drawerList1, setDrawerList1] = useState([
-		{
-			name: 'All Notes',
-			icon: <BallotIcon />,
-			// function: <ProfileSettings />,
-		},
-		{
-			name: 'Show Folder',
-			icon: <FolderIcon />,
-			// function: <AccountSettings />,
-		},
-		{
-			name: 'Edit Folder',
-			icon: <EditIcon />,
-			function: toggleFolderDialog,
-		},
-	]);
+	// const [drawerList1, setDrawerList1] = useState([
+	// 	{
+	// 		name: 'All Notes',
+	// 		icon: <BallotIcon />,
+	// 		// function: <ProfileSettings />,
+	// 	},
+	// 	{
+	// 		name: 'Show Folder',
+	// 		icon: <FolderIcon />,
+	// 		// function: <AccountSettings />,
+	// 	},
+	// 	{
+	// 		name: 'Edit Folder',
+	// 		icon: <EditIcon />,
+	// 		function: toggleFolderDialog,
+	// 	},
+	// ]);
 
 	const [drawerList2, setDrawerList2] = useState([
 		{
@@ -84,14 +86,34 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 		},
 	]);
 
+	const handleFolderChange = useCallback(
+		(item) => {
+			unsubscribeAll();
+			navigate('#' + item?.folderName);
+			getAllNotesOfFolder(item, true);
+		},
+		[navigate]
+	);
+
+	useEffect(() => {
+		const openFolderFromURL = userAllDetails?.userFolders?.filter(
+			(item) => item.folderName === window.location?.href?.split('#')[1]
+		);
+		if (openFolderFromURL.length > 0) {
+			handleFolderChange(openFolderFromURL?.[0]);
+		} else {
+			navigate('/home');
+		}
+	}, [handleFolderChange, navigate, userAllDetails?.userFolders]);
+
 	const toggleDrawer = useCallback(() => {
 		setIsDrawerOpen((prevState) => !prevState);
 	}, []);
 
-	const handleEditFolderListBtnClick = useCallback(() => {
-		setIsDrawerOpen((prevState) => !prevState);
-		setIsFolderDialogOpen((prevState) => !prevState);
-	}, []);
+	// const handleEditFolderListBtnClick = useCallback(() => {
+	// 	setIsDrawerOpen((prevState) => !prevState);
+	// 	setIsFolderDialogOpen((prevState) => !prevState);
+	// }, []);
 
 	const renderDrawerListBtns = (name, icon, func, sx) => {
 		return (
@@ -147,7 +169,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 						)}
 
 						<Collapse in={isNoteFolderListOpen} timeout="auto" unmountOnExit>
-							<List component="div" disablePadding onClick={toggleDrawer}>
+							<List component="div" disablePadding>
 								<ListItemButton
 									sx={{ pl: 4 }}
 									onClick={() => setIsFolderDialogOpen((prevState) => !prevState)}
@@ -158,7 +180,11 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes }) {
 
 								{noteFolders.map((item, index) => {
 									return (
-										<ListItemButton key={index} sx={{ pl: 4 }}>
+										<ListItemButton
+											key={index}
+											onClick={() => handleFolderChange(item)}
+											sx={{ pl: 4 }}
+										>
 											<ListItemText
 												primary={item?.folderName}
 												primaryTypographyProps={{

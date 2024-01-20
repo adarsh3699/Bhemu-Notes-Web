@@ -13,43 +13,35 @@ import {
 	where,
 	serverTimestamp,
 	orderBy,
-	arrayUnion,
-	getDoc,
 } from 'firebase/firestore';
 
 // collection ref
 const colRef = collection(database, 'user_notes');
+let unsubscribeFunctionsArray = [];
 
 function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 	const getDataQuery = query(colRef, where('userId', '==', USER_DETAILS?.userId || ''), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
 	setIsApiLoading(true);
 	onSnapshot(
-		colRef,
+		getDataQuery,
 		async (realSnapshot) => {
-			await getDocs(getDataQuery)
-				.then((snapshot) => {
-					let noteData = [];
-					snapshot.docs.forEach((doc) => {
-						noteData.push({
-							notesId: doc.id,
-							notesTitle: decryptText(doc.data().notesTitle),
-							noteData: JSON.parse(decryptText(doc.data().noteData)),
-							updatedOn: doc.data().updatedOn,
-							noteSharedUsers: doc.data().noteSharedUsers || [],
-							isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
-						});
-					});
-					setIsApiLoading(false);
-					setAllNotes(noteData);
-
-					const encryptNotesData = encryptText(JSON.stringify(noteData));
-					localStorage.setItem('note_data', encryptNotesData);
-				})
-				.catch((err) => {
-					setIsApiLoading(false);
-					console.log(err.message);
-					setMsg(err.code);
+			let noteData = [];
+			realSnapshot.docs.forEach((doc) => {
+				noteData.push({
+					notesId: doc.id,
+					notesTitle: decryptText(doc.data().notesTitle),
+					noteData: JSON.parse(decryptText(doc.data().noteData)),
+					updatedOn: doc.data().updatedOn,
+					noteSharedUsers: doc.data().noteSharedUsers || [],
+					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
 				});
+			});
+			setIsApiLoading(false);
+			setAllNotes(noteData);
+			console.log(noteData);
+
+			const encryptNotesData = encryptText(JSON.stringify(noteData));
+			localStorage.setItem('note_data', encryptNotesData);
 		},
 		(err) => {
 			setIsApiLoading(false);
@@ -128,4 +120,53 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 		});
 }
 
-export { getUserAllNoteData, addNewNote, deleteData, updateDocument };
+function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, setMsg) {
+	// console.log('folder', folder);
+	const noteIds = folder.folderData.map((item) => item.notesId);
+	console.log(noteIds);
+
+	const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
+	const unsubscribe = onSnapshot(
+		getDataQuery,
+		async (realSnapshot) => {
+			let noteData = [];
+			realSnapshot.forEach((doc) => {
+				noteData.push({
+					notesId: doc.id,
+					notesTitle: decryptText(doc.data().notesTitle),
+					noteData: JSON.parse(decryptText(doc.data().noteData)),
+					updatedOn: doc.data().updatedOn,
+					noteSharedUsers: doc.data().noteSharedUsers || [],
+					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
+				});
+			});
+			console.log(noteData);
+
+			unsubscribeFunctionsArray.push(unsubscribe);
+		},
+		(err) => {
+			// setIsApiLoading(false);
+			console.log(err);
+			// setMsg(err.code);
+		}
+	);
+}
+
+function unsubscribeAll() {
+	console.log('unsubscribeFunctions', unsubscribeFunctionsArray);
+	unsubscribeFunctionsArray.forEach((unsubscribe) => unsubscribe());
+	// Clear the array after unsubscribing all listeners
+	unsubscribeFunctionsArray = [];
+}
+
+// console.log(getAllNotesOfFolder().unsubscribe);
+
+export {
+	getUserAllNoteData,
+	addNewNote,
+	deleteData,
+	updateDocument,
+	getAllNotesOfFolder,
+	unsubscribeAll,
+	unsubscribeFunctionsArray,
+};
