@@ -5,10 +5,11 @@ import { handleUserNameChange, handleUserProfileChange } from '../../../firebase
 import myLogo from '../../../img/newLogo.webp';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import { USER_DETAILS } from '../../../utils';
 
 import './profileSettings.css';
 
-const localUserDetails = JSON.parse(localStorage.getItem('user_details'));
+const localUserDetails = USER_DETAILS;
 
 function ProfileSettings() {
 	const [imageUpload, setImageUpload] = useState(null);

@@ -29,7 +29,7 @@ function CreateAcc() {
 					<input
 						type="tet"
 						name="userName"
-						placeholder="User Name"
+						placeholder="Full Name"
 						className="inputBottomMargin"
 						required
 						onChange={handleMsgHideOnKeyUp}

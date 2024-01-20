@@ -1,12 +1,9 @@
-import { storage } from './initFirebase';
+import { storage, auth, database } from './initFirebase';
 
-import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updateProfile, updatePassword } from 'firebase/auth';
+import { reauthenticateWithCredential, EmailAuthProvider, updateProfile, updatePassword } from 'firebase/auth';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-import { getFirestore, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
-
-const auth = getAuth();
-const database = getFirestore();
+import { updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 async function handleUserNameChange(userDetails, setMsg, setIsSaveBtnLoading, imageUpload) {
 	const { userName, email, userId } = userDetails;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { handleSignOut, handleUserState } from '../firebase/auth';
+import { USER_DETAILS } from '../utils';
 
 import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
 import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
@@ -59,7 +60,7 @@ function SettingsPage() {
 
 	useEffect(() => {
 		handleUserState(true);
-		if (JSON.parse(localStorage.getItem('user_details'))) {
+		if (USER_DETAILS) {
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes | Settings ';
 		}

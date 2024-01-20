@@ -1,11 +1,9 @@
-import { getAuth } from 'firebase/auth';
-import { encryptText, decryptText } from '../utils';
+import { auth, database } from './initFirebase';
+import { encryptText, decryptText, USER_DETAILS } from '../utils';
 
 import {
-	getFirestore,
 	collection,
 	onSnapshot,
-	getDocs,
 	addDoc,
 	deleteDoc,
 	updateDoc,
@@ -16,43 +14,32 @@ import {
 	orderBy,
 } from 'firebase/firestore';
 
-const auth = getAuth();
-const database = getFirestore();
 // collection ref
 const colRef = collection(database, 'user_notes');
-
-const userId = JSON.parse(localStorage.getItem('user_details'))?.userId || '';
+let unsubscribeFunctionsArray = [];
 
 function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
-	const getDataQuery = query(colRef, where('userId', '==', userId), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
+	const getDataQuery = query(colRef, where('userId', '==', USER_DETAILS?.userId || ''), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
 	setIsApiLoading(true);
 	onSnapshot(
-		colRef,
+		getDataQuery,
 		async (realSnapshot) => {
-			await getDocs(getDataQuery)
-				.then((snapshot) => {
-					let noteData = [];
-					snapshot.docs.forEach((doc) => {
-						noteData.push({
-							notesId: doc.id,
-							notesTitle: decryptText(doc.data().notesTitle),
-							noteData: JSON.parse(decryptText(doc.data().noteData)),
-							updatedOn: doc.data().updatedOn,
-							noteSharedUsers: doc.data().noteSharedUsers || [],
-							isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
-						});
-					});
-					setIsApiLoading(false);
-					setAllNotes(noteData);
-
-					const encryptNotesData = encryptText(JSON.stringify(noteData));
-					localStorage.setItem('note_data', encryptNotesData);
-				})
-				.catch((err) => {
-					setIsApiLoading(false);
-					console.log(err.message);
-					setMsg(err.code);
+			let noteData = [];
+			realSnapshot.docs.forEach((doc) => {
+				noteData.push({
+					notesId: doc.id,
+					notesTitle: decryptText(doc.data().notesTitle),
+					noteData: JSON.parse(decryptText(doc.data().noteData)),
+					updatedOn: doc.data().updatedOn,
+					noteSharedUsers: doc.data().noteSharedUsers || [],
+					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
 				});
+			});
+			setIsApiLoading(false);
+			setAllNotes(noteData);
+
+			const encryptNotesData = encryptText(JSON.stringify(noteData));
+			localStorage.setItem('note_data', encryptNotesData);
 		},
 		(err) => {
 			setIsApiLoading(false);
@@ -131,4 +118,54 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 		});
 }
 
-export { getUserAllNoteData, addNewNote, deleteData, updateDocument };
+function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown) {
+	const noteIds = folder.folderData.map((item) => item.notesId);
+
+	const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
+	const unsubscribe = onSnapshot(
+		getDataQuery,
+		async (realSnapshot) => {
+			let noteData = [];
+			realSnapshot.forEach((doc) => {
+				noteData.push({
+					notesId: doc.id,
+					notesTitle: decryptText(doc.data().notesTitle),
+					noteData: JSON.parse(decryptText(doc.data().noteData)),
+					updatedOn: doc.data().updatedOn,
+					noteSharedUsers: doc.data().noteSharedUsers || [],
+					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
+				});
+			});
+
+			setAllNotes(noteData);
+
+			const encryptNotesData = encryptText(JSON.stringify(noteData));
+			localStorage.setItem(folder.folderName, encryptNotesData);
+
+			unsubscribeFunctionsArray.push(unsubscribe);
+		},
+		(err) => {
+			setIsApiLoading(false);
+			console.log(err);
+			handleMsgShown(err.code);
+		}
+	);
+}
+
+function unsubscribeAll() {
+	unsubscribeFunctionsArray.forEach((unsubscribe) => unsubscribe());
+	// Clear the array after unsubscribing all listeners
+	unsubscribeFunctionsArray = [];
+}
+
+// console.log(getAllNotesOfFolder().unsubscribe);
+
+export {
+	getUserAllNoteData,
+	addNewNote,
+	deleteData,
+	updateDocument,
+	getAllNotesOfFolder,
+	unsubscribeAll,
+	unsubscribeFunctionsArray,
+};

@@ -1,6 +1,6 @@
 {
 	"name": "notes-react",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"private": true,
 	"author": {
 		"email": "adarsh3699@gmail.com",
@@ -8,10 +8,10 @@
 		"url": "https://bhemu.me"
 	},
 	"dependencies": {
-		"@emotion/react": "^11.10.5",
-		"@emotion/styled": "^11.10.5",
+		"@emotion/react": "^11.11.1",
+		"@emotion/styled": "^11.11.0",
 		"@mui/icons-material": "^5.10.9",
-		"@mui/material": "^5.10.12",
+		"@mui/material": "^5.15.0",
 		"crypto-js": "^4.1.1",
 		"firebase": "^9.15.0",
 		"react": "^18.2.0",
@@ -19,7 +19,8 @@
 		"react-hotkeys-hook": "^4.4.1",
 		"react-router-dom": "^6.6.0",
 		"react-scripts": "5.0.1",
-		"react-textarea-autosize": "^8.4.0"
+		"react-textarea-autosize": "^8.4.0",
+		"uid": "^2.0.2"
 	},
 	"scripts": {
 		"start": "react-scripts start",

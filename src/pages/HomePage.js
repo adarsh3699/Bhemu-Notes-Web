@@ -1,8 +1,17 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { handleUserState } from '../firebase/auth';
-import { getUserAllNoteData, addNewNote, deleteData, updateDocument } from '../firebase/notes';
-import { decryptText, userDeviceType } from '../utils';
+import {
+	getUserAllNoteData,
+	addNewNote,
+	deleteData,
+	updateDocument,
+	unsubscribeAll,
+	getAllNotesOfFolder,
+} from '../firebase/notes';
+import { getUserAllData } from '../firebase/features';
+import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
@@ -26,11 +35,15 @@ document.addEventListener(
 );
 
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
-const user_details = JSON.parse(localStorage.getItem('user_details'));
+const localFolderData = window.location?.hash?.slice(1)
+	? JSON.parse(decryptText(localStorage.getItem(window.location?.hash?.slice(1))))
+	: undefined;
 
 function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
 	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
+	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
+	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
 	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
 	const [myNotesId, setMyNotesId] = useState('');
@@ -49,6 +62,9 @@ function HomePage() {
 	const [focusedInput, setfocusedInput] = useState(null);
 	const todoRef = useRef();
 	const lastTextBoxRef = useRef();
+	const navigate = useNavigate();
+
+	const folderName = window.location.hash.slice(1);
 
 	const handleMsgShown = useCallback((msgText, type) => {
 		if (msgText) {
@@ -63,6 +79,7 @@ function HomePage() {
 
 	const openFirstNote = useCallback(function (allNotesAtr) {
 		if (allNotesAtr.length === 0) return;
+
 		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
 		setNotesTitle(allNotesAtr[0]?.notesTitle || '');
 		setMyNotesId(allNotesAtr[0]?.notesId || '');
@@ -74,8 +91,9 @@ function HomePage() {
 	// fetch All noteData
 	useEffect(() => {
 		handleUserState(true);
-		if (JSON.parse(localStorage.getItem('user_details'))) {
+		if (USER_DETAILS) {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
+			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
 			setIsPageLoaded(true);
 			document.title = 'Bhemu Notes';
 		}
@@ -84,9 +102,13 @@ function HomePage() {
 	useEffect(() => {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
 			setIsNotesModalOpen(true);
-			openFirstNote(allNotes);
+			if (!folderName) {
+				openFirstNote(allNotes);
+			} else {
+				openFirstNote(currentFolderNotes);
+			}
 		}
-	}, [openFirstNote, allNotes, isNotesModalOpen]);
+	}, [openFirstNote, allNotes, isNotesModalOpen, folderName, currentFolderNotes]);
 
 	const handleNoteOpening = useCallback(
 		(index, noteId, title, data, shareWith, userPermission) => {
@@ -106,6 +128,15 @@ function HomePage() {
 		setIsNotesModalOpen(false);
 		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
 	}, []);
+
+	const handleFolderChange = useCallback(
+		(item) => {
+			unsubscribeAll();
+			navigate('#' + item?.folderName);
+			getAllNotesOfFolder(item, setCurrentFolderNotes, setIsApiLoading, handleMsgShown);
+		},
+		[handleMsgShown, navigate]
+	);
 
 	//add Note Function
 	const addNotes = useCallback(
@@ -224,7 +255,7 @@ function HomePage() {
 		(e) => {
 			e.preventDefault();
 			const email = e.target.shareEmailInput.value.trim();
-			if (email === '' || user_details?.email === email) return;
+			if (email === '' || USER_DETAILS?.email === email) return;
 
 			for (let i = 0; i < noteSharedUsers.length; i++) {
 				if (noteSharedUsers[i]?.email === email) {
@@ -289,12 +320,19 @@ function HomePage() {
 		isPageLoaded && (
 			<>
 				<div id="homePage">
-					<NavBar NavBarType="homePage" addNotes={addNotes} />
+					<NavBar
+						NavBarType="homePage"
+						addNotes={addNotes}
+						allNotes={allNotes}
+						handleFolderChange={handleFolderChange}
+						userAllDetails={userAllDetails}
+						handleMsgShown={handleMsgShown}
+					/>
 
 					<div id="allContent">
 						<div id="notesTitleContainer">
 							<RenderNotesTitle
-								allNotes={allNotes}
+								allNotes={folderName ? currentFolderNotes : allNotes}
 								handleNoteOpening={handleNoteOpening}
 								isApiLoading={isApiLoading}
 								handleAddNoteInputBox={handleAddNoteInputBox}

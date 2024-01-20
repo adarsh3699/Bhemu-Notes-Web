@@ -43,15 +43,6 @@ function userDeviceType() {
 	}
 }
 
-// function handleErrorShown(msgText, setMsg) {
-// 	if (msgText) {
-// 		setMsg(msgText);
-// 		setTimeout(() => {
-// 			setMsg('');
-// 		}, 2500);
-// 	} else {
-// 		console.log('Please Provide Text Msg');
-// 	}
-// };
+const USER_DETAILS = JSON.parse(decryptText(localStorage.getItem('user_details')));
 
-export { encryptText, decryptText, md5Hash, userDeviceType };
+export { encryptText, decryptText, md5Hash, userDeviceType, USER_DETAILS };

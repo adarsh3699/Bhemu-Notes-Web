@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { handleUserState, handleLoginForm } from '../firebase/auth';
+import { USER_DETAILS } from '../utils';
+
 import { NavLink } from 'react-router-dom';
 import Loader from '../components/Loader';
 
@@ -18,7 +20,7 @@ function LoginPage() {
 
 	useEffect(() => {
 		handleUserState(false);
-		if (JSON.parse(localStorage.getItem('user_details'))) {
+		if (USER_DETAILS) {
 			document.location.href = '/home';
 		} else {
 			setIsLoading(false);
