@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, useRef } from 'react';
+import { Button } from '@mui/material';
 
 import './confirmationDialogBox.css';
 
@@ -38,12 +39,26 @@ function ConfirmationDialogBox({ title, message, onYesClick, setIsConfirmationDi
 				<div className="ConfirmationDialogBoxMessage">{message}</div>
 
 				<div className="ConfirmationDialogBoxBtns">
-					<button className="ConfirmationDialogBoxYesBtn" onClick={onYesClick}>
+					<Button
+						className="ConfirmationDialogBoxYesBtn"
+						variant="contained"
+						color="error"
+						fullWidth
+						sx={{ mr: 2, fontSize: '17px' }}
+						onClick={onYesClick}
+					>
 						Yes
-					</button>
-					<button className="ConfirmationDialogBoxNoBtn" onClick={handleDialogBoxClosing}>
+					</Button>
+					<Button
+						className="ConfirmationDialogBoxNoBtn"
+						variant="contained"
+						color="info"
+						fullWidth
+						sx={{ fontSize: '17px' }}
+						onClick={handleDialogBoxClosing}
+					>
 						No
-					</button>
+					</Button>
 				</div>
 			</div>
 		</div>
