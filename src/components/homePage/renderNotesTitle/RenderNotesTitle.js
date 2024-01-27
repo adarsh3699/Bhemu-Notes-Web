@@ -5,10 +5,27 @@ import homePageSkeleton from '../../../img/homePageSkeleton.svg';
 
 import './renderNotesTitle.css';
 
-function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading, isShareNoteType, handleAddNoteInputBox }) {
+function RenderNotesTitle({
+	allNotes,
+	handleNoteOpening,
+	isApiLoading,
+	isShareNoteType,
+	handleAddNoteInputBox,
+	handleMsgShown,
+}) {
 	return (
 		<>
-			<form id="addNotesInputBox" onSubmit={isShareNoteType ? (e) => e.preventDefault() : handleAddNoteInputBox}>
+			<form
+				id="addNotesInputBox"
+				onSubmit={
+					isShareNoteType
+						? (e) => {
+								e.preventDefault();
+								handleMsgShown('Please create a account to create own notes', 'warning');
+						  }
+						: handleAddNoteInputBox
+				}
+			>
 				<input
 					id="addNotesInput"
 					name="noteTitle"
@@ -31,16 +48,14 @@ function RenderNotesTitle({ allNotes, handleNoteOpening, isApiLoading, isShareNo
 							className="noteBox"
 							key={index}
 							onClick={() =>
-								isShareNoteType
-									? null
-									: handleNoteOpening(
-											index,
-											items.notesId,
-											items.notesTitle,
-											items.noteData,
-											items.noteSharedUsers,
-											items.isNoteSharedWithAll
-									  )
+								handleNoteOpening(
+									index,
+									items.notesId,
+									items.notesTitle,
+									items.noteData,
+									items.noteSharedUsers,
+									items.isNoteSharedWithAll
+								)
 							}
 						>
 							<div className="noteTitle">{items.notesTitle}</div>

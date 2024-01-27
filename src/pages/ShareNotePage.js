@@ -15,7 +15,7 @@ function ShareNotePage() {
 	const [searchedNoteData, setSearchedNoteData] = useState([]);
 
 	const [isGetApiLoading, setIsGetApiLoading] = useState(true);
-	const [isNotesModalOpen, setIsNotesModalOpen] = useState(true);
+	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 
 	const handleMsgShown = useCallback((msgText, type) => {
 		if (msgText) {
@@ -32,11 +32,24 @@ function ShareNotePage() {
 		const noteId = window.location?.pathname?.split('/')?.[2];
 		getSearchedNoteData(noteId, setSearchedNoteData, handleMsgShown, setIsGetApiLoading);
 		document.title = 'Bhemu Notes | Share';
-	}, [handleMsgShown]);
+
+		if (isNotesModalOpen === false && userDeviceType().desktop) {
+			setIsNotesModalOpen(true);
+		}
+	}, [handleMsgShown, isNotesModalOpen, setIsNotesModalOpen]);
+
+	const handleNotesModalClosing = useCallback(() => {
+		setIsNotesModalOpen(false);
+		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
+	}, []);
+
+	const handleNoteOpening = useCallback(() => {
+		if (searchedNoteData?.[0].notesId) setIsNotesModalOpen(true);
+	}, [setIsNotesModalOpen, searchedNoteData]);
 
 	return (
 		<div id="shareNotePage">
-			<NavBar NavBarType="shareNotePage" />
+			<NavBar NavBarType="shareNotePage" handleMsgShown={handleMsgShown} />
 
 			<div id="allContent">
 				<div id="notesTitleContainer">
@@ -44,23 +57,27 @@ function ShareNotePage() {
 						isShareNoteType={true}
 						allNotes={searchedNoteData}
 						isApiLoading={isGetApiLoading}
-						// handleNoteOpening={handleNoteOpening}
+						handleNoteOpening={handleNoteOpening}
+						handleMsgShown={handleMsgShown}
 						// handleAddNoteInputBox={handleAddNoteInputBox}
 					/>
 				</div>
 				{isNotesModalOpen && (
 					<div id="noteContentContainer">
-						{userDeviceType().mobile && <NavBar NavBarType="notesModal" />}
+						{userDeviceType().mobile && (
+							<NavBar NavBarType="shareNotePage" handleMsgShown={handleMsgShown} />
+						)}
 						<RenderNoteContent
 							isShareNoteType={true}
 							// isSaveBtnLoading={isSaveBtnLoading}
-							// handleNotesModalClosing={handleNotesModalClosing}
+							handleNotesModalClosing={handleNotesModalClosing}
 							// openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
 							// toggleShareDialogBox={toggleShareDialogBox}
 
 							myNotesId={searchedNoteData[0]?.notesId}
 							notesTitle={searchedNoteData[0]?.notesTitle}
 							openedNoteData={searchedNoteData[0]?.noteData || []}
+							handleMsgShown={handleMsgShown}
 
 							// handleSaveBtnClick={handleSaveBtnClick}
 							// handleDeleteBtnClick={handleDeleteBtnClick}

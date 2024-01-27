@@ -25,6 +25,7 @@ function NoteContainerBar({
 	openConfirmationDialog,
 	toggleShareDialogBox,
 	isShareNoteType,
+	showShareNoteError,
 }) {
 	const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
@@ -48,7 +49,12 @@ function NoteContainerBar({
 					</IconButton>
 
 					<Tooltip title="Save" arrow>
-						<IconButton color="inherit" sx={{ ml: 1 }} aria-label="save" onClick={handleSaveBtnClick}>
+						<IconButton
+							color="inherit"
+							sx={{ ml: 1 }}
+							aria-label="save"
+							onClick={isShareNoteType ? showShareNoteError : handleSaveBtnClick}
+						>
 							{isSaveBtnLoading ? <CircularProgress size={24} /> : <SaveIcon fontSize="inherit" />}
 						</IconButton>
 					</Tooltip>
@@ -57,7 +63,7 @@ function NoteContainerBar({
 				<div id="addNoteAndTodoSection">
 					<Tooltip title="Add Todo" arrow>
 						<IconButton
-							onClick={handleAddTodoBtn}
+							onClick={isShareNoteType ? showShareNoteError : handleAddTodoBtn}
 							color="inherit"
 							aria-label="addTodoBtn"
 							aria-haspopup="true"
@@ -74,6 +80,7 @@ function NoteContainerBar({
 							color="inherit"
 							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
 							aria-haspopup="true"
+							onClick={showShareNoteError}
 							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
 							sx={{ mr: 1.2 }}
 						>

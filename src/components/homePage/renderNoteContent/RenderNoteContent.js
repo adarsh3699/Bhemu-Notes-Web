@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import NoteContainerBar from './noteContainerBar/NoteContainerBar';
 
 import { IconButton } from '@mui/material';
@@ -17,6 +17,7 @@ function RenderNoteContent({
 	handleNotesModalClosing,
 	openConfirmationDialog,
 	toggleShareDialogBox,
+	handleMsgShown,
 
 	myNotesId,
 	notesTitle,
@@ -63,6 +64,10 @@ function RenderNoteContent({
 		}
 	});
 
+	const showShareNoteError = useCallback(() => {
+		handleMsgShown('Please create a account to edit this note', 'warning');
+	}, [handleMsgShown]);
+
 	return (
 		<>
 			<NoteContainerBar
@@ -75,6 +80,7 @@ function RenderNoteContent({
 				handleAddShareNoteUser={handleAddShareNoteUser}
 				toggleShareDialogBox={toggleShareDialogBox}
 				isShareNoteType={isShareNoteType}
+				showShareNoteError={showShareNoteError}
 			/>
 
 			<div id="userNotesContent">
@@ -125,7 +131,9 @@ function RenderNoteContent({
 								icon={<CircleOutlinedIcon />}
 								checkedIcon={<CheckCircleOutlineIcon />}
 								checked={item?.isDone}
-								onChange={() => (isShareNoteType ? null : handleCheckboxClick(index, item.isDone))}
+								onChange={() =>
+									isShareNoteType ? showShareNoteError : handleCheckboxClick(index, item.isDone)
+								}
 								size="small"
 								sx={{ p: 0.5, ml: 1 }}
 							/>
@@ -150,8 +158,8 @@ function RenderNoteContent({
 							/>
 							<IconButton
 								sx={{ color: '#F1F1F1', p: '5px', mr: 1 }}
-								aria-label="delete"
-								onClick={() => (isShareNoteType ? null : handleDeleteToDoBtnClick(index))}
+								aria-label="deleteTodoBtn"
+								onClick={() => (isShareNoteType ? showShareNoteError : handleDeleteToDoBtnClick(index))}
 							>
 								<CloseIcon fontSize="inherit" />
 							</IconButton>

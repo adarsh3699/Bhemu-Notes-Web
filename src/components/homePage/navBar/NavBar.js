@@ -93,9 +93,11 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 		if (openFolderFromURL?.length > 0) {
 			handleFolderChange(openFolderFromURL?.[0]);
 		} else {
-			navigate('/home');
+			if (NavBarType !== 'shareNotePage') {
+				navigate('/home');
+			}
 		}
-	}, [currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
+	}, [NavBarType, currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
 
 	const toggleDrawer = useCallback(() => {
 		setIsDrawerOpen((prevState) => !prevState);
@@ -140,7 +142,11 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 					color="success"
 					id="basic-button"
 					aria-haspopup="true"
-					onClick={addNotes}
+					onClick={
+						NavBarType === 'shareNotePage'
+							? () => handleMsgShown('Please create a account to create own notes', 'warning')
+							: addNotes
+					}
 				>
 					Add Note
 				</Button>

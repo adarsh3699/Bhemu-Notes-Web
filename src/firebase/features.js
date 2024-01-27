@@ -94,6 +94,8 @@ function updateUserShareList(incomingData, setIsSaveBtnLoading, handleErrorShown
 //open anonymous sharenote
 async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, setIsGetApiLoading) {
 	setIsGetApiLoading(true);
+	if (!noteId) return (window.location.href = '/') & console.log('Please Provide Note Id');
+
 	const docRef = doc(database, 'user_notes', noteId);
 
 	onSnapshot(
