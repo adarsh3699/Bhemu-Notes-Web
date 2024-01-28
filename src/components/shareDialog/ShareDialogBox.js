@@ -102,9 +102,9 @@ function ShareDialogBox({
 				<div className="ConfirmationDialogBoxTitle">{title}</div>
 				{/* <div className="ConfirmationDialogBoxMessage">{message}</div> */}
 
-				<form onSubmit={handleAddShareNoteUser}>
+				{/* <form onSubmit={handleAddShareNoteUser}>
 					<input type="email" className="shareEmailInput" name="shareEmailInput" placeholder="Add Email" />
-				</form>
+				</form> */}
 				<div className="shareUserDetailsBox">
 					<img
 						src={userProfileImg === 'null' ? userProflie : userProfileImg}
@@ -174,7 +174,7 @@ function ShareDialogBox({
 						</Button>
 					</div>
 				</div>
-				<h1>This feature comming soon</h1>
+				{/* <h1>This feature comming soon</h1> */}
 			</div>
 		</div>
 	);
