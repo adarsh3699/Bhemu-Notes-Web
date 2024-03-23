@@ -37,7 +37,7 @@ import './files/navBar.css';
 function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderChange, handleMsgShown }) {
 	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(false);
+	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(true);
 	const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
 	const noteFolders = userAllDetails?.userFolders || [];
 
@@ -48,8 +48,9 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 		handleSignOut();
 	}, []);
 
-	const toggleFolderDialog = useCallback(() => {
+	const toggleFolderDialog = useCallback((isDrawerOpen) => {
 		setIsFolderDialogOpen((prevState) => !prevState);
+		if (isDrawerOpen) setIsDrawerOpen((prevState) => !prevState);
 	}, []);
 
 	// const [drawerList1, setDrawerList1] = useState([
@@ -163,6 +164,8 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 							navigate('/home');
 							unsubscribeAll();
 						})}
+						{renderDrawerListBtns('Edit Folder', <EditIcon />, () => toggleFolderDialog(true))}
+
 						{renderDrawerListBtns(
 							'Show Folders',
 							isNoteFolderListOpen ? <ExpandLess /> : <ExpandMore />,
@@ -171,14 +174,6 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 
 						<Collapse in={isNoteFolderListOpen} timeout="auto" unmountOnExit>
 							<List component="div" disablePadding onClick={toggleDrawer}>
-								<ListItemButton
-									sx={{ pl: 4 }}
-									onClick={() => setIsFolderDialogOpen((prevState) => !prevState)}
-								>
-									<ListItemText primary="Edit Folder" />
-									<EditIcon />
-								</ListItemButton>
-
 								{noteFolders.map((item, index) => {
 									return (
 										<ListItemButton
@@ -201,7 +196,6 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 								})}
 							</List>
 						</Collapse>
-						{/* {renderDrawerListBtns('Edit Folder', <EditIcon />, handleEditFolderListBtnClick)} */}
 					</List>
 					<Divider />
 
