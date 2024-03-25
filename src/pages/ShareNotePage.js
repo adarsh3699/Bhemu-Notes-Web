@@ -56,7 +56,7 @@ function ShareNotePage() {
 				<div id="notesTitleContainer">
 					<RenderAllNotes
 						isShareNoteType={true}
-						allNotes={[searchedNoteData]}
+						userAllNotes={[searchedNoteData]}
 						isApiLoading={isGetApiLoading}
 						handleNoteOpening={handleNoteOpening}
 						handleMsgShown={handleMsgShown}
