@@ -84,7 +84,7 @@ export function QuillToolbar({
 
 	const renderToolbarBtns = useCallback((tooltip, className, value) => {
 		return (
-			<Tooltip title={tooltip} arrow>
+			<Tooltip title={tooltip} enterDelay="700" arrow>
 				{value ? <button className={className} value={value} /> : <button className={className} />}
 			</Tooltip>
 		);
