@@ -26,15 +26,15 @@ import '../styles/homePage.css';
 
 document.title = 'Bhemu Notes';
 
-document.addEventListener(
-	'keydown',
-	(e) => {
-		if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-			e.preventDefault();
-		}
-	},
-	true
-);
+// document.addEventListener(
+// 	'keydown',
+// 	(e) => {
+// 		if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
+// 			e.preventDefault();
+// 		}
+// 	},
+// 	true
+// );
 
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
 const localFolderData = window.location?.hash?.slice(1)
@@ -186,13 +186,18 @@ function HomePage() {
 
 	//handle Save when "ctrl + s" is pressed
 	useHotkeys(
-		['ctrl + s', 'meta + s'],
+		'ctrl + s, meta + s',
 		() => {
 			if (isNotesModalOpen) {
 				handleSaveBtnClick();
 			}
 		},
-		{ enableOnFormTags: true }
+
+		{
+			enableOnFormTags: true,
+			preventDefault: true,
+			enableOnContentEditable: true,
+		}
 	);
 
 	//handle note delete

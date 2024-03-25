@@ -42,7 +42,6 @@ function RenderNoteContent({
 				isShareNoteType={isShareNoteType}
 				showShareNoteError={showShareNoteError}
 			/>
-			<div id="editor">{/* Render the React Quill editor */}</div>
 			<ReactQuill
 				ref={quillRef}
 				theme="snow"
