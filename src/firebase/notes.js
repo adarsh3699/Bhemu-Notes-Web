@@ -38,7 +38,6 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 			});
 			setIsApiLoading(false);
 			setAllNotes(allNotesData);
-			console.log(allNotesData);
 
 			const encryptNotesData = encryptText(JSON.stringify(allNotesData));
 			localStorage.setItem('note_data', encryptNotesData);

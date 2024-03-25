@@ -47,7 +47,7 @@ function RenderAllNotes({
 						<div className="noteBox" key={index} onClick={() => handleNoteOpening(index, item)}>
 							<div className="noteTitle">{item.noteTitle}</div>
 							<div className="noteContent">
-								<div>
+								<div className="noteDisplay">
 									{!item.noteText?.trim() ? 'Empty.......' : item.noteText.split(item.noteTitle)[1]}
 								</div>
 							</div>
