@@ -6,7 +6,7 @@ import homePageSkeleton from '../../../img/homePageSkeleton.svg';
 import './renderAllNotes.css';
 
 function RenderAllNotes({
-	allNotes,
+	userAllNotes,
 	handleNoteOpening,
 	isApiLoading,
 	handleAddNewNote,
@@ -36,13 +36,13 @@ function RenderAllNotes({
 			</form>
 			<div id="renderNotes">
 				<Loader isLoading={isApiLoading} />
-				{allNotes.length === 0 && !isApiLoading && (
+				{userAllNotes.length === 0 && !isApiLoading && (
 					<div id="homePageSkeleton">
 						<img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
 						<div id="homePageSkeletonText">Create your first note !</div>
 					</div>
 				)}
-				{allNotes.map(function (item, index) {
+				{userAllNotes.map(function (item, index) {
 					return (
 						<div className="noteBox" key={index} onClick={() => handleNoteOpening(index, item)}>
 							<div className="noteTitle">{item.noteTitle}</div>

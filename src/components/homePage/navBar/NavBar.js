@@ -34,7 +34,7 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-function NavBar({ NavBarType, handleAddNewNote, allNotes, handleFolderChange, userAllDetails, handleMsgShown }) {
+function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange, userAllDetails, handleMsgShown }) {
 	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(true);
@@ -227,7 +227,7 @@ function NavBar({ NavBarType, handleAddNewNote, allNotes, handleFolderChange, us
 				<FolderDialog
 					handleMsgShown={handleMsgShown}
 					toggleFolderDialog={toggleFolderDialog}
-					allNotes={allNotes}
+					userAllNotes={userAllNotes}
 					noteFolders={noteFolders}
 					// isFolderDialogOpen={isFolderDialogOpen}
 				/>

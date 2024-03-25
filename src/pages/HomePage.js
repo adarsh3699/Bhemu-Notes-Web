@@ -43,12 +43,12 @@ const localFolderData = window.location?.hash?.slice(1)
 
 function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
-	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
+	const [userAllNotes, setAllNotes] = useState(localStorageNotesData || []);
 	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
 	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
-	const [currentNoteId, setMyNotesId] = useState('');
+	const [currentNoteId, setCurrentNoteId] = useState('');
 	const [noteText, setnoteText] = useState('');
 	const [openedNoteData, setOpenedNoteData] = useState('');
 	const [noteSharedUsers, setNoteSharedUsers] = useState([]);
@@ -81,7 +81,7 @@ function HomePage() {
 
 		setOpenedNoteData(allNotesAtr[0]?.noteData || '');
 		// setnoteText(allNotesAtr[0]?.noteText || '');
-		setMyNotesId(allNotesAtr[0]?.noteId || '');
+		setCurrentNoteId(allNotesAtr[0]?.noteId || '');
 		setNoteSharedUsers(allNotesAtr[0]?.noteSharedUsers || []);
 		setIsNoteSharedWithAll(allNotesAtr[0]?.isNoteSharedWithAll || false);
 		setCurrentNoteIndex(0);
@@ -101,17 +101,17 @@ function HomePage() {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
 			setIsNotesModalOpen(true);
 			if (!folderName) {
-				openFirstNote(allNotes);
+				openFirstNote(userAllNotes);
 			} else {
 				openFirstNote(currentFolderNotes);
 			}
 		}
-	}, [openFirstNote, allNotes, isNotesModalOpen, folderName, currentFolderNotes]);
+	}, [openFirstNote, userAllNotes, isNotesModalOpen, folderName, currentFolderNotes]);
 
 	const handleNoteOpening = useCallback(
 		(index, item) => {
 			const { noteId, noteText, noteData, noteSharedUsers, isNoteSharedWithAll } = item;
-			if (noteId) setMyNotesId(noteId);
+			if (noteId) setCurrentNoteId(noteId);
 			setnoteText(noteText);
 			setOpenedNoteData(noteData);
 			setNoteSharedUsers(noteSharedUsers || []);
@@ -148,7 +148,7 @@ function HomePage() {
 
 			const toSendNoteData = { newNoteText, newNoteData };
 			handleNoteOpening(0, { noteText: newNoteText, noteData: newNoteData });
-			addNewNote(toSendNoteData, setMyNotesId, handleMsgShown, setIsApiLoading);
+			addNewNote(toSendNoteData, setCurrentNoteId, handleMsgShown, setIsApiLoading);
 			if (e.target?.noteTitle?.value?.trim()) e.target.reset();
 		},
 		[handleNoteOpening, handleMsgShown]
@@ -206,11 +206,11 @@ function HomePage() {
 	//toggle share dialog box
 	const toggleShareDialogBox = useCallback(() => {
 		if (isShareDialogBoxOpen) {
-			setIsNoteSharedWithAll(allNotes[currentNoteIndex]?.isNoteSharedWithAll || false);
-			setNoteSharedUsers(allNotes[currentNoteIndex]?.noteSharedUsers || []);
+			setIsNoteSharedWithAll(userAllNotes[currentNoteIndex]?.isNoteSharedWithAll || false);
+			setNoteSharedUsers(userAllNotes[currentNoteIndex]?.noteSharedUsers || []);
 		}
 		setIsShareDialogBoxOpen((prev) => !prev);
-	}, [allNotes, currentNoteIndex, isShareDialogBoxOpen]);
+	}, [userAllNotes, currentNoteIndex, isShareDialogBoxOpen]);
 
 	/// handle add share note user
 	const handleAddShareNoteUser = useCallback(
@@ -239,7 +239,7 @@ function HomePage() {
 					<NavBar
 						NavBarType="homePage"
 						handleAddNewNote={handleAddNewNote}
-						allNotes={allNotes}
+						userAllNotes={userAllNotes}
 						handleFolderChange={handleFolderChange}
 						userAllDetails={userAllDetails}
 						handleMsgShown={handleMsgShown}
@@ -248,7 +248,7 @@ function HomePage() {
 					<div id="allContent">
 						<div id="notesTitleContainer">
 							<RenderAllNotes
-								allNotes={folderName ? currentFolderNotes : allNotes}
+								userAllNotes={folderName ? currentFolderNotes : userAllNotes}
 								handleNoteOpening={handleNoteOpening}
 								isApiLoading={isApiLoading}
 								handleAddNewNote={handleAddNewNote}
