@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 // import { Quill } from 'react-quill';
 
 import Menu from '@mui/material/Menu';
@@ -81,6 +81,14 @@ export function QuillToolbar({
 	const toggleSettingsMenu = (event) => {
 		setSettingMenuAddNotesAnchorEl(event.currentTarget);
 	};
+
+	const renderToolbarBtns = useCallback((tooltip, className, value) => {
+		return (
+			<Tooltip title={tooltip} arrow>
+				{value ? <button className={className} value={value} /> : <button className={className} />}
+			</Tooltip>
+		);
+	}, []);
 	return (
 		<div id="toolbar">
 			<div className="toolbarContainer">
@@ -115,46 +123,45 @@ export function QuillToolbar({
 						</select>
 					</span>
 					<span className="ql-formats">
-						<button className="ql-bold" />
-						<button className="ql-italic" />
-						<button className="ql-underline" />
-						<button className="ql-strike" />
+						{renderToolbarBtns('Bold', 'ql-bold')}
+						{renderToolbarBtns('Italic', 'ql-italic')}
+						{renderToolbarBtns('Underline', 'ql-underline')}
+						{renderToolbarBtns('Line Through', 'ql-strike')}
 					</span>
 					<span className="ql-formats notForPhone">
-						<button className="ql-list" value="ordered" />
-						<button className="ql-list" value="bullet" />
-						<button className="ql-indent" value="-1" />
-						<button className="ql-indent" value="+1" />
+						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
+						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
+						{renderToolbarBtns('Indent', 'ql-indent', '-1')}
+						{renderToolbarBtns('Indent', 'ql-indent', '+1')}
 					</span>
 
 					<span className="ql-formats notForPc">
-						<button className="ql-list" value="ordered" />
-						<button className="ql-list" value="bullet" />
-						<select className="ql-align" />
+						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
+						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
+						{renderToolbarBtns('Alignment', 'ql-align')}
 					</span>
 					<span className="ql-formats notForPhone">
-						<select className="ql-color" />
-						<select className="ql-background" />
-						<select className="ql-align" />
+						{renderToolbarBtns('Text Color', 'ql-color')}
+						{renderToolbarBtns('Background Color', 'ql-background')}
+						{renderToolbarBtns('Alignment', 'ql-align')}
 					</span>
 					<span className="ql-formats notForPhone">
-						<button className="ql-link" />
-						<button className="ql-image" />
-						<button className="ql-video" />
+						{renderToolbarBtns('Link', 'ql-link')}
+						{renderToolbarBtns('Image', 'ql-image')}
+						{renderToolbarBtns('Video', 'ql-video')}
 					</span>
 					<span className="ql-formats notForPhone">
-						<button className="ql-blockquote" />
-						<button className="ql-code-block" />
-						<button className="ql-clean" />
+						{renderToolbarBtns('Blockquote', 'ql-blockquote')}
+						{renderToolbarBtns('Code Block', 'ql-code-block')}
+						{renderToolbarBtns('Clear All', 'ql-clean')}
 					</span>
-
 					<span className="ql-formats notForPc">
-						<select className="ql-color" />
-						<button className="ql-link" />
-						<button className="ql-clean" />
+						{renderToolbarBtns('Text Color', 'ql-color')}
+						{renderToolbarBtns('Link', 'ql-link')}
+						{renderToolbarBtns('Clear All', 'ql-clean')}
 					</span>
 				</div>
-				<div className="">
+				<Tooltip title="Menu" arrow>
 					<IconButton
 						id="noteMenuBtn"
 						color="inherit"
@@ -165,7 +172,7 @@ export function QuillToolbar({
 					>
 						<MenuIcon fontSize="inherit" />
 					</IconButton>
-				</div>
+				</Tooltip>
 			</div>
 			<Menu
 				anchorEl={settingMenuAnchorEl}
