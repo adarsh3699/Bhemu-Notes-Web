@@ -5,11 +5,11 @@
 	height: 40px;
 }
 
-#backAndTitleSection {
+/* #backAndTitleSection {
 	width: 33.3%;
 	display: flex;
 	align-items: center;
-}
+} */
 
 #addNoteAndTodoSection {
 	width: 33.3%;

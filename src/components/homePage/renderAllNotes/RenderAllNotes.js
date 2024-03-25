@@ -3,15 +3,15 @@ import Loader from '../../Loader';
 
 import homePageSkeleton from '../../../img/homePageSkeleton.svg';
 
-import './renderNotesTitle.css';
+import './renderAllNotes.css';
 
-function RenderNotesTitle({
+function RenderAllNotes({
 	allNotes,
 	handleNoteOpening,
 	isApiLoading,
-	isShareNoteType,
-	handleAddNoteInputBox,
+	handleAddNewNote,
 	handleMsgShown,
+	isShareNoteType,
 }) {
 	return (
 		<>
@@ -23,7 +23,7 @@ function RenderNotesTitle({
 								e.preventDefault();
 								handleMsgShown('Please create a account to create own notes', 'warning');
 						  }
-						: handleAddNoteInputBox
+						: handleAddNewNote
 				}
 			>
 				<input
@@ -42,53 +42,19 @@ function RenderNotesTitle({
 						<div id="homePageSkeletonText">Create your first note !</div>
 					</div>
 				)}
-				{allNotes.map(function (items, index) {
+				{allNotes.map(function (item, index) {
 					return (
-						<div
-							className="noteBox"
-							key={index}
-							onClick={() =>
-								handleNoteOpening(
-									index,
-									items.notesId,
-									items.notesTitle,
-									items.noteData,
-									items.noteSharedUsers,
-									items.isNoteSharedWithAll
-								)
-							}
-						>
-							<div className="noteTitle">{items.notesTitle}</div>
+						<div className="noteBox" key={index} onClick={() => handleNoteOpening(index, item)}>
+							<div className="noteTitle">{item.noteTitle}</div>
 							<div className="noteContent">
 								<div>
-									{items.noteData.length <= 2 && items.noteData[0]?.element === '' ? (
-										'Empty.......'
-									) : (
-										<>
-											<div
-												className={
-													items?.noteData[0]?.type === 'todo' ? 'todoDisplay' : 'noteDisplay'
-												}
-											>
-												{items?.noteData[0]?.element}
-											</div>
-
-											<div
-												className={
-													items?.noteData[1]?.type === 'todo' ? 'todoDisplay' : 'noteDisplay'
-												}
-											>
-												{items?.noteData[1]?.element}
-											</div>
-										</>
-									)}
+									{!item.noteText?.trim() ? 'Empty.......' : item.noteText.split(item.noteTitle)[1]}
 								</div>
 							</div>
 							<div className="date">
 								<div>
-									{new Date(items.updatedOn?.seconds * 1000).toLocaleString('en-US') !==
-									'Invalid Date'
-										? new Date(items.updatedOn?.seconds * 1000).toLocaleString('en-US', {
+									{new Date(item.updatedOn?.seconds * 1000).toLocaleString('en-US') !== 'Invalid Date'
+										? new Date(item.updatedOn?.seconds * 1000).toLocaleString('en-US', {
 												hour: '2-digit',
 												minute: '2-digit',
 												hour12: true,
@@ -100,9 +66,9 @@ function RenderNotesTitle({
 										  })}
 								</div>
 								<div>
-									{new Date(items.updatedOn?.seconds * 1000)?.toLocaleDateString('en-US') !==
+									{new Date(item.updatedOn?.seconds * 1000)?.toLocaleDateString('en-US') !==
 									'Invalid Date'
-										? new Date(items.updatedOn?.seconds * 1000)?.toLocaleDateString(undefined, {
+										? new Date(item.updatedOn?.seconds * 1000)?.toLocaleDateString(undefined, {
 												day: '2-digit',
 												month: 'long',
 												year: 'numeric',
@@ -122,4 +88,4 @@ function RenderNotesTitle({
 	);
 }
 
-export default RenderNotesTitle;
+export default RenderAllNotes;

@@ -16,6 +16,10 @@
 #noteContentContainer {
 	min-width: calc(75% - 0.5px);
 	max-width: calc(75% - 0.5px);
+	/* height: calc(100vh - 45px); */
+	/* overflow-y: auto; */
+	/* overflow-x: hidden; */
+	/* overflow: hidden; */
 	z-index: 10;
 	background: rgb(30, 30, 30);
 }

@@ -1,78 +1,112 @@
-#userNotesContent {
-	max-height: calc(100vh - 85px);
-	min-height: calc(100vh - 85px);
-	overflow: auto;
+#toolbar {
+	position: sticky;
+	top: 0;
+	background: #1a1a1a;
+	z-index: 1;
+	border: unset !important;
+	/* box-shadow: -2px 3.5px 5px 0px rgba(0, 0, 0, 0.5); */
 }
 
-#titleTextBox,
-.notesArea,
-.todosInputBox {
-	font-family: 'Google Sans', Roboto, Arial, sans-serif;
-}
-
-#titleTextBox {
-	display: block;
-	padding: 6px 15px 0 15px;
-	min-width: calc(100% - 30px);
-	max-width: calc(100% - 30px);
-	color: white;
-	font-size: 22px;
-	font-weight: 500;
-	border: unset;
-	outline: unset;
-	margin-bottom: 10px;
-}
-
-#titleTextBox[placeholder]:empty:before {
-	content: attr(placeholder);
-	color: rgb(140, 138, 138);
-}
-
-.notesArea {
-	display: block;
-	padding: 7.5px 15px 7.5px 15px;
-	color: white;
-	font-size: 16px;
-	resize: unset;
-	width: calc(100% - 30px);
-	border: unset;
-	outline: unset;
-	background-color: unset;
-	line-height: 20px;
-}
-
-.lastNotesArea {
-	padding-bottom: 300px;
-}
-
-.toDosBox {
+.toolbarContainer {
 	display: flex;
 	align-items: center;
+	justify-content: space-between !important;
 }
 
-.toDosBox:focus-within {
-	background-color: rgb(58, 58, 58);
+#arrowBackIcon {
+	display: none;
 }
 
-.todosInputBox {
-	color: white;
-	font-size: 16px;
-	padding: 9px;
-	resize: vertical;
-	outline: unset;
-	width: 94%;
-	background-color: unset;
-	border: unset;
-	line-height: 20px;
-	resize: unset;
+.notForPc {
+	display: none !important;
 }
 
-.todosIsDone {
-	text-decoration: line-through;
-	text-decoration-color: rgb(255, 182, 182);
-	text-decoration-thickness: 2px;
+.ql-toolbar .ql-stroke {
+	fill: none;
+	stroke: #f1f1f1;
+}
+
+.ql-toolbar .ql-fill,
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+	fill: #f1f1f1;
+	stroke: none;
+}
+
+.ql-toolbar .ql-picker {
+	color: #f1f1f1;
+}
+
+.ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
+	margin-top: -12px;
+}
+
+.ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button,
+.ql-snow .ql-color-picker,
+.ql-snow .ql-icon-picker,
+.ql-snow .ql-icon-picker .ql-picker-item {
+	height: 30px;
+	width: 30px;
+}
+
+.ql-picker-label svg {
+	height: 25px;
+	width: 25px;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+	border: unset; /*picker border remove*/
+}
+
+.ql-picker-options {
+	border: unset !important; /*picker option border remove*/
+	border-radius: 5px;
+	background-color: #121212 !important; /*picker option background color*/
+	background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12));
+}
+
+.ql-container {
+	border: unset !important;
+	font-size: 17px;
+	/* background-color: rgb(37, 37, 117); */
+}
+
+.ql-editor {
+	height: calc(100vh - 91px);
+	overflow-y: auto;
+	overflow-x: hidden;
+	overflow-wrap: break-word;
+	padding-bottom: 300px !important;
+}
+
+.quill > .ql-container > .ql-editor.ql-blank::before {
+	font-size: 20px; /*placeholder font size*/
+	color: rgb(213, 213, 213); /*placeholder color*/
+}
+
+.ql-editor span {
+	border-radius: 3px;
 }
 
 /* ...............M-Web................ */
+@media screen and (max-width: 1073px) {
+	.notForPhone {
+		display: none !important;
+	}
+	.notForPc {
+		display: inline-block !important;
+	}
+}
 
-/* @media screen and (max-width: 1200px) {} */
+@media screen and (max-width: 768px) {
+	#arrowBackIcon {
+		display: inline-block;
+	}
+}
+
+@media screen and (max-width: 586px) {
+	.ql-editor {
+		height: calc(100vh - 121px);
+	}
+}
