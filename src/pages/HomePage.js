@@ -76,15 +76,15 @@ function HomePage() {
 		}
 	}, []);
 
-	const openFirstNote = useCallback(function (allNotesAtr) {
+	const openFirstNote = useCallback(function (allNotesAtr, index) {
 		if (allNotesAtr.length === 0) return;
 
-		setOpenedNoteData(allNotesAtr[0]?.noteData || '');
-		// setnoteText(allNotesAtr[0]?.noteText || '');
-		setCurrentNoteId(allNotesAtr[0]?.noteId || '');
-		setNoteSharedUsers(allNotesAtr[0]?.noteSharedUsers || []);
-		setIsNoteSharedWithAll(allNotesAtr[0]?.isNoteSharedWithAll || false);
-		setCurrentNoteIndex(0);
+		setOpenedNoteData(allNotesAtr[index]?.noteData || '');
+		// setnoteText(allNotesAtr[index]?.noteText || '');
+		setCurrentNoteId(allNotesAtr[index]?.noteId || '');
+		setNoteSharedUsers(allNotesAtr[index]?.noteSharedUsers || []);
+		setIsNoteSharedWithAll(allNotesAtr[index]?.isNoteSharedWithAll || false);
+		setCurrentNoteIndex(index);
 	}, []);
 
 	// fetch All noteData
@@ -101,27 +101,24 @@ function HomePage() {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
 			setIsNotesModalOpen(true);
 			if (!folderName) {
-				openFirstNote(userAllNotes);
+				openFirstNote(userAllNotes, 0);
 			} else {
-				openFirstNote(currentFolderNotes);
+				openFirstNote(currentFolderNotes, 0);
 			}
 		}
-	}, [openFirstNote, userAllNotes, isNotesModalOpen, folderName, currentFolderNotes]);
+	}, []);
 
-	const handleNoteOpening = useCallback(
-		(index, item) => {
-			const { noteId, noteText, noteData, noteSharedUsers, isNoteSharedWithAll } = item;
-			if (noteId) setCurrentNoteId(noteId);
-			setnoteText(noteText);
-			setOpenedNoteData(noteData);
-			setNoteSharedUsers(noteSharedUsers || []);
-			setIsNoteSharedWithAll(isNoteSharedWithAll || false);
-			setCurrentNoteIndex(index);
-			setIsNotesModalOpen(true);
-			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
-		},
-		[setnoteText, setOpenedNoteData, setIsNotesModalOpen]
-	);
+	const handleNoteOpening = useCallback((index, item) => {
+		const { noteId, noteText, noteData, noteSharedUsers, isNoteSharedWithAll } = item;
+		if (noteId) setCurrentNoteId(noteId);
+		setnoteText(noteText);
+		setOpenedNoteData(noteData);
+		setNoteSharedUsers(noteSharedUsers || []);
+		setIsNoteSharedWithAll(isNoteSharedWithAll || false);
+		setCurrentNoteIndex(index);
+		setIsNotesModalOpen(true);
+		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
+	}, []);
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
@@ -202,11 +199,11 @@ function HomePage() {
 
 	//handle note delete
 	const handleDeleteBtnClick = useCallback(async () => {
-		handleNotesModalClosing();
+		// userDeviceType().mobile && handleNotesModalClosing();
 		setIsConfirmationDialogOpen(false);
 
-		deleteData(currentNoteId, setIsApiLoading, handleMsgShown);
-	}, [handleMsgShown, currentNoteId, handleNotesModalClosing]);
+		deleteData(currentNoteId, setIsApiLoading, handleMsgShown, openFirstNote, userAllNotes, currentNoteIndex);
+	}, [currentNoteId, handleMsgShown, openFirstNote, userAllNotes, currentNoteIndex]);
 
 	//toggle share dialog box
 	const toggleShareDialogBox = useCallback(() => {

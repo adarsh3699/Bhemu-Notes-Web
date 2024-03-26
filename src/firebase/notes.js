@@ -80,13 +80,13 @@ function addNewNote(toSendNoteData, setMyNotesId, setMsg, setIsApiLoading) {
 		});
 }
 //delete Notes
-function deleteData(noteId, setIsApiLoading, setMsg) {
+function deleteData(noteId, setIsApiLoading, setMsg, openFirstNote, userAllNotes, currentNoteIndex) {
 	if (!noteId) return setMsg('deleteData: Please Provide noteId');
 	const docRef = doc(database, 'user_notes', noteId);
 	setIsApiLoading(true);
 	deleteDoc(docRef)
-		.then((e) => {
-			console.log('Document successfully deleted!');
+		.then(() => {
+			currentNoteIndex === 0 ? openFirstNote(userAllNotes, 1) : openFirstNote(userAllNotes, 0);
 		})
 		.catch((err) => {
 			console.log('deleteData', err.message);
@@ -101,7 +101,7 @@ function deleteData(noteId, setIsApiLoading, setMsg) {
 function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, handleMsgShown) {
 	const { noteId, noteTitle, noteText, noteData } = upcomingData;
 	if (!noteId || !noteText || !noteData || !noteTitle) {
-		handleMsgShown('Please Provide all details (noteId, noteText, noteData, noteTitle)');
+		handleMsgShown('Please Create a note first', 'warning');
 		console.log('updateDocument: Please Provide all details (noteId, noteText, noteData, noteTitle)');
 		setIsSaveBtnLoading(false);
 		return;

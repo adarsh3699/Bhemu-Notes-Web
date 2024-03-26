@@ -45,11 +45,11 @@ function RenderAllNotes({
 				{userAllNotes.map(function (item, index) {
 					return (
 						<div className="noteBox" key={index} onClick={() => handleNoteOpening(index, item)}>
-							<div className="noteTitle">{item.noteTitle}</div>
+							<div className="noteTitle">{item.noteTitle || 'Note Title'}</div>
 							<div className="noteContent">
 								<div className="noteDisplay">
-									{item.noteText.split(item.noteTitle)[1]
-										? item.noteText.split(item.noteTitle)[1]
+									{item.noteText?.split(item.noteTitle)[1]
+										? item.noteText?.split(item.noteTitle)[1]
 										: 'Empty.......'}
 								</div>
 							</div>
