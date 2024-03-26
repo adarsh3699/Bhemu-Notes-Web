@@ -103,6 +103,9 @@
 	#arrowBackIcon {
 		display: inline-block;
 	}
+	.ql-container {
+		font-size: 16px;
+	}
 }
 
 @media screen and (max-width: 586px) {
