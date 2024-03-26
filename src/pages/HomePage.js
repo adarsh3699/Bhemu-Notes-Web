@@ -130,9 +130,7 @@ function HomePage() {
 		(e) => {
 			e.preventDefault();
 			const newNoteText = e.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
-			const newNoteData = newNoteText
-				? `<h1>${newNoteText}</h1><p><br></p>`
-				: `<h1>Enter Notes Title</h1><p><br></p>`;
+			const newNoteData = `<h1>${newNoteText}</h1><p><br></p><p><br></p><p><br></p>`;
 
 			const toSendNoteData = { newNoteText, newNoteData };
 			handleNoteOpening(0, { noteText: newNoteText, noteData: newNoteData });
