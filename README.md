@@ -1,9 +1,9 @@
 # Bhemu Notes
 
-This is a Multi-User Notes app.
-This Notes app facilitates many features, like bold, italic, changing font colour, size, and many more.
-You can now add images, videos, and code blocks in Note.
-Feature like group notes in a folder to keep them organized.
+This is a Multi-User Notes app. <br />
+This Notes app facilitates many features, like bold, italic, changing font colour, size, and many more. <br />
+You can now add images, videos, and code blocks in Note. <br />
+Feature like group notes in a folder to keep them organized. <br />
 Feature Like share notes with others by just sharing the link of that note.
 
 ## Demo Account:-
