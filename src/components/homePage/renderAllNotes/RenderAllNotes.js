@@ -48,7 +48,9 @@ function RenderAllNotes({
 							<div className="noteTitle">{item.noteTitle}</div>
 							<div className="noteContent">
 								<div className="noteDisplay">
-									{!item.noteText?.trim() ? 'Empty.......' : item.noteText.split(item.noteTitle)[1]}
+									{item.noteText.split(item.noteTitle)[1]
+										? item.noteText.split(item.noteTitle)[1]
+										: 'Empty.......'}
 								</div>
 							</div>
 							<div className="date">
