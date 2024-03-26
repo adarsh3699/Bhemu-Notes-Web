@@ -19,7 +19,7 @@ In the project directory, you can run:
 
 ### `npm install`
 
-To install the in the development mode.\
+To install the in the development mode.
 
 ### `npm start`
 
