@@ -10,6 +10,10 @@ Feature Like share notes with others by just sharing the link of that note.
 
 Email: demo@bhemu.me Pass: demo1234
 
+## Web App
+
+Open [notes.bhemu.me](https://notes.bhemu.me) to view it in your browser.
+
 ## Available Scripts
 
 In the project directory, you can run:
