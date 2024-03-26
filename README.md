@@ -7,7 +7,7 @@ Feature Like share notes with others by just sharing the link of that note.
 
 ## Demo Account:-
 
-`Email:` [demo@bhemu.me] `Pass:` demo1234
+`Email:` demo@bhemu.me `Pass:` demo1234
 
 ## Web App
 
