@@ -30,7 +30,6 @@
 .ql-snow .ql-fill,
 .ql-snow .ql-stroke.ql-fill {
 	fill: #f1f1f1;
-	stroke: none;
 }
 
 .ql-toolbar .ql-picker {
@@ -87,6 +86,16 @@
 
 .ql-editor span {
 	border-radius: 3px;
+}
+
+.ql-editor ol,
+.ql-editor ul {
+	padding-left: unset;
+}
+
+.ql-editor ol li:not(.ql-direction-rtl),
+.ql-editor ul li:not(.ql-direction-rtl) {
+	margin-bottom: 5px;
 }
 
 /* ...............M-Web................ */

@@ -137,8 +137,8 @@ export function QuillToolbar({
 						<select className="ql-align" />
 					</span>
 					<span className="ql-formats notForPhone">
-						{renderToolbarBtns('Text Color', 'ql-color')}
-						{renderToolbarBtns('Background Color', 'ql-background')}
+						<select className="ql-color" />
+						<select className="ql-background" />
 						<select className="ql-align" />
 					</span>
 					<span className="ql-formats notForPhone">
@@ -152,7 +152,7 @@ export function QuillToolbar({
 						{renderToolbarBtns('Clear All', 'ql-clean')}
 					</span>
 					<span className="ql-formats notForPc">
-						{renderToolbarBtns('Text Color', 'ql-color')}
+						<select className="ql-color" />
 						{renderToolbarBtns('Link', 'ql-link')}
 						{renderToolbarBtns('Clear All', 'ql-clean')}
 					</span>
