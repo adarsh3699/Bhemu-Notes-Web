@@ -57,7 +57,7 @@ function ProfileSettings() {
 						src={
 							imageUpload
 								? URL.createObjectURL(imageUpload)
-								: profilePictureUrl === 'null'
+								: profilePictureUrl === 'null' || !profilePictureUrl
 								? myLogo
 								: profilePictureUrl
 						}

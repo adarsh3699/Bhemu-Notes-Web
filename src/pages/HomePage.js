@@ -24,16 +24,6 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import '../styles/homePage.css';
 
-document.addEventListener(
-	'keydown',
-	(e) => {
-		if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-			e.preventDefault();
-		}
-	},
-	true
-);
-
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
 const localFolderData = window.location?.hash?.slice(1)
 	? JSON.parse(decryptText(localStorage.getItem(window.location?.hash?.slice(1))))
@@ -77,15 +67,15 @@ function HomePage() {
 		}
 	}, []);
 
-	const openFirstNote = useCallback(function (allNotesAtr) {
+	const openFirstNote = useCallback(function (allNotesAtr, index) {
 		if (allNotesAtr.length === 0) return;
 
-		setOpenedNoteData(allNotesAtr[0]?.noteData || []);
-		setNotesTitle(allNotesAtr[0]?.notesTitle || '');
-		setMyNotesId(allNotesAtr[0]?.notesId || '');
-		setNoteSharedUsers(allNotesAtr[0]?.noteSharedUsers || []);
-		setIsNoteSharedWithAll(allNotesAtr[0]?.isNoteSharedWithAll || false);
-		setCurrentNoteIndex(0);
+		setOpenedNoteData(allNotesAtr[index]?.noteData || []);
+		setNotesTitle(allNotesAtr[index]?.notesTitle || '');
+		setMyNotesId(allNotesAtr[index]?.notesId || '');
+		setNoteSharedUsers(allNotesAtr[index]?.noteSharedUsers || []);
+		setIsNoteSharedWithAll(allNotesAtr[index]?.isNoteSharedWithAll || false);
+		setCurrentNoteIndex(index);
 	}, []);
 
 	// fetch All noteData
@@ -103,12 +93,13 @@ function HomePage() {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
 			setIsNotesModalOpen(true);
 			if (!folderName) {
-				openFirstNote(allNotes);
+				openFirstNote(allNotes, 0);
 			} else {
-				openFirstNote(currentFolderNotes);
+				openFirstNote(currentFolderNotes, 0);
 			}
 		}
-	}, [openFirstNote, allNotes, isNotesModalOpen, folderName, currentFolderNotes]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleNoteOpening = useCallback(
 		(index, noteId, title, data, shareWith, userPermission) => {
@@ -182,11 +173,11 @@ function HomePage() {
 
 	//handle note or todo delete
 	const handleDeleteBtnClick = useCallback(async () => {
-		handleNotesModalClosing();
+		// userDeviceType().mobile && handleNotesModalClosing();
 		setIsConfirmationDialogOpen(false);
 
-		deleteData(myNotesId, setIsApiLoading, handleMsgShown);
-	}, [handleMsgShown, myNotesId, handleNotesModalClosing]);
+		deleteData(myNotesId, setIsApiLoading, handleMsgShown, openFirstNote, allNotes, currentNoteIndex);
+	}, [myNotesId, handleMsgShown, openFirstNote, allNotes, currentNoteIndex]);
 
 	//handle todo checkbo click
 	const handleCheckboxClick = useCallback(
@@ -228,7 +219,7 @@ function HomePage() {
 				handleSaveBtnClick();
 			}
 		},
-		{ enableOnFormTags: true }
+		{ enableOnFormTags: true, preventDefault: true, enableOnContentEditable: true }
 	);
 
 	const handleAddTodoBtn = useCallback(

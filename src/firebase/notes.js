@@ -75,17 +75,20 @@ function addNewNote(upcomingData, setMyNotesId, setMsg, setIsApiLoading) {
 		});
 }
 //delete Notes
-function deleteData(noteId, setIsApiLoading, setMsg) {
+function deleteData(noteId, setIsApiLoading, setMsg, openFirstNote, allNotes, currentNoteIndex) {
 	if (!noteId) return setMsg('Please Provide all details');
 	const docRef = doc(database, 'user_notes', noteId);
 	setIsApiLoading(true);
 	deleteDoc(docRef)
 		.then((e) => {
-			setIsApiLoading(false);
+			currentNoteIndex === 0 ? openFirstNote(allNotes, 1) : openFirstNote(allNotes, 0);
 		})
 		.catch((err) => {
 			console.log(err.message);
 			setMsg(err.code);
+		})
+		.finally(() => {
+			setIsApiLoading(false);
 		});
 }
 
