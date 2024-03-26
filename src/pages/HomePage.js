@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { handleUserState } from '../firebase/auth';
@@ -14,7 +14,7 @@ import { getUserAllData } from '../firebase/features';
 import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
-import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
+import RenderAllNotes from '../components/homePage/renderAllNotes/RenderAllNotes';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
 import ShareDialogBox from '../components/shareDialog/ShareDialogBox';
@@ -24,6 +24,8 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import '../styles/homePage.css';
 
+document.title = 'Bhemu Notes';
+
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
 const localFolderData = window.location?.hash?.slice(1)
 	? JSON.parse(decryptText(localStorage.getItem(window.location?.hash?.slice(1))))
@@ -31,14 +33,14 @@ const localFolderData = window.location?.hash?.slice(1)
 
 function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
-	const [allNotes, setAllNotes] = useState(localStorageNotesData || []);
+	const [userAllNotes, setAllNotes] = useState(localStorageNotesData || []);
 	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
 	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
-	const [myNotesId, setMyNotesId] = useState('');
-	const [notesTitle, setNotesTitle] = useState('');
-	const [openedNoteData, setOpenedNoteData] = useState([]);
+	const [currentNoteId, setCurrentNoteId] = useState('');
+	const [noteText, setnoteText] = useState('');
+	const [openedNoteData, setOpenedNoteData] = useState('');
 	const [noteSharedUsers, setNoteSharedUsers] = useState([]);
 	const [isNoteSharedWithAll, setIsNoteSharedWithAll] = useState(false);
 
@@ -49,9 +51,6 @@ function HomePage() {
 	const [isPageLoaded, setIsPageLoaded] = useState(false);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isApiLoading, setIsApiLoading] = useState(false);
-	const [focusedInput, setfocusedInput] = useState(null);
-	const todoRef = useRef();
-	const lastTextBoxRef = useRef();
 	const navigate = useNavigate();
 
 	const folderName = window.location.hash.slice(1);
@@ -70,9 +69,9 @@ function HomePage() {
 	const openFirstNote = useCallback(function (allNotesAtr, index) {
 		if (allNotesAtr.length === 0) return;
 
-		setOpenedNoteData(allNotesAtr[index]?.noteData || []);
-		setNotesTitle(allNotesAtr[index]?.notesTitle || '');
-		setMyNotesId(allNotesAtr[index]?.notesId || '');
+		setOpenedNoteData(allNotesAtr[index]?.noteData || '');
+		// setnoteText(allNotesAtr[index]?.noteText || '');
+		setCurrentNoteId(allNotesAtr[index]?.noteId || '');
 		setNoteSharedUsers(allNotesAtr[index]?.noteSharedUsers || []);
 		setIsNoteSharedWithAll(allNotesAtr[index]?.isNoteSharedWithAll || false);
 		setCurrentNoteIndex(index);
@@ -85,7 +84,6 @@ function HomePage() {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
 			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
 			setIsPageLoaded(true);
-			document.title = 'Bhemu Notes';
 		}
 	}, [handleMsgShown]);
 
@@ -93,7 +91,7 @@ function HomePage() {
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
 			setIsNotesModalOpen(true);
 			if (!folderName) {
-				openFirstNote(allNotes, 0);
+				openFirstNote(userAllNotes, 0);
 			} else {
 				openFirstNote(currentFolderNotes, 0);
 			}
@@ -101,19 +99,17 @@ function HomePage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleNoteOpening = useCallback(
-		(index, noteId, title, data, shareWith, userPermission) => {
-			if (noteId) setMyNotesId(noteId);
-			setNotesTitle(title);
-			setOpenedNoteData(data);
-			setIsNotesModalOpen(true);
-			setNoteSharedUsers(shareWith || []);
-			setIsNoteSharedWithAll(userPermission || false);
-			setCurrentNoteIndex(index);
-			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
-		},
-		[setNotesTitle, setOpenedNoteData, setIsNotesModalOpen]
-	);
+	const handleNoteOpening = useCallback((index, item) => {
+		const { noteId, noteText, noteData, noteSharedUsers, isNoteSharedWithAll } = item;
+		if (noteId) setCurrentNoteId(noteId);
+		setnoteText(noteText);
+		setOpenedNoteData(noteData);
+		setNoteSharedUsers(noteSharedUsers || []);
+		setIsNoteSharedWithAll(isNoteSharedWithAll || false);
+		setCurrentNoteIndex(index);
+		setIsNotesModalOpen(true);
+		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
+	}, []);
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
@@ -130,116 +126,84 @@ function HomePage() {
 	);
 
 	//add Note Function
-	const addNotes = useCallback(
-		(e, notesTitle) => {
-			setIsApiLoading(true);
-			const newNotesTitle = notesTitle ? notesTitle : 'Enter Notes Title';
-			const newNoteData = [{ element: '', type: 'note' }];
-
-			const toSendNoteData = { newNotesTitle, newNoteData };
-			handleNoteOpening(0, '', newNotesTitle, newNoteData);
-			addNewNote(toSendNoteData, setMyNotesId, handleMsgShown, setIsApiLoading);
-		},
-		[handleNoteOpening, handleMsgShown]
-	);
-
-	const handleAddNoteInputBox = useCallback(
+	const handleAddNewNote = useCallback(
 		(e) => {
 			e.preventDefault();
-			const newNotesTitle = e.target.noteTitle.value.trim();
-			if (newNotesTitle) {
-				setIsApiLoading(true);
-				const newNoteData = [{ element: '', type: 'note' }];
+			const newNoteText = e.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
+			const newNoteData = newNoteText
+				? `<h1>${newNoteText}</h1><p><br></p>`
+				: `<h1>Enter Notes Title</h1><p><br></p>`;
 
-				const toSendNoteData = { newNotesTitle, newNoteData };
-				handleNoteOpening(0, '', newNotesTitle, newNoteData);
-				addNewNote(toSendNoteData, setMyNotesId, handleMsgShown, setIsApiLoading);
-				e.target.reset();
-			}
+			const toSendNoteData = { newNoteText, newNoteData };
+			handleNoteOpening(0, { noteText: newNoteText, noteData: newNoteData });
+			addNewNote(toSendNoteData, setCurrentNoteId, handleMsgShown, setIsApiLoading);
+			if (e.target?.noteTitle?.value?.trim()) e.target.reset();
 		},
 		[handleNoteOpening, handleMsgShown]
 	);
 
+	//get title value from html string
+	const getTitleValue = useCallback((htmlString) => {
+		// Create a temporary element to parse the HTML string
+		const tempElement = document.createElement('div');
+		tempElement.innerHTML = htmlString;
+
+		for (let i = 0; i < tempElement.children.length; i++) {
+			const element = tempElement.children[i]?.textContent.trim();
+			if (element) {
+				return element;
+			}
+		}
+	}, []);
+
 	//handle note or todo save
-	const handleSaveBtnClick = useCallback(async () => {
+	const handleSaveBtnClick = useCallback(() => {
 		setIsSaveBtnLoading(true);
+		const html = document.querySelector('.ql-editor').innerHTML;
+		const noteTitleValue = getTitleValue(html);
+
 		const toSendData = {
-			noteId: myNotesId,
-			notesTitle: document.getElementById('titleTextBox')?.innerText,
+			noteId: currentNoteId,
+			noteTitle: noteTitleValue || 'Enter Notes Title',
+			noteText: document.querySelector('.ql-editor')?.innerText || '',
 			noteData: openedNoteData,
 		};
+
 		updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleMsgShown);
-	}, [handleMsgShown, myNotesId, openedNoteData]);
-
-	//handle note or todo delete
-	const handleDeleteBtnClick = useCallback(async () => {
-		// userDeviceType().mobile && handleNotesModalClosing();
-		setIsConfirmationDialogOpen(false);
-
-		deleteData(myNotesId, setIsApiLoading, handleMsgShown, openFirstNote, allNotes, currentNoteIndex);
-	}, [myNotesId, handleMsgShown, openFirstNote, allNotes, currentNoteIndex]);
-
-	//handle todo checkbo click
-	const handleCheckboxClick = useCallback(
-		(index, isDone) => {
-			const newToDos = openedNoteData.map(function (toDo, i) {
-				return i === index ? { ...toDo, isDone: isDone ? false : true } : toDo;
-			});
-			setOpenedNoteData(newToDos);
-		},
-		[openedNoteData]
-	);
-
-	const handleNoteTextChange = useCallback(
-		(index, e) => {
-			const newToDos = openedNoteData.map(function (item, i) {
-				return i === index ? { ...item, element: e.target.value } : item;
-			});
-			setOpenedNoteData(newToDos);
-		},
-		[openedNoteData]
-	);
-
-	const handleDeleteToDoBtnClick = useCallback(
-		(index) => {
-			let newToDos = openedNoteData.filter((data, i) => {
-				return i !== index ? data : null;
-			});
-
-			setOpenedNoteData(newToDos);
-		},
-		[openedNoteData]
-	);
+	}, [getTitleValue, handleMsgShown, currentNoteId, openedNoteData]);
 
 	//handle Save when "ctrl + s" is pressed
 	useHotkeys(
-		['ctrl + s', 'meta + s'],
+		'ctrl + s, meta + s',
 		() => {
 			if (isNotesModalOpen) {
 				handleSaveBtnClick();
 			}
 		},
-		{ enableOnFormTags: true, preventDefault: true, enableOnContentEditable: true }
+
+		{
+			enableOnFormTags: true,
+			preventDefault: true,
+			enableOnContentEditable: true,
+		}
 	);
 
-	const handleAddTodoBtn = useCallback(
-		(e) => {
-			let tempData = [...openedNoteData];
-			if (lastTextBoxRef?.current) {
-				lastTextBoxRef.current.style.minHeight = '';
-				if (!lastTextBoxRef.current?.value.trim()) {
-					tempData.splice(openedNoteData.length - 1, 0, { element: '', isDone: false, type: 'todo' });
-					setfocusedInput(openedNoteData.length - 1);
-				} else {
-					tempData.push({ element: '', isDone: false, type: 'todo' }, { element: '', type: 'note' });
-					setfocusedInput(openedNoteData.length);
-				}
-			}
+	//handle note delete
+	const handleDeleteBtnClick = useCallback(async () => {
+		// userDeviceType().mobile && handleNotesModalClosing();
+		setIsConfirmationDialogOpen(false);
 
-			setOpenedNoteData(tempData);
-		},
-		[openedNoteData]
-	);
+		deleteData(currentNoteId, setIsApiLoading, handleMsgShown, openFirstNote, userAllNotes, currentNoteIndex);
+	}, [currentNoteId, handleMsgShown, openFirstNote, userAllNotes, currentNoteIndex]);
+
+	//toggle share dialog box
+	const toggleShareDialogBox = useCallback(() => {
+		if (isShareDialogBoxOpen) {
+			setIsNoteSharedWithAll(userAllNotes[currentNoteIndex]?.isNoteSharedWithAll || false);
+			setNoteSharedUsers(userAllNotes[currentNoteIndex]?.noteSharedUsers || []);
+		}
+		setIsShareDialogBoxOpen((prev) => !prev);
+	}, [userAllNotes, currentNoteIndex, isShareDialogBoxOpen]);
 
 	/// handle add share note user
 	const handleAddShareNoteUser = useCallback(
@@ -261,60 +225,14 @@ function HomePage() {
 		[noteSharedUsers, handleMsgShown]
 	);
 
-	const handleTodoEnterClick = useCallback(
-		(e, index) => {
-			e.preventDefault();
-			if (e?.target?.value) {
-				const tempData = [...openedNoteData];
-				tempData.splice(index + 1, 0, { element: '', isDone: false, type: 'todo' });
-
-				setOpenedNoteData(tempData);
-			}
-			document.getElementById('textbox_' + (index + 1)).focus();
-			setfocusedInput(index + 1);
-		},
-		[openedNoteData]
-	);
-
-	// handleBackspaceClick in todo and note
-	const handleBackspaceClick = useCallback(
-		(e, index) => {
-			if (e.target.value.trim() === '') {
-				e.preventDefault();
-
-				if (openedNoteData.length - 1 !== index) {
-					//for last textbox
-					let newToDos = openedNoteData.filter((data, i) => {
-						return i !== index ? data : null;
-					});
-					setOpenedNoteData(newToDos);
-				}
-				if (openedNoteData.length - 1 !== index) {
-					document.getElementById('textbox_' + (index - 1))?.focus();
-				} else {
-					setfocusedInput(index - 1);
-				}
-			}
-		},
-		[openedNoteData]
-	);
-
-	const toggleShareDialogBox = useCallback(() => {
-		if (isShareDialogBoxOpen) {
-			setIsNoteSharedWithAll(allNotes[currentNoteIndex]?.isNoteSharedWithAll || false);
-			setNoteSharedUsers(allNotes[currentNoteIndex]?.noteSharedUsers || []);
-		}
-		setIsShareDialogBoxOpen((prev) => !prev);
-	}, [allNotes, currentNoteIndex, isShareDialogBoxOpen]);
-
 	return (
 		isPageLoaded && (
 			<>
 				<div id="homePage">
 					<NavBar
 						NavBarType="homePage"
-						addNotes={addNotes}
-						allNotes={allNotes}
+						handleAddNewNote={handleAddNewNote}
+						userAllNotes={userAllNotes}
 						handleFolderChange={handleFolderChange}
 						userAllDetails={userAllDetails}
 						handleMsgShown={handleMsgShown}
@@ -322,37 +240,31 @@ function HomePage() {
 
 					<div id="allContent">
 						<div id="notesTitleContainer">
-							<RenderNotesTitle
-								allNotes={folderName ? currentFolderNotes : allNotes}
+							<RenderAllNotes
+								userAllNotes={folderName ? currentFolderNotes : userAllNotes}
 								handleNoteOpening={handleNoteOpening}
 								isApiLoading={isApiLoading}
-								handleAddNoteInputBox={handleAddNoteInputBox}
+								handleAddNewNote={handleAddNewNote}
 							/>
 						</div>
 						{isNotesModalOpen && (
 							<div id="noteContentContainer">
-								{userDeviceType().mobile && <NavBar NavBarType="notesModal" addNotes={addNotes} />}
+								{userDeviceType().mobile && (
+									<NavBar NavBarType="notesModal" handleAddNewNote={handleAddNewNote} />
+								)}
 								<RenderNoteContent
 									isSaveBtnLoading={isSaveBtnLoading}
 									handleNotesModalClosing={handleNotesModalClosing}
 									openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
 									toggleShareDialogBox={toggleShareDialogBox}
-									myNotesId={myNotesId}
-									notesTitle={notesTitle}
+									currentNoteId={currentNoteId}
+									noteText={noteText}
 									openedNoteData={openedNoteData}
+									setOpenedNoteData={setOpenedNoteData}
 									handleSaveBtnClick={handleSaveBtnClick}
 									handleDeleteBtnClick={handleDeleteBtnClick}
-									handleNoteTextChange={handleNoteTextChange}
-									handleCheckboxClick={handleCheckboxClick}
-									handleDeleteToDoBtnClick={handleDeleteToDoBtnClick}
-									handleAddTodoBtn={handleAddTodoBtn}
 									handleAddShareNoteUser={handleAddShareNoteUser}
-									handleTodoEnterClick={handleTodoEnterClick}
-									handleBackspaceClick={handleBackspaceClick}
-									todoRef={todoRef}
-									focusedInput={focusedInput}
-									setfocusedInput={setfocusedInput}
-									lastTextBoxRef={lastTextBoxRef}
+									handleMsgShown={handleMsgShown}
 								/>
 							</div>
 						)}
@@ -374,7 +286,7 @@ function HomePage() {
 						title="Share Note"
 						toggleBtn={toggleShareDialogBox}
 						handleAddShareNoteUser={handleAddShareNoteUser}
-						myNotesId={myNotesId}
+						currentNoteId={currentNoteId}
 						noteSharedUsers={noteSharedUsers}
 						setNoteSharedUsers={setNoteSharedUsers}
 						isNoteSharedWithAll={isNoteSharedWithAll}

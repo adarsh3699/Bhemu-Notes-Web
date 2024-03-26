@@ -1,6 +1,6 @@
 {
 	"name": "notes-react",
-	"version": "2.1.1",
+	"version": "3.0.1",
 	"private": true,
 	"author": {
 		"email": "adarsh3699@gmail.com",
@@ -17,9 +17,9 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-hotkeys-hook": "^4.5.0",
+		"react-quill": "^2.0.0",
 		"react-router-dom": "^6.22.3",
 		"react-scripts": "5.0.1",
-		"react-textarea-autosize": "^8.4.0",
 		"uid": "^2.0.2"
 	},
 	"scripts": {

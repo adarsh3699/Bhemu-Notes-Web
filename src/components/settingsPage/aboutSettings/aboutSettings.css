@@ -8,8 +8,15 @@
 	margin-bottom: 20px;
 }
 
-li {
+.aboutPoints {
+	display: list-item;
+	list-style-type: disc;
+	margin: 5px 20px;
 	line-height: 32px;
+}
+
+.aboutPoints a:hover {
+	text-decoration: underline;
 }
 
 .aboutdeveloperTitle {

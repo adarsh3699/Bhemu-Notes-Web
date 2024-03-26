@@ -24,67 +24,72 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 	onSnapshot(
 		getDataQuery,
 		async (realSnapshot) => {
-			let noteData = [];
+			let allNotesData = [];
 			realSnapshot.docs.forEach((doc) => {
-				noteData.push({
-					notesId: doc.id,
-					notesTitle: decryptText(doc.data().notesTitle),
-					noteData: JSON.parse(decryptText(doc.data().noteData)),
+				allNotesData.push({
+					noteId: doc.id,
+					noteData: decryptText(doc.data().noteData),
+					noteText: decryptText(doc.data().noteText),
+					noteTitle: decryptText(doc.data().noteTitle),
 					updatedOn: doc.data().updatedOn,
 					noteSharedUsers: doc.data().noteSharedUsers || [],
 					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
 				});
 			});
 			setIsApiLoading(false);
-			setAllNotes(noteData);
+			setAllNotes(allNotesData);
 
-			const encryptNotesData = encryptText(JSON.stringify(noteData));
+			const encryptNotesData = encryptText(JSON.stringify(allNotesData));
 			localStorage.setItem('note_data', encryptNotesData);
 		},
 		(err) => {
 			setIsApiLoading(false);
-			console.log(err);
+			console.log('getUserAllNoteData', err);
 			setMsg(err.code);
 		}
 	);
 }
 
 //Add Notes
-function addNewNote(upcomingData, setMyNotesId, setMsg, setIsApiLoading) {
+function addNewNote(toSendNoteData, setMyNotesId, setMsg, setIsApiLoading) {
 	const userId = auth?.currentUser?.uid;
-	const { newNotesTitle, newNoteData } = upcomingData;
-	const encryptTitle = encryptText(newNotesTitle ? newNotesTitle?.trim() : newNotesTitle);
-	const stringifyedNoteData = JSON.stringify(newNoteData);
-	const encryptNoteData = encryptText(stringifyedNoteData);
+	const { newNoteText, newNoteData } = toSendNoteData;
+	if (!userId || !newNoteText || !newNoteData) return setMsg('addNewNote: Please Provide all details');
+	setIsApiLoading(true);
+	const encryptNoteText = encryptText(newNoteText?.trim());
+	const encryptNoteData = encryptText(newNoteData);
 
 	addDoc(colRef, {
 		userId,
-		notesTitle: encryptTitle,
+		noteTitle: encryptNoteText,
+		noteText: encryptNoteText,
 		noteData: encryptNoteData,
+		isNoteSharedWithAll: false,
 		createdAt: serverTimestamp(),
 		updatedOn: serverTimestamp(),
 	})
 		.then((e) => {
 			setMyNotesId(e?.id);
-			setIsApiLoading(false);
 		})
 		.catch((err) => {
-			setIsApiLoading(false);
 			setMsg(err.code);
-			console.log(err);
+			console.log('addNewNote', err);
+		})
+		.finally(() => {
+			setIsApiLoading(false);
 		});
 }
 //delete Notes
-function deleteData(noteId, setIsApiLoading, setMsg, openFirstNote, allNotes, currentNoteIndex) {
-	if (!noteId) return setMsg('Please Provide all details');
+function deleteData(noteId, setIsApiLoading, setMsg, openFirstNote, userAllNotes, currentNoteIndex) {
+	if (!noteId) return setMsg('deleteData: Please Provide noteId');
 	const docRef = doc(database, 'user_notes', noteId);
 	setIsApiLoading(true);
 	deleteDoc(docRef)
-		.then((e) => {
-			currentNoteIndex === 0 ? openFirstNote(allNotes, 1) : openFirstNote(allNotes, 0);
+		.then(() => {
+			currentNoteIndex === 0 ? openFirstNote(userAllNotes, 1) : openFirstNote(userAllNotes, 0);
 		})
 		.catch((err) => {
-			console.log(err.message);
+			console.log('deleteData', err.message);
 			setMsg(err.code);
 		})
 		.finally(() => {
@@ -93,57 +98,57 @@ function deleteData(noteId, setIsApiLoading, setMsg, openFirstNote, allNotes, cu
 }
 
 //update notes
-function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, setMsg) {
-	const { noteId, notesTitle, noteData } = upcomingData;
-	if (!noteId || !notesTitle || !noteData) {
-		setMsg('Please Provide all details (noteId, notesTitle, noteData)');
+function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, handleMsgShown) {
+	const { noteId, noteTitle, noteText, noteData } = upcomingData;
+	if (!noteId || !noteText || !noteData || !noteTitle) {
+		handleMsgShown('Please Create a note first', 'warning');
+		console.log('updateDocument: Please Provide all details (noteId, noteText, noteData, noteTitle)');
 		setIsSaveBtnLoading(false);
 		return;
 	}
-	const encryptTitle = encryptText(notesTitle ? notesTitle?.trim() : notesTitle);
-	const stringifyedNoteData = JSON.stringify(noteData);
-	const encryptNoteData = encryptText(stringifyedNoteData);
 
 	const docRef = doc(database, 'user_notes', noteId);
 
 	updateDoc(docRef, {
-		notesTitle: encryptTitle,
-		noteData: encryptNoteData,
+		noteTitle: encryptText(noteTitle?.trim() || ''),
+		noteData: encryptText(noteData),
+		noteText: encryptText(noteText),
 		updatedOn: serverTimestamp(),
 	})
-		.then(() => {
-			setIsSaveBtnLoading(false);
-		})
 		.catch((err) => {
 			setIsNotesModalOpen(false);
-			setIsSaveBtnLoading(false);
+			handleMsgShown(err.code);
 			console.log(err.message);
+		})
+		.finally(() => {
+			setIsSaveBtnLoading(false);
 		});
 }
 
 function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown) {
-	const noteIds = folder.folderData.map((item) => item.notesId);
+	const noteIds = folder.folderData.map((item) => item.noteId);
 
 	try {
 		const getDataQuery = query(colRef, where('__name__', 'in', noteIds));
 		const unsubscribe = onSnapshot(
 			getDataQuery,
 			async (realSnapshot) => {
-				let noteData = [];
+				let folderAllNotesData = [];
 				realSnapshot.forEach((doc) => {
-					noteData.push({
-						notesId: doc.id,
-						notesTitle: decryptText(doc.data().notesTitle),
-						noteData: JSON.parse(decryptText(doc.data().noteData)),
+					folderAllNotesData.push({
+						noteId: doc.id,
+						noteTitle: decryptText(doc.data().noteTitle),
+						noteText: decryptText(doc.data().noteText),
+						noteData: decryptText(doc.data().noteData),
 						updatedOn: doc.data().updatedOn,
 						noteSharedUsers: doc.data().noteSharedUsers || [],
 						isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
 					});
 				});
 
-				setAllNotes(noteData);
+				setAllNotes(folderAllNotesData);
 
-				const encryptNotesData = encryptText(JSON.stringify(noteData));
+				const encryptNotesData = encryptText(JSON.stringify(folderAllNotesData));
 				localStorage.setItem(folder.folderName, encryptNotesData);
 
 				unsubscribeFunctionsArray.push(unsubscribe);
@@ -155,7 +160,7 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShow
 			}
 		);
 	} catch (error) {
-		console.log(error);
+		console.log('getAllNotesOfFolder', error);
 		handleMsgShown(error.message);
 	}
 }

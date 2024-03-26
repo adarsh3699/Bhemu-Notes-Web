@@ -103,18 +103,18 @@ async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, 
 		async (realSnapshot) => {
 			if (!realSnapshot?.data()?.isNoteSharedWithAll) return (window.location.href = '/');
 
-			const noteData = [
-				{
-					notesId: realSnapshot.id,
-					notesTitle: decryptText(realSnapshot.data().notesTitle),
-					noteData: JSON.parse(decryptText(realSnapshot.data().noteData)),
-					updatedOn: realSnapshot.data().updatedOn,
-					noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
-					isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
-				},
-			];
+			const sharedNoteData = {
+				noteId: realSnapshot.id,
+				noteTitle: decryptText(realSnapshot.data().noteTitle),
+				noteText: decryptText(realSnapshot.data().noteText),
+				noteData: decryptText(realSnapshot.data().noteData),
+				updatedOn: realSnapshot.data().updatedOn,
+				noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
+				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
+			};
 
-			setSearchedUserData(noteData);
+			// console.log(sharedNoteData);
+			setSearchedUserData(sharedNoteData);
 
 			setIsGetApiLoading(false);
 		},

@@ -126,7 +126,7 @@ function SettingsPage() {
 								</Typography>
 							</div>
 							<NavLink to="/home">
-								<IconButton color="inherit" aria-label="delete">
+								<IconButton color="inherit" aria-label="close">
 									<CloseIcon />
 								</IconButton>
 							</NavLink>

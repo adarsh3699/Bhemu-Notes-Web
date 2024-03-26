@@ -13,7 +13,8 @@ code {
 }
 
 a {
-	all: unset;
+	color: unset;
+	text-decoration: unset;
 }
 
 #loadingScreen {

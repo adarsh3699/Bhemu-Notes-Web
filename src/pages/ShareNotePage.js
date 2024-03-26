@@ -5,14 +5,16 @@ import { getSearchedNoteData } from '../firebase/features.js';
 import { userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
-import RenderNotesTitle from '../components/homePage/renderNotesTitle/RenderNotesTitle';
+import RenderAllNotes from '../components/homePage/renderAllNotes/RenderAllNotes';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 
 import '../styles/shareNotePage.css';
 
+document.title = 'Bhemu Notes | Share';
+
 function ShareNotePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
-	const [searchedNoteData, setSearchedNoteData] = useState([]);
+	const [searchedNoteData, setSearchedNoteData] = useState({});
 
 	const [isGetApiLoading, setIsGetApiLoading] = useState(true);
 	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
@@ -31,7 +33,6 @@ function ShareNotePage() {
 	useEffect(() => {
 		const noteId = window.location?.pathname?.split('/')?.[2];
 		getSearchedNoteData(noteId, setSearchedNoteData, handleMsgShown, setIsGetApiLoading);
-		document.title = 'Bhemu Notes | Share';
 
 		if (isNotesModalOpen === false && userDeviceType().desktop) {
 			setIsNotesModalOpen(true);
@@ -44,7 +45,7 @@ function ShareNotePage() {
 	}, []);
 
 	const handleNoteOpening = useCallback(() => {
-		if (searchedNoteData?.[0].notesId) setIsNotesModalOpen(true);
+		if (searchedNoteData?.noteId) setIsNotesModalOpen(true);
 	}, [setIsNotesModalOpen, searchedNoteData]);
 
 	return (
@@ -53,9 +54,9 @@ function ShareNotePage() {
 
 			<div id="allContent">
 				<div id="notesTitleContainer">
-					<RenderNotesTitle
+					<RenderAllNotes
 						isShareNoteType={true}
-						allNotes={searchedNoteData}
+						userAllNotes={[searchedNoteData]}
 						isApiLoading={isGetApiLoading}
 						handleNoteOpening={handleNoteOpening}
 						handleMsgShown={handleMsgShown}
@@ -74,9 +75,9 @@ function ShareNotePage() {
 							// openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
 							// toggleShareDialogBox={toggleShareDialogBox}
 
-							myNotesId={searchedNoteData[0]?.notesId}
-							notesTitle={searchedNoteData[0]?.notesTitle}
-							openedNoteData={searchedNoteData[0]?.noteData || []}
+							currentNoteId={searchedNoteData?.noteId}
+							// notesTitle={searchedNoteData?.notesTitle}
+							openedNoteData={searchedNoteData?.noteData || ''}
 							handleMsgShown={handleMsgShown}
 
 							// handleSaveBtnClick={handleSaveBtnClick}

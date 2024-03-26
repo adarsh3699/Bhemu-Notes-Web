@@ -24,12 +24,12 @@ import ListItemText from '@mui/material/ListItemText';
 
 import './folderDialog.css';
 
-function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolders, sx }) {
+function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
 	const [allNoteFolders, setAllNoteFolders] = useState(noteFolders || []);
 	const [currentFolderId, setCurrentFolderId] = useState('');
-	const [selectedNotes, setSelectedNotes] = useState(allNotes || []);
+	const [selectedNotes, setSelectedNotes] = useState(userAllNotes || []);
 	const [folderName, setFolderName] = useState('');
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isEditFolderDialogOpen, setIsEditFolderDialogOpen] = useState({ isOpen: false, openAsEdit: false });
@@ -70,13 +70,13 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolder
 		if (isEditFolderDialogOpen.isOpen) {
 			setIsEditFolderDialogOpen({ isOpen: false, openAsEdit: false });
 			setCurrentFolderId('');
-			setSelectedNotes(allNotes);
+			setSelectedNotes(userAllNotes);
 			setAllNoteFolders(noteFolders);
 			setFolderName('');
 		} else {
 			toggleFolderDialog();
 		}
-	}, [allNotes, isEditFolderDialogOpen.isOpen, noteFolders, toggleFolderDialog]);
+	}, [userAllNotes, isEditFolderDialogOpen.isOpen, noteFolders, toggleFolderDialog]);
 
 	//handleCreateNewFolder btn click
 	const handleCreateNewFolder = useCallback(() => {
@@ -90,21 +90,21 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolder
 			setCurrentFolderId(itemOrg.folderId);
 			setFolderName(itemOrg.folderName);
 			setIsEditFolderDialogOpen({ isOpen: true, openAsEdit: true });
-			const temp = allNotes.map((i) => itemOrg.folderData.find((j) => j.notesId === i.notesId) || i);
+			const temp = userAllNotes.map((i) => itemOrg.folderData.find((j) => j.noteId === i.noteId) || i);
 			setSelectedNotes(temp);
 		},
-		[allNotes]
+		[userAllNotes]
 	);
 
 	const handleSelectNote = useCallback(
 		(index, isSelected) => {
 			const newToDos = selectedNotes.map(function (item, i) {
 				return i === index
-					? { isNoteSelected: isSelected ? false : true, notesTitle: item.notesTitle, notesId: item.notesId }
+					? { isNoteSelected: isSelected ? false : true, noteTitle: item.noteTitle, noteId: item.noteId }
 					: {
 							isNoteSelected: item.isNoteSelected || false,
-							notesTitle: item.notesTitle,
-							notesId: item.notesId,
+							noteTitle: item.noteTitle,
+							noteId: item.noteId,
 					  };
 			});
 			setSelectedNotes(newToDos);
@@ -217,7 +217,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolder
 						item.isNoteSelected && (
 							<div className="folderDialogBoxTableCol" key={index}>
 								<NotesIcon sx={{ fontSize: 30, mr: 2 }} />
-								{item.notesTitle}
+								{item.noteTitle}
 							</div>
 						)
 					);
@@ -300,7 +300,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, allNotes, noteFolder
 										<ListItemIcon>
 											<NotesIcon />
 										</ListItemIcon>
-										<ListItemText primary={item.notesTitle} />
+										<ListItemText primary={item.noteTitle} />
 										<Checkbox checked={item?.isNoteSelected || false} onChange={() => {}} />
 									</ListItemButton>
 								</ListItem>

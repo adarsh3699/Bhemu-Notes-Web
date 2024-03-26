@@ -34,7 +34,7 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderChange, handleMsgShown }) {
+function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange, userAllDetails, handleMsgShown }) {
 	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(true);
@@ -146,7 +146,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 					onClick={
 						NavBarType === 'shareNotePage'
 							? () => handleMsgShown('Please create a account to create own notes', 'warning')
-							: addNotes
+							: handleAddNewNote
 					}
 				>
 					Add Note
@@ -227,7 +227,7 @@ function NavBar({ NavBarType, addNotes, userAllDetails, allNotes, handleFolderCh
 				<FolderDialog
 					handleMsgShown={handleMsgShown}
 					toggleFolderDialog={toggleFolderDialog}
-					allNotes={allNotes}
+					userAllNotes={userAllNotes}
 					noteFolders={noteFolders}
 					// isFolderDialogOpen={isFolderDialogOpen}
 				/>

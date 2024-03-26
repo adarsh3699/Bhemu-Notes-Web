@@ -19,7 +19,7 @@ function ShareDialogBox({
 	handleMsgShown,
 	toggleBtn,
 	handleAddShareNoteUser,
-	myNotesId,
+	currentNoteId,
 	noteSharedUsers,
 	setNoteSharedUsers,
 	isNoteSharedWithAll,
@@ -81,20 +81,20 @@ function ShareDialogBox({
 	);
 
 	const handleCopyLinkBtnClick = useCallback(() => {
-		navigator.clipboard.writeText(window.location.origin + '/share/' + myNotesId);
+		navigator.clipboard.writeText(window.location.origin + '/share/' + currentNoteId);
 		handleMsgShown('Copied to clipboard', 'success');
-	}, [handleMsgShown, myNotesId]);
+	}, [handleMsgShown, currentNoteId]);
 
 	const handleSaveBtnClick = useCallback(() => {
-		if (!myNotesId) return console.log('Please Provide noteId');
+		if (!currentNoteId) return console.log('Please Provide noteId');
 		const data = {
-			noteId: myNotesId,
+			noteId: currentNoteId,
 			noteSharedUsers,
 			isNoteSharedWithAll,
 		};
 		updateNoteShareAccess(data, setIsSaveBtnLoading, handleMsgShown);
 		updateUserShareList(data, setIsSaveBtnLoading, handleMsgShown);
-	}, [myNotesId, isNoteSharedWithAll, noteSharedUsers, handleMsgShown]);
+	}, [currentNoteId, isNoteSharedWithAll, noteSharedUsers, handleMsgShown]);
 
 	return (
 		<div className="shareDialogBoxBg">
