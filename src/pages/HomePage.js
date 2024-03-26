@@ -26,16 +26,6 @@ import '../styles/homePage.css';
 
 document.title = 'Bhemu Notes';
 
-// document.addEventListener(
-// 	'keydown',
-// 	(e) => {
-// 		if (e.key === 's' && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-// 			e.preventDefault();
-// 		}
-// 	},
-// 	true
-// );
-
 const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
 const localFolderData = window.location?.hash?.slice(1)
 	? JSON.parse(decryptText(localStorage.getItem(window.location?.hash?.slice(1))))
@@ -106,6 +96,7 @@ function HomePage() {
 				openFirstNote(currentFolderNotes, 0);
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleNoteOpening = useCallback((index, item) => {
