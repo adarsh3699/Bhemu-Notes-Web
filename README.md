@@ -1,6 +1,6 @@
 # Bhemu Notes
 
-This is a Multi-User Notes app.\
+This is a Multi-User advance Notes app.\
 This Notes app facilitates many features, like bold, italic, changing font colour, size, and many more.\
 Feature like group notes in a folder to keep them organized.\
 Feature Like share notes with others by just sharing the link of that note.
