@@ -116,11 +116,7 @@ export function QuillToolbar({
 				</div>
 				<div>
 					<span className="ql-formats">
-						<select className="ql-header" defaultValue="3">
-							<option value="1">Heading</option>
-							<option value="2">Subheading</option>
-							<option value="3">Regular</option>
-						</select>
+						<select className="ql-header" defaultValue="3" />
 					</span>
 					<span className="ql-formats">
 						{renderToolbarBtns('Bold', 'ql-bold')}
@@ -138,12 +134,12 @@ export function QuillToolbar({
 					<span className="ql-formats notForPc">
 						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
 						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
-						{renderToolbarBtns('Alignment', 'ql-align')}
+						<select className="ql-align" />
 					</span>
 					<span className="ql-formats notForPhone">
 						{renderToolbarBtns('Text Color', 'ql-color')}
 						{renderToolbarBtns('Background Color', 'ql-background')}
-						{renderToolbarBtns('Alignment', 'ql-align')}
+						<select className="ql-align" />
 					</span>
 					<span className="ql-formats notForPhone">
 						{renderToolbarBtns('Link', 'ql-link')}
