@@ -1,8 +1,7 @@
-*,
-:after,
+/* :after,
 :before {
 	box-sizing: border-box;
-}
+} */
 
 .h2,
 h2 {
@@ -33,20 +32,19 @@ h6 {
 		font-size: 2rem;
 	}
 }
-
-button,
-input,
-optgroup,
-select,
-textarea {
+.accordion-item button,
+.accordion-item input,
+.accordion-item optgroup,
+.accordion-item select,
+.accordion-item textarea {
 	margin: 0;
 	font-family: inherit;
 	font-size: inherit;
 	line-height: inherit;
 }
 
-button,
-select {
+.accordion-item button,
+.accordion-item select {
 	text-transform: none;
 }
 
@@ -63,7 +61,7 @@ button {
 	align-items: center;
 	width: 100%;
 	padding: 1rem 1.25rem;
-	font-size: 1rem;
+	font-size: 1rem !important;
 	color: white;
 	text-align: left;
 	outline: unset;
@@ -73,12 +71,8 @@ button {
 	border: 0;
 	border-radius: 5px;
 	overflow-anchor: none;
-	transition:
-		color 0.3s ease-in-out,
-		background-color 0.3s ease-in-out,
-		border-color 0.3s ease-in-out,
-		box-shadow 0.3s ease-in-out,
-		border-radius 0.3s ease;
+	transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out,
+		box-shadow 0.3s ease-in-out, border-radius 0.3s ease;
 }
 
 [type='button']:not(:disabled),

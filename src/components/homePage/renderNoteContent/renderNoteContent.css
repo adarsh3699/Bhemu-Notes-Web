@@ -76,7 +76,7 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 	overflow-wrap: break-word;
-	padding-bottom: 300px !important;
+	padding-bottom: 400px !important;
 }
 
 .quill > .ql-container > .ql-editor.ql-blank::before {
@@ -99,7 +99,7 @@
 }
 
 /* ...............M-Web................ */
-@media screen and (max-width: 1073px) {
+@media screen and (max-width: 1088px) {
 	.notForPhone {
 		display: none !important;
 	}

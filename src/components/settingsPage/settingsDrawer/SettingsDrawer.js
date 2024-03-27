@@ -22,7 +22,7 @@ function SettingsDrawer(
 
 	const container = window !== undefined ? () => window().document.body : undefined;
 
-	const drawer = (
+	const drawer = (isForPhone) => (
 		<div>
 			<Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
 				<IconButton
@@ -46,7 +46,7 @@ function SettingsDrawer(
 						disablePadding
 						selected={item.isSelected}
 						// eslint-disable-next-line no-sequences
-						onClick={() => (handleSelectedMenu(item?.name, index), handleDrawerToggle())}
+						onClick={() => (handleSelectedMenu(item?.name, index), isForPhone && handleDrawerToggle())}
 					>
 						<ListItemButton sx={{ py: 1.7, pl: 4 }}>
 							<ListItemIcon>{item.icon}</ListItemIcon>
@@ -60,7 +60,7 @@ function SettingsDrawer(
 
 	return (
 		<Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }} aria-label="mailbox folders">
-			{/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+			{/* For Phone drawer */}
 			<Drawer
 				container={container}
 				variant="temporary"
@@ -77,8 +77,9 @@ function SettingsDrawer(
 					},
 				}}
 			>
-				{drawer}
+				{drawer(true)}
 			</Drawer>
+			{/* For Pc drawer */}
 			<Drawer
 				variant="permanent"
 				sx={{
@@ -90,7 +91,7 @@ function SettingsDrawer(
 				}}
 				open
 			>
-				{drawer}
+				{drawer()}
 			</Drawer>
 		</Box>
 	);
