@@ -27,6 +27,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 // // Modules object for setting up the Quill editor
 export const modules = {
+	clipboard: {
+		matchVisual: false,
+	},
 	toolbar: {
 		container: '#toolbar',
 		handlers: {
