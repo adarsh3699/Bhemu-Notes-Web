@@ -39,70 +39,64 @@ function LoginPage() {
 		setMsg('');
 	}, []);
 
+	if (isLoading) return;
+
 	return (
-		<>
-			{!isLoading && (
-				<div id="background">
-					<div id="wrapper">
-						<img id="myLogo" src={logo} alt="" />
-						<div id="Title">Bhemu Notes</div>
-						<form className="form" onSubmit={handleUserLogin}>
-							<input
-								type="email"
-								name="email"
-								placeholder="Email"
-								disabled={isApiLoading}
-								className="inputBottomMargin"
-								onKeyDown={handleMsgHideOnKeyUp}
+		<div className="authPage">
+			<img id="myLogo" src={logo} alt="" />
+			<div id="Title">Bhemu Notes</div>
+			<form className="form" onSubmit={handleUserLogin}>
+				<input
+					type="email"
+					name="email"
+					placeholder="Email"
+					disabled={isApiLoading}
+					className="inputBottomMargin"
+					onKeyDown={handleMsgHideOnKeyUp}
+				/>
+				<input
+					type={ispasswordVisible ? 'text' : 'password'}
+					name="password"
+					placeholder="Password"
+					disabled={isApiLoading}
+					className=""
+					onKeyDown={handleMsgHideOnKeyUp}
+				/>
+
+				<div id="showPassword">
+					<FormControlLabel
+						control={
+							<Checkbox
+								onClick={handlePasswordVisibility}
+								sx={{
+									color: amber[400],
+									'&.Mui-checked': {
+										color: amber[600],
+									},
+								}}
 							/>
-							<input
-								type={ispasswordVisible ? 'text' : 'password'}
-								name="password"
-								placeholder="Password"
-								disabled={isApiLoading}
-								className=""
-								onKeyDown={handleMsgHideOnKeyUp}
-							/>
-
-							<div id="showPassword">
-								<FormControlLabel
-									control={
-										<Checkbox
-											onClick={handlePasswordVisibility}
-											sx={{
-												color: amber[400],
-												'&.Mui-checked': {
-													color: amber[600],
-												},
-											}}
-										/>
-									}
-									label="Show password"
-								/>
-							</div>
-
-							<button id="login" className={isApiLoading ? 'isLogin' : ''}>
-								Login
-							</button>
-						</form>
-
-						<div id="msg" className="red" style={isApiLoading ? { marginBottom: '0px' } : {}}>
-							{' '}
-							{msg}{' '}
-						</div>
-						<Loader isLoading={isApiLoading} />
-						<NavLink to="/forget-password" id="forgotPass">
-							Forgotten Password
-						</NavLink>
-
-						<hr />
-						<a href="/register">
-							<div id="createAcc">Create New Account</div>
-						</a>
-					</div>
+						}
+						label="Show password"
+					/>
 				</div>
-			)}
-		</>
+
+				<button id="login" className={isApiLoading ? 'isLoginBtnLoading' : ''}>
+					LOGIN
+				</button>
+			</form>
+
+			<div id="msg" className="error_msg" style={isApiLoading ? { marginBottom: '0px' } : {}}>
+				{msg}
+			</div>
+			<Loader isLoading={isApiLoading} />
+			<NavLink to="/forget-password" id="forgotPass">
+				Forgotten Password
+			</NavLink>
+
+			<div className="botton_navBtn">
+				Don't have an account yet? <NavLink to="/register">Signup</NavLink>
+			</div>
+		</div>
 	);
 }
 
