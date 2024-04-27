@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useEffect } from 'react';
 
 import ReactQuill from 'react-quill';
-import QuillToolbar, { modules } from './QuillToolbar';
+import QuillToolbar, { modules, formats } from './QuillToolbar';
 // import { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -46,7 +46,7 @@ function RenderNoteContent({
 			<ReactQuill
 				ref={quillRef}
 				theme="snow"
-				// formats={formats}
+				formats={formats}
 				value={openedNoteData}
 				// defaultValue={new Delta().insert('Hello').insert('\n', { header: 1 }).insert('\n').insert('\n')}
 				onChange={setOpenedNoteData}

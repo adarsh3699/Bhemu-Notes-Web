@@ -64,7 +64,7 @@ export const formats = [
 	'image',
 	'video',
 	'color',
-	'code-block',
+	// 'code-block',
 ];
 
 // Quill Toolbar component
@@ -151,7 +151,7 @@ export function QuillToolbar({
 					</span>
 					<span className="ql-formats notForPhone">
 						{renderToolbarBtns('Blockquote', 'ql-blockquote')}
-						{renderToolbarBtns('Code Block', 'ql-code-block')}
+						{/* {renderToolbarBtns('Code Block', 'ql-code-block')} */}
 						{renderToolbarBtns('Clear All', 'ql-clean')}
 					</span>
 					<span className="ql-formats notForPc">
