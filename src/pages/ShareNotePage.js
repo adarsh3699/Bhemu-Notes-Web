@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 
 import ShowMsg from '../components/showMsg/ShowMsg.js';
 import { getSearchedNoteData } from '../firebase/features.js';
+
 import { userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
@@ -15,9 +16,10 @@ document.title = 'Bhemu Notes | Share';
 function ShareNotePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
 	const [searchedNoteData, setSearchedNoteData] = useState({});
+	const [canEdit, setCanEdit] = useState(false);
 
 	const [isGetApiLoading, setIsGetApiLoading] = useState(true);
-	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+	const [isNotesModalOpen, setIsNotesModalOpen] = useState(userDeviceType().desktop ? true : false);
 
 	const handleMsgShown = useCallback((msgText, type) => {
 		if (msgText) {
@@ -32,11 +34,10 @@ function ShareNotePage() {
 
 	useEffect(() => {
 		const noteId = window.location?.pathname?.split('/')?.[2];
-		getSearchedNoteData(noteId, setSearchedNoteData, handleMsgShown, setIsGetApiLoading);
-
-		if (isNotesModalOpen === false && userDeviceType().desktop) {
-			setIsNotesModalOpen(true);
-		}
+		getSearchedNoteData(noteId, setSearchedNoteData, setCanEdit, handleMsgShown, setIsGetApiLoading);
+		// if (isNotesModalOpen === false && userDeviceType().desktop) {
+		// 	setIsNotesModalOpen(true);
+		// }
 	}, [handleMsgShown, isNotesModalOpen, setIsNotesModalOpen]);
 
 	const handleNotesModalClosing = useCallback(() => {
@@ -71,6 +72,7 @@ function ShareNotePage() {
 						<RenderNoteContent
 							isShareNoteType={true}
 							// isSaveBtnLoading={isSaveBtnLoading}
+							canEdit={canEdit}
 							handleNotesModalClosing={handleNotesModalClosing}
 							// openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
 							// toggleShareDialogBox={toggleShareDialogBox}
@@ -89,7 +91,7 @@ function ShareNotePage() {
 							// handleAddShareNoteUser={handleAddShareNoteUser}
 							// handleTodoEnterClick={handleTodoEnterClick}
 							// handleBackspaceClick={handleBackspaceClick}
-							// todoRef={todoRef}
+
 							// focusedInput={focusedInput}
 							// setfocusedInput={setfocusedInput}
 							// lastTextBoxRef={lastTextBoxRef}

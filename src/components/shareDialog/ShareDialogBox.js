@@ -93,7 +93,7 @@ function ShareDialogBox({
 			isNoteSharedWithAll,
 		};
 		updateNoteShareAccess(data, setIsSaveBtnLoading, handleMsgShown);
-		updateUserShareList(data, setIsSaveBtnLoading, handleMsgShown);
+		// updateUserShareList(data, setIsSaveBtnLoading, handleMsgShown);
 	}, [currentNoteId, isNoteSharedWithAll, noteSharedUsers, handleMsgShown]);
 
 	return (
@@ -102,12 +102,12 @@ function ShareDialogBox({
 				<div className="ConfirmationDialogBoxTitle">{title}</div>
 				{/* <div className="ConfirmationDialogBoxMessage">{message}</div> */}
 
-				{/* <form onSubmit={handleAddShareNoteUser}>
+				<form onSubmit={handleAddShareNoteUser}>
 					<input type="email" className="shareEmailInput" name="shareEmailInput" placeholder="Add Email" />
-				</form> */}
+				</form>
 				<div className="shareUserDetailsBox">
 					<img
-						src={userProfileImg === 'null' ? userProflie : userProfileImg}
+						src={userProfileImg === 'null' || !userProfileImg ? userProflie : userProfileImg}
 						className="shareUserProflie"
 						alt=""
 					/>

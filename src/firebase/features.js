@@ -1,11 +1,11 @@
 import { database, auth } from './initFirebase';
 import { encryptText, decryptText, USER_DETAILS } from '../utils';
+import { handleUserState } from './auth';
 
 import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorShown) {
 	const { noteId, noteSharedUsers, isNoteSharedWithAll } = incomingData;
-	console.log(noteId);
 
 	if (!noteId || noteSharedUsers === '') {
 		handleErrorShown('Please Provide all details (noteId, isNoteSharedWithAll)');
@@ -29,70 +29,48 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 		});
 }
 
-function updateUserShareList(incomingData, setIsSaveBtnLoading, handleErrorShown) {
-	const { noteId, noteSharedUsers } = incomingData;
+// function updateUserShareList(incomingData, setIsSaveBtnLoading, handleErrorShown) {
+// 	const { noteId, noteSharedUsers } = incomingData;
 
-	if (!noteId || noteSharedUsers === '') {
-		handleErrorShown('Please Provide all details (noteId, noteSharedUsers)');
-		console.log('Please Provide all details (noteId, noteSharedUsers)');
-		setIsSaveBtnLoading(false);
-		return;
-	}
-	setIsSaveBtnLoading(true);
+// 	if (!noteId || noteSharedUsers === '') {
+// 		handleErrorShown('Please Provide all details (noteId, noteSharedUsers)');
+// 		console.log('Please Provide all details (noteId, noteSharedUsers)');
+// 		setIsSaveBtnLoading(false);
+// 		return;
+// 	}
+// 	setIsSaveBtnLoading(true);
 
-	noteSharedUsers.forEach(async (user) => {
-		const docRef = doc(database, 'user_details', user.email);
-		setIsSaveBtnLoading(true);
-		console.log(user);
+// 	noteSharedUsers.forEach(async (user) => {
+// 		const docRef = doc(database, 'user_details', user.email);
 
-		await getDoc(docRef)
-			.then((e) => {
-				const oldNotesSharedWithYou = e.data()?.notesSharedWithYou || [];
-				// console.log(oldNotesSharedWithYou);
+// 		await getDoc(docRef)
+// 			.then((e) => {
+// 				const oldNotesSharedWithYou = e.data()?.notesSharedWithYou || [];
+// 				console.log(oldNotesSharedWithYou);
 
-				if (!e.exists()) {
-					return setIsSaveBtnLoading(false);
-				} else if (oldNotesSharedWithYou?.length !== 0 && oldNotesSharedWithYou !== undefined) {
-					for (let i = 0; i < oldNotesSharedWithYou?.length; i++) {
-						if (oldNotesSharedWithYou[i]?.noteId === noteId) {
-							console.log(oldNotesSharedWithYou[i]);
-							return setIsSaveBtnLoading(false);
-						}
-					}
-
-					updateDoc(docRef, {
-						notesSharedWithYou: [{ noteId, canEdit: user.canEdit }, ...oldNotesSharedWithYou],
-					})
-						.then(() => {
-							setIsSaveBtnLoading(false);
-							console.log('User Updated');
-						})
-						.catch((err) => {
-							setIsSaveBtnLoading(false);
-							console.log(err.message);
-						});
-				} else {
-					updateDoc(docRef, {
-						notesSharedWithYou: [{ noteId, canEdit: user.canEdit }],
-					})
-						.then(() => {
-							setIsSaveBtnLoading(false);
-							console.log('User Updated');
-						})
-						.catch((err) => {
-							setIsSaveBtnLoading(false);
-							console.log(err.message);
-						});
-				}
-			})
-			.catch((err) => {
-				console.log(err.message);
-			});
-	});
-}
+// 				if (e.exists()) {
+// 					updateDoc(docRef, {
+// 						notesSharedWithYou: [noteId],
+// 					})
+// 						.then(() => {
+// 							setIsSaveBtnLoading(false);
+// 							console.log('User Updated');
+// 						})
+// 						.catch((err) => {
+// 							setIsSaveBtnLoading(false);
+// 							console.log(err.message);
+// 						});
+// 				}
+// 			})
+// 			.catch((err) => {
+// 				console.log(err.message);
+// 				setIsSaveBtnLoading(false);
+// 			});
+// 	});
+// }
 
 //open anonymous sharenote
-async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, setIsGetApiLoading) {
+async function getSearchedNoteData(noteId, setSearchedUserData, setCanEdit, handleMsgShown, setIsGetApiLoading) {
 	setIsGetApiLoading(true);
 	if (!noteId) return (window.location.href = '/') & console.log('Please Provide Note Id');
 
@@ -101,7 +79,18 @@ async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, 
 	onSnapshot(
 		docRef,
 		async (realSnapshot) => {
-			if (!realSnapshot?.data()?.isNoteSharedWithAll) return (window.location.href = '/');
+			if (!realSnapshot?.data()) return (window.location.href = '/');
+
+			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
+
+			const checkUser = realSnapshot?.data()?.noteSharedUsers?.find((user) => user.email === USER_DETAILS?.email);
+			const userPermission = checkUser
+				? { userExists: true, canEdit: checkUser.canEdit }
+				: { userExists: false, canEdit: false };
+
+			if (!realSnapshot?.data()?.isNoteSharedWithAll && !userPermission.userExists) {
+				return (window.location.href = '/');
+			}
 
 			const sharedNoteData = {
 				noteId: realSnapshot.id,
@@ -113,7 +102,7 @@ async function getSearchedNoteData(noteId, setSearchedUserData, handleMsgShown, 
 				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
 			};
 
-			// console.log(sharedNoteData);
+			setCanEdit(userPermission.canEdit);
 			setSearchedUserData(sharedNoteData);
 
 			setIsGetApiLoading(false);
@@ -183,4 +172,4 @@ function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackB
 		});
 }
 
-export { updateNoteShareAccess, updateUserShareList, getSearchedNoteData, updateUserFolder, getUserAllData };
+export { updateNoteShareAccess, getSearchedNoteData, updateUserFolder, getUserAllData };
