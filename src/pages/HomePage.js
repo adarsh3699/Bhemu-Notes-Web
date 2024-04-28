@@ -39,7 +39,7 @@ function HomePage() {
 
 	const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
 	const [currentNoteId, setCurrentNoteId] = useState('');
-	const [noteText, setnoteText] = useState('');
+	// const [noteText, setnoteText] = useState('');
 	const [openedNoteData, setOpenedNoteData] = useState('');
 	const [noteSharedUsers, setNoteSharedUsers] = useState([]);
 	const [isNoteSharedWithAll, setIsNoteSharedWithAll] = useState(false);
@@ -48,7 +48,7 @@ function HomePage() {
 	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 	const [isShareDialogBoxOpen, setIsShareDialogBoxOpen] = useState(false);
 
-	const [isPageLoaded, setIsPageLoaded] = useState(false);
+	const [isPageLoaded, setIsPageLoaded] = useState(true);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isApiLoading, setIsApiLoading] = useState(false);
 	const navigate = useNavigate();
@@ -83,7 +83,7 @@ function HomePage() {
 		if (USER_DETAILS?.userId) {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
 			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
-			setIsPageLoaded(true);
+			setIsPageLoaded(false);
 		}
 	}, [handleMsgShown]);
 
@@ -100,9 +100,9 @@ function HomePage() {
 	}, []);
 
 	const handleNoteOpening = useCallback((index, item) => {
-		const { noteId, noteText, noteData, noteSharedUsers, isNoteSharedWithAll } = item;
+		const { noteId, noteData, noteSharedUsers, isNoteSharedWithAll } = item;
 		if (noteId) setCurrentNoteId(noteId);
-		setnoteText(noteText);
+		// setnoteText(noteText);
 		setOpenedNoteData(noteData);
 		setNoteSharedUsers(noteSharedUsers || []);
 		setIsNoteSharedWithAll(isNoteSharedWithAll || false);
@@ -223,79 +223,79 @@ function HomePage() {
 		[noteSharedUsers, handleMsgShown]
 	);
 
-	return (
-		isPageLoaded && (
-			<>
-				<div id="homePage">
-					<NavBar
-						NavBarType="homePage"
-						handleAddNewNote={handleAddNewNote}
-						userAllNotes={userAllNotes}
-						handleFolderChange={handleFolderChange}
-						userAllDetails={userAllDetails}
-						handleMsgShown={handleMsgShown}
-					/>
+	if (isPageLoaded) return;
 
-					<div id="allContent">
-						<div id="notesTitleContainer">
-							<RenderAllNotes
-								userAllNotes={folderName ? currentFolderNotes : userAllNotes}
-								handleNoteOpening={handleNoteOpening}
-								isApiLoading={isApiLoading}
-								handleAddNewNote={handleAddNewNote}
+	return (
+		<>
+			<div id="homePage">
+				<NavBar
+					NavBarType="homePage"
+					handleAddNewNote={handleAddNewNote}
+					userAllNotes={userAllNotes}
+					handleFolderChange={handleFolderChange}
+					userAllDetails={userAllDetails}
+					handleMsgShown={handleMsgShown}
+				/>
+
+				<div id="allContent">
+					<div id="notesTitleContainer">
+						<RenderAllNotes
+							userAllNotes={folderName ? currentFolderNotes : userAllNotes}
+							handleNoteOpening={handleNoteOpening}
+							isApiLoading={isApiLoading}
+							handleAddNewNote={handleAddNewNote}
+						/>
+					</div>
+					{isNotesModalOpen && (
+						<div id="noteContentContainer">
+							{userDeviceType().mobile && (
+								<NavBar NavBarType="notesModal" handleAddNewNote={handleAddNewNote} />
+							)}
+							<RenderNoteContent
+								isSaveBtnLoading={isSaveBtnLoading}
+								handleNotesModalClosing={handleNotesModalClosing}
+								openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
+								toggleShareDialogBox={toggleShareDialogBox}
+								currentNoteId={currentNoteId}
+								// noteText={noteText}
+								openedNoteData={openedNoteData}
+								setOpenedNoteData={setOpenedNoteData}
+								handleSaveBtnClick={handleSaveBtnClick}
+								handleDeleteBtnClick={handleDeleteBtnClick}
+								handleAddShareNoteUser={handleAddShareNoteUser}
+								handleMsgShown={handleMsgShown}
 							/>
 						</div>
-						{isNotesModalOpen && (
-							<div id="noteContentContainer">
-								{userDeviceType().mobile && (
-									<NavBar NavBarType="notesModal" handleAddNewNote={handleAddNewNote} />
-								)}
-								<RenderNoteContent
-									isSaveBtnLoading={isSaveBtnLoading}
-									handleNotesModalClosing={handleNotesModalClosing}
-									openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
-									toggleShareDialogBox={toggleShareDialogBox}
-									currentNoteId={currentNoteId}
-									noteText={noteText}
-									openedNoteData={openedNoteData}
-									setOpenedNoteData={setOpenedNoteData}
-									handleSaveBtnClick={handleSaveBtnClick}
-									handleDeleteBtnClick={handleDeleteBtnClick}
-									handleAddShareNoteUser={handleAddShareNoteUser}
-									handleMsgShown={handleMsgShown}
-								/>
-							</div>
-						)}
-					</div>
+					)}
 				</div>
+			</div>
 
-				{isConfirmationDialogOpen && (
-					<ConfirmationDialog
-						title="Are You Sure?"
-						message="You can't undo this action."
-						isOpen={isConfirmationDialogOpen}
-						setIsConfirmationDialogOpen={setIsConfirmationDialogOpen}
-						onYesClick={handleDeleteBtnClick}
-					/>
-				)}
+			{isConfirmationDialogOpen && (
+				<ConfirmationDialog
+					title="Are You Sure?"
+					message="You can't undo this action."
+					isOpen={isConfirmationDialogOpen}
+					setIsConfirmationDialogOpen={setIsConfirmationDialogOpen}
+					onYesClick={handleDeleteBtnClick}
+				/>
+			)}
 
-				{isShareDialogBoxOpen && (
-					<ShareDialogBox
-						title="Share Note"
-						toggleBtn={toggleShareDialogBox}
-						handleAddShareNoteUser={handleAddShareNoteUser}
-						currentNoteId={currentNoteId}
-						noteSharedUsers={noteSharedUsers}
-						setNoteSharedUsers={setNoteSharedUsers}
-						isNoteSharedWithAll={isNoteSharedWithAll}
-						setIsNoteSharedWithAll={setIsNoteSharedWithAll}
-						handleMsgShown={handleMsgShown}
-					/>
-				)}
+			{isShareDialogBoxOpen && (
+				<ShareDialogBox
+					title="Share Note"
+					toggleBtn={toggleShareDialogBox}
+					handleAddShareNoteUser={handleAddShareNoteUser}
+					currentNoteId={currentNoteId}
+					noteSharedUsers={noteSharedUsers}
+					setNoteSharedUsers={setNoteSharedUsers}
+					isNoteSharedWithAll={isNoteSharedWithAll}
+					setIsNoteSharedWithAll={setIsNoteSharedWithAll}
+					handleMsgShown={handleMsgShown}
+				/>
+			)}
 
-				{msg && <ShowMsg msgText={msg?.text} type={msg?.type} />}
-			</>
-		)
+			{msg && <ShowMsg msgText={msg?.text} type={msg?.type} />}
+		</>
 	);
 }
 

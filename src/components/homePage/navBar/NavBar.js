@@ -104,11 +104,6 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 		setIsDrawerOpen((prevState) => !prevState);
 	}, []);
 
-	// const handleEditFolderListBtnClick = useCallback(() => {
-	// 	setIsDrawerOpen((prevState) => !prevState);
-	// 	setIsFolderDialogOpen((prevState) => !prevState);
-	// }, []);
-
 	const renderDrawerListBtns = (name, icon, func, sx) => {
 		return (
 			<ListItem disablePadding onClick={func} sx={sx}>
