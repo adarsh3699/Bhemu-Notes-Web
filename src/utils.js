@@ -15,6 +15,7 @@ function encryptText(text) {
 function decryptText(enryptedValue) {
 	let value = null;
 	try {
+		if (!enryptedValue) throw new Error('enryptedValue is required');
 		const decrypted = AES.decrypt(enryptedValue, encryptionKey);
 		value = enc.Utf8.stringify(decrypted);
 	} catch (err) {
