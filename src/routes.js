@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes as Switch, Route } from 'react-router-dom';
+import { Navigate, Routes as Switch, Route } from 'react-router-dom';
+
 // import LoginPage from './pages/LoginPage';
 // import HomePage from "./pages/HomePage";
 // import NotesPage from "./pages/NotesPage"
@@ -42,8 +43,9 @@ function Routes() {
 				<Route exact path="/register" element={<CreateAcc />} />
 				<Route exact path="/forget-password" element={<ForgetPasswordPage />} />
 				<Route exact path="/" element={<HomePage />} />
-				<Route exact path="/share/*" element={<ShareNotePage />} />
+				<Route path="/share/*" element={<ShareNotePage />} />
 				<Route exact path="/settings" element={<SettingsPage />} />
+				<Route exact path="/home" element={<Navigate to="/" />} />
 
 				<Route
 					path="*"
