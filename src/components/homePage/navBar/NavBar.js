@@ -95,7 +95,7 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 			handleFolderChange(openFolderFromURL?.[0]);
 		} else {
 			if (NavBarType !== 'shareNotePage') {
-				navigate('/home');
+				navigate('/');
 			}
 		}
 	}, [NavBarType, currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
@@ -156,7 +156,7 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 					<List>
 						{renderDrawerListBtns('All Notes', <BallotIcon />, () => {
 							toggleDrawer();
-							navigate('/home');
+							navigate('/');
 							unsubscribeAll();
 						})}
 						{renderDrawerListBtns('Edit Folder', <EditIcon />, () => toggleFolderDialog(true))}

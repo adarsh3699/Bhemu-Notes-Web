@@ -45,7 +45,7 @@ function ForgetPasswordPage() {
 			</form>
 
 			<div className="botton_navBtn">
-				Back to <NavLink to="/">LoginPage</NavLink>
+				Back to <NavLink to="/login">LoginPage</NavLink>
 			</div>
 		</div>
 	);

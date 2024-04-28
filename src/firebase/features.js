@@ -72,14 +72,14 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 //open anonymous sharenote
 async function getSearchedNoteData(noteId, setSearchedUserData, setCanEdit, handleMsgShown, setIsGetApiLoading) {
 	setIsGetApiLoading(true);
-	if (!noteId) return (window.location.href = '/') & console.log('Please Provide Note Id');
+	if (!noteId) return (window.location.href = '/login') & console.log('Please Provide Note Id');
 
 	const docRef = doc(database, 'user_notes', noteId);
 
 	onSnapshot(
 		docRef,
 		async (realSnapshot) => {
-			if (!realSnapshot?.data()) return (window.location.href = '/');
+			if (!realSnapshot?.data()) return (window.location.href = '/login');
 
 			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
 
@@ -89,7 +89,7 @@ async function getSearchedNoteData(noteId, setSearchedUserData, setCanEdit, hand
 				: { userExists: false, canEdit: false };
 
 			if (!realSnapshot?.data()?.isNoteSharedWithAll && !userPermission.userExists) {
-				return (window.location.href = '/');
+				return (window.location.href = '/login');
 			}
 
 			const sharedNoteData = {

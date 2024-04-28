@@ -38,10 +38,10 @@ function Routes() {
 			}
 		>
 			<Switch>
-				<Route exact path="/" element={<LoginPage />} />
+				<Route exact path="/login" element={<LoginPage />} />
 				<Route exact path="/register" element={<CreateAcc />} />
 				<Route exact path="/forget-password" element={<ForgetPasswordPage />} />
-				<Route exact path="/home" element={<HomePage />} />
+				<Route exact path="/" element={<HomePage />} />
 				<Route exact path="/share/*" element={<ShareNotePage />} />
 				<Route exact path="/settings" element={<SettingsPage />} />
 

@@ -75,7 +75,7 @@ function CreateAcc() {
 			<Loader isLoading={isApiLoading} />
 
 			<div className="botton_navBtn">
-				Already have an Account <NavLink to="/">Click here</NavLink>
+				Already have an Account <NavLink to="/login">Click here</NavLink>
 			</div>
 		</div>
 	);

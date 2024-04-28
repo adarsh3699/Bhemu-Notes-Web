@@ -36,7 +36,7 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
 					})
 				)
 			);
-			document.location.href = '/home';
+			document.location.href = '/';
 		})
 		.catch((err) => {
 			setIsApiLoading(false);
@@ -113,7 +113,7 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 										})
 									)
 								);
-								document.location.href = '/home';
+								document.location.href = '/';
 							})
 							.catch((err) => {
 								setIsApiLoading(false);
@@ -139,7 +139,7 @@ function handleSignOut() {
 	signOut(auth)
 		.then(() => {
 			localStorage.clear();
-			document.location.href = '/';
+			document.location.href = '/login';
 		})
 		.catch((err) => {
 			console.log(err.code);
@@ -169,8 +169,6 @@ function handleUserState(currentPage) {
 	onAuthStateChanged(auth, (user) => {
 		if (currentPage && user === null) {
 			handleSignOut();
-		} else if (!currentPage && user !== null) {
-			document.location.href = '/home';
 		} else if (USER_DETAILS?.email !== user?.email || USER_DETAILS?.userId !== user?.uid) {
 			handleSignOut();
 		}

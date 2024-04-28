@@ -21,7 +21,7 @@ function LoginPage() {
 	useEffect(() => {
 		handleUserState(false);
 		if (USER_DETAILS?.userId) {
-			document.location.href = '/home';
+			document.location.href = '/';
 		} else {
 			setIsLoading(false);
 		}

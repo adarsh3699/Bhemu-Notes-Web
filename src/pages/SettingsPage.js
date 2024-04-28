@@ -75,7 +75,7 @@ function SettingsPage() {
 			if (menuName === 'Log Out') {
 				handleSignOut();
 				localStorage.clear();
-				document.location.href = '/';
+				document.location.href = '/login';
 				return;
 			}
 
@@ -125,7 +125,7 @@ function SettingsPage() {
 									Settings
 								</Typography>
 							</div>
-							<NavLink to="/home">
+							<NavLink to="/">
 								<IconButton color="inherit" aria-label="close">
 									<CloseIcon />
 								</IconButton>
