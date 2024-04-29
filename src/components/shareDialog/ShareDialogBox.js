@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateNoteShareAccess, updateUserShareList } from '../../firebase/features';
+import { updateNoteShareAccess } from '../../firebase/features';
 import { USER_DETAILS } from '../../utils';
 
 import Button from '@mui/material/Button';
@@ -135,7 +135,9 @@ function ShareDialogBox({
 									onChange={(e) => handleSpecificUserPermissionChange(e, index)}
 								>
 									<option value={false}>Can Read</option>
-									<option value={true}>Can Edit</option>
+									<option value={true} disabled>
+										Can Edit
+									</option>
 									<option value="remove">Remove</option>
 								</select>
 							</div>
