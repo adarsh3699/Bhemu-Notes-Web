@@ -26,14 +26,15 @@ import '../styles/homePage.css';
 
 document.title = 'Bhemu Notes';
 
-const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
 const localFolderData = window.location?.hash?.slice(1)
 	? JSON.parse(decryptText(localStorage.getItem(window.location?.hash?.slice(1))))
 	: undefined;
 
 function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
-	const [userAllNotes, setAllNotes] = useState(localStorageNotesData || []);
+	const [userAllNotes, setAllNotes] = useState(
+		(localStorage.getItem('note_data') && JSON.parse(decryptText(localStorage.getItem('note_data')))) || []
+	);
 	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
