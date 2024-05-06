@@ -159,6 +159,9 @@ input:focus {
 }
 
 @media screen and (max-width: 475px) {
+	.authPage {
+		min-height: 90vh;
+	}
 	#myLogo {
 		height: 100px;
 	}
