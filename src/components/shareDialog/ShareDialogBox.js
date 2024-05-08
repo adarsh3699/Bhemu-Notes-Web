@@ -19,11 +19,8 @@ function ShareDialogBox({
 	handleMsgShown,
 	toggleBtn,
 	handleAddShareNoteUser,
-	currentNoteId,
-	noteSharedUsers,
-	setNoteSharedUsers,
-	isNoteSharedWithAll,
-	setIsNoteSharedWithAll,
+	openedNoteAllData,
+	setOpenedNoteAllData,
 	sx,
 }) {
 	const backgroundRef = useRef();
@@ -56,45 +53,45 @@ function ShareDialogBox({
 			const toBoolean = e.target.value === 'true' ? true : e.target.value === 'false' ? false : 'remove';
 
 			if (toBoolean === 'remove') {
-				let newToDos = noteSharedUsers.filter((data, i) => {
+				let userlist = openedNoteAllData.noteSharedUsers.filter((data, i) => {
 					return i !== index ? data : null;
 				});
 
-				return setNoteSharedUsers(newToDos);
+				return setOpenedNoteAllData((prev) => ({ ...prev, noteSharedUsers: userlist }));
 			}
 
-			const newToDos = noteSharedUsers.map(function (item, i) {
+			const userlist = openedNoteAllData.noteSharedUsers.map(function (item, i) {
 				return i === index ? { ...item, canEdit: toBoolean } : item;
 			});
 
-			setNoteSharedUsers(newToDos);
+			return setOpenedNoteAllData((prev) => ({ ...prev, noteSharedUsers: userlist }));
 		},
-		[noteSharedUsers, setNoteSharedUsers]
+		[openedNoteAllData.noteSharedUsers, setOpenedNoteAllData]
 	);
 
 	const handleAllUserPermissionChange = useCallback(
 		(e) => {
 			const permission = e.target.value === 'true' ? true : false;
-			setIsNoteSharedWithAll(permission);
+			setOpenedNoteAllData((prev) => ({ ...prev, isNoteSharedWithAll: permission }));
 		},
-		[setIsNoteSharedWithAll]
+		[setOpenedNoteAllData]
 	);
 
 	const handleCopyLinkBtnClick = useCallback(() => {
-		navigator.clipboard.writeText(window.location.origin + '/share/' + currentNoteId);
+		navigator.clipboard.writeText(window.location.origin + '/share/' + openedNoteAllData.noteId);
 		handleMsgShown('Copied to clipboard', 'success');
-	}, [handleMsgShown, currentNoteId]);
+	}, [openedNoteAllData.noteId, handleMsgShown]);
 
 	const handleSaveBtnClick = useCallback(() => {
-		if (!currentNoteId) return console.log('Please Provide noteId');
+		if (!openedNoteAllData.noteId) return console.log('Please Provide noteId');
 		const data = {
-			noteId: currentNoteId,
-			noteSharedUsers,
-			isNoteSharedWithAll,
+			noteId: openedNoteAllData.noteId,
+			noteSharedUsers: openedNoteAllData.noteSharedUsers,
+			isNoteSharedWithAll: openedNoteAllData.isNoteSharedWithAll,
 		};
 		updateNoteShareAccess(data, setIsSaveBtnLoading, handleMsgShown);
 		// updateUserShareList(data, setIsSaveBtnLoading, handleMsgShown);
-	}, [currentNoteId, isNoteSharedWithAll, noteSharedUsers, handleMsgShown]);
+	}, [openedNoteAllData, handleMsgShown]);
 
 	return (
 		<div className="shareDialogBoxBg">
@@ -120,7 +117,7 @@ function ShareDialogBox({
 					</div>
 				</div>
 
-				{noteSharedUsers?.map((item, index) => {
+				{openedNoteAllData.noteSharedUsers?.map((item, index) => {
 					return (
 						<div className="shareUserDetailsBox" key={index}>
 							<img src={userProflie} className="shareUserProflie" alt="" />
@@ -135,9 +132,7 @@ function ShareDialogBox({
 									onChange={(e) => handleSpecificUserPermissionChange(e, index)}
 								>
 									<option value={false}>Can Read</option>
-									<option value={true} disabled>
-										Can Edit
-									</option>
+									<option value={true}>Can Edit</option>
 									<option value="remove">Remove</option>
 								</select>
 							</div>
@@ -150,7 +145,7 @@ function ShareDialogBox({
 						<ManageAccountsIcon fontSize="inherit" />
 						<select
 							className="shareUserAccessSelect"
-							value={isNoteSharedWithAll}
+							value={openedNoteAllData.isNoteSharedWithAll}
 							onChange={handleAllUserPermissionChange}
 						>
 							<option value={false}>Only invited people can access</option>

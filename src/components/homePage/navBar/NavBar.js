@@ -4,7 +4,7 @@ import { handleSignOut } from '../../../firebase/auth';
 import FolderDialog from '../../folderDialog/FolderDialog';
 import { USER_DETAILS } from '../../../utils';
 
-import { unsubscribeAll } from '../../../firebase/notes';
+import { unsubscribeAllFolders } from '../../../firebase/notes';
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -34,7 +34,14 @@ import logo from './files/newLogoNav.webp';
 
 import './files/navBar.css';
 
-function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange, userAllDetails, handleMsgShown }) {
+function NavBar({
+	isSharedNoteType,
+	handleAddNewNote,
+	userAllNotes,
+	handleFolderChange,
+	userAllDetails,
+	handleMsgShown,
+}) {
 	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [isNoteFolderListOpen, setIsNoteFolderListOpen] = useState(true);
@@ -94,11 +101,11 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 		if (openFolderFromURL?.length > 0) {
 			handleFolderChange(openFolderFromURL?.[0]);
 		} else {
-			if (NavBarType !== 'shareNotePage') {
-				navigate('/');
+			if (!isSharedNoteType) {
+				// navigate('/');
 			}
 		}
-	}, [NavBarType, currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
+	}, [isSharedNoteType, currentFolderHash, handleFolderChange, navigate, userAllDetails?.userFolders]);
 
 	const toggleDrawer = useCallback(() => {
 		setIsDrawerOpen((prevState) => !prevState);
@@ -124,7 +131,7 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 						color="inherit"
 						size="small"
 						aria-haspopup="true"
-						onClick={NavBarType === 'homePage' ? toggleDrawer : null}
+						onClick={isSharedNoteType ? null : toggleDrawer}
 						sx={{ ml: 1.2 }}
 					>
 						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
@@ -139,7 +146,7 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 					id="basic-button"
 					aria-haspopup="true"
 					onClick={
-						NavBarType === 'shareNotePage'
+						isSharedNoteType
 							? () => handleMsgShown('Please create a account to create own notes', 'warning')
 							: handleAddNewNote
 					}
@@ -157,7 +164,7 @@ function NavBar({ NavBarType, handleAddNewNote, userAllNotes, handleFolderChange
 						{renderDrawerListBtns('All Notes', <BallotIcon />, () => {
 							toggleDrawer();
 							navigate('/');
-							unsubscribeAll();
+							unsubscribeAllFolders();
 						})}
 						{renderDrawerListBtns('Edit Folder', <EditIcon />, () => toggleFolderDialog(true))}
 

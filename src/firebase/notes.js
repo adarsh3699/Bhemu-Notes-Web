@@ -1,5 +1,6 @@
 import { auth, database } from './initFirebase';
 import { encryptText, decryptText, USER_DETAILS } from '../utils';
+import { handleUserState } from './auth';
 
 import {
 	collection,
@@ -16,7 +17,8 @@ import {
 
 // collection ref
 const colRef = collection(database, 'user_notes');
-let unsubscribeFunctionsArray = [];
+let unsubscribeFolderFunctions = [];
+let unsubscribeNoteFunctions = [];
 
 function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 	const getDataQuery = query(colRef, where('userId', '==', USER_DETAILS?.userId || ''), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
@@ -25,12 +27,14 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 		getDataQuery,
 		async (realSnapshot) => {
 			let allNotesData = [];
-			realSnapshot.docs.forEach((doc) => {
+			realSnapshot.docs.forEach((doc, index) => {
 				allNotesData.push({
+					index,
 					noteId: doc.id,
 					noteData: decryptText(doc.data().noteData),
 					noteText: decryptText(doc.data().noteText),
 					noteTitle: decryptText(doc.data().noteTitle),
+					isLocked: doc.data().isLocked,
 					updatedOn: doc.data().updatedOn,
 					noteSharedUsers: doc.data().noteSharedUsers || [],
 					isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
@@ -51,15 +55,14 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg) {
 }
 
 //Add Notes
-function addNewNote(toSendNoteData, setMyNotesId, setMsg, setIsApiLoading) {
+function addNewNote(toSendNoteData, setOpenedNoteAllData, setMsg, setIsApiLoading) {
 	const userId = auth?.currentUser?.uid;
 	const { newNoteText, newNoteData } = toSendNoteData;
 	if (!userId || !newNoteText || !newNoteData) return setMsg('addNewNote: Please Provide all details');
 	setIsApiLoading(true);
 	const encryptNoteText = encryptText(newNoteText?.trim());
 	const encryptNoteData = encryptText(newNoteData);
-
-	addDoc(colRef, {
+	const toAdd = {
 		userId,
 		noteTitle: encryptNoteText,
 		noteText: encryptNoteText,
@@ -67,9 +70,11 @@ function addNewNote(toSendNoteData, setMyNotesId, setMsg, setIsApiLoading) {
 		isNoteSharedWithAll: false,
 		createdAt: serverTimestamp(),
 		updatedOn: serverTimestamp(),
-	})
+	};
+	addDoc(colRef, toAdd)
 		.then((e) => {
-			setMyNotesId(e?.id);
+			setOpenedNoteAllData({ ...toAdd, noteId: e?.id });
+			// setMyNotesId(e?.id);
 		})
 		.catch((err) => {
 			setMsg(err.code);
@@ -125,6 +130,101 @@ function updateDocument(upcomingData, setIsSaveBtnLoading, setIsNotesModalOpen, 
 		});
 }
 
+async function getSearchedNoteData(
+	noteId,
+	setSearchedUserData,
+	setOpenedNoteAllData,
+	handleMsgShown,
+	setIsGetApiLoading
+) {
+	setIsGetApiLoading(true);
+	if (!noteId) return (window.location.href = '/login') & console.log('Please Provide Note Id');
+
+	const docRef = doc(database, 'user_notes', noteId);
+
+	const unsubscribe = onSnapshot(
+		docRef,
+		async (realSnapshot) => {
+			if (!realSnapshot?.data()) return (window.location.href = '/login');
+
+			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
+
+			const checkUser = realSnapshot?.data()?.noteSharedUsers?.find((user) => user.email === USER_DETAILS?.email);
+			const userPermission = checkUser
+				? { userExists: true, canEdit: checkUser.canEdit }
+				: { userExists: false, canEdit: false };
+
+			if (!realSnapshot?.data()?.isNoteSharedWithAll && !userPermission.userExists) {
+				return (window.location.href = '/login');
+			}
+
+			const sharedNoteData = {
+				index: 0,
+				noteId: realSnapshot.id,
+				noteTitle: decryptText(realSnapshot.data().noteTitle),
+				noteText: decryptText(realSnapshot.data().noteText),
+				noteData: decryptText(realSnapshot.data().noteData),
+				canEdit: userPermission.canEdit,
+				updatedOn: realSnapshot.data().updatedOn,
+				noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
+				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
+			};
+
+			setSearchedUserData([sharedNoteData]);
+			setOpenedNoteAllData(sharedNoteData);
+			setIsGetApiLoading(false);
+			unsubscribeNoteFunctions.push(unsubscribe);
+		},
+		(err) => {
+			setIsGetApiLoading(false);
+			console.log(err);
+			handleMsgShown(err.code, 'error');
+		}
+	);
+}
+
+async function getOpenNoteData(noteId, setOpenedNoteAllData, setOpenedNoteText, handleMsgShown) {
+	// setIsGetApiLoading(true);
+	if (!noteId) return (window.location.href = '/') & console.log('Please Provide Note Id');
+
+	const docRef = doc(database, 'user_notes', noteId);
+
+	const unsubscribe = onSnapshot(
+		docRef,
+		async (realSnapshot) => {
+			if (!realSnapshot?.data()) return (window.location.href = '/login');
+
+			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
+
+			const checkUser = realSnapshot?.data()?.noteSharedUsers?.find((user) => user.email === USER_DETAILS?.email);
+			const userPermission = checkUser
+				? { userExists: true, canEdit: checkUser.canEdit }
+				: { userExists: false, canEdit: false };
+
+			const sharedNoteData = {
+				index: 0,
+				noteId: realSnapshot.id,
+				noteTitle: decryptText(realSnapshot.data().noteTitle),
+				noteText: decryptText(realSnapshot.data().noteText),
+				noteData: decryptText(realSnapshot.data().noteData),
+				canEdit: userPermission.canEdit,
+				updatedOn: realSnapshot.data().updatedOn,
+				noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
+				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
+			};
+			setOpenedNoteText(sharedNoteData.noteData);
+			setOpenedNoteAllData(sharedNoteData);
+			// setIsGetApiLoading(false);
+			unsubscribeNoteFunctions.push(unsubscribe);
+		},
+		(err) => {
+			// setIsGetApiLoading(false);
+			console.log(err);
+			handleMsgShown(err.code, 'error');
+		}
+	);
+}
+
 function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown) {
 	const noteIds = folder.folderData.map((item) => item.noteId);
 
@@ -134,12 +234,14 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShow
 			getDataQuery,
 			async (realSnapshot) => {
 				let folderAllNotesData = [];
-				realSnapshot.forEach((doc) => {
+				realSnapshot.forEach((doc, index) => {
 					folderAllNotesData.push({
+						index,
 						noteId: doc.id,
-						noteTitle: decryptText(doc.data().noteTitle),
-						noteText: decryptText(doc.data().noteText),
 						noteData: decryptText(doc.data().noteData),
+						noteText: decryptText(doc.data().noteText),
+						noteTitle: decryptText(doc.data().noteTitle),
+						isLocked: doc.data().isLocked,
 						updatedOn: doc.data().updatedOn,
 						noteSharedUsers: doc.data().noteSharedUsers || [],
 						isNoteSharedWithAll: doc.data().isNoteSharedWithAll,
@@ -151,7 +253,7 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShow
 				const encryptNotesData = encryptText(JSON.stringify(folderAllNotesData));
 				localStorage.setItem(folder.folderName, encryptNotesData);
 
-				unsubscribeFunctionsArray.push(unsubscribe);
+				unsubscribeFolderFunctions.push(unsubscribe);
 			},
 			(err) => {
 				setIsApiLoading(false);
@@ -165,10 +267,16 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShow
 	}
 }
 
-function unsubscribeAll() {
-	unsubscribeFunctionsArray.forEach((unsubscribe) => unsubscribe());
+function unsubscribeAllFolders() {
+	unsubscribeFolderFunctions.forEach((unsubscribe) => unsubscribe());
 	// Clear the array after unsubscribing all listeners
-	unsubscribeFunctionsArray = [];
+	unsubscribeFolderFunctions = [];
+}
+
+function unsubscribeAllNotes() {
+	unsubscribeNoteFunctions.forEach((unsubscribe) => unsubscribe());
+	// Clear the array after unsubscribing all listeners
+	unsubscribeNoteFunctions = [];
 }
 
 // console.log(getAllNotesOfFolder().unsubscribe);
@@ -178,7 +286,8 @@ export {
 	addNewNote,
 	deleteData,
 	updateDocument,
+	getOpenNoteData,
 	getAllNotesOfFolder,
-	unsubscribeAll,
-	unsubscribeFunctionsArray,
+	unsubscribeAllFolders,
+	unsubscribeAllNotes,
 };

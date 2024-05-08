@@ -11,10 +11,10 @@ function RenderNoteContent({
 	isSaveBtnLoading,
 	handleNotesModalClosing,
 	toggleShareDialogBox,
-	currentNoteId,
+	openedNoteAllData,
 	// noteText,
-	openedNoteData,
-	setOpenedNoteData,
+	openedNoteText,
+	setOpenedNoteText,
 	handleSaveBtnClick,
 	openConfirmationDialog, // handleDeleteBtnClick,
 	handleAddShareNoteUser,
@@ -25,7 +25,7 @@ function RenderNoteContent({
 
 	useEffect(() => {
 		if (!isShareNoteType) quillRef?.current?.focus();
-	}, [currentNoteId, isShareNoteType]);
+	}, [openedNoteAllData.noteId, isShareNoteType]);
 
 	const showShareNoteError = useCallback(() => {
 		handleMsgShown('Please create a account to edit this note', 'warning');
@@ -47,9 +47,9 @@ function RenderNoteContent({
 				ref={quillRef}
 				theme="snow"
 				formats={formats}
-				value={openedNoteData}
+				value={openedNoteText}
 				// defaultValue={new Delta().insert('Hello').insert('\n', { header: 1 }).insert('\n').insert('\n')}
-				onChange={setOpenedNoteData}
+				onChange={setOpenedNoteText}
 				readOnly={isShareNoteType}
 				placeholder="Write something awesome..."
 				modules={modules}

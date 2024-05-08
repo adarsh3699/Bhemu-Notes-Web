@@ -1,6 +1,5 @@
 import { database, auth } from './initFirebase';
 import { encryptText, decryptText, USER_DETAILS } from '../utils';
-import { handleUserState } from './auth';
 
 import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
@@ -70,50 +69,58 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 // }
 
 //open anonymous sharenote
-async function getSearchedNoteData(noteId, setSearchedUserData, setCanEdit, handleMsgShown, setIsGetApiLoading) {
-	setIsGetApiLoading(true);
-	if (!noteId) return (window.location.href = '/login') & console.log('Please Provide Note Id');
 
-	const docRef = doc(database, 'user_notes', noteId);
+// async function getSearchedNoteData(
+// 	noteId,
+// 	setSearchedUserData,
+// 	setOpenedNoteAllData,
+// 	handleMsgShown,
+// 	setIsGetApiLoading
+// ) {
+// 	setIsGetApiLoading(true);
+// 	if (!noteId) return (window.location.href = '/login') & console.log('Please Provide Note Id');
 
-	onSnapshot(
-		docRef,
-		async (realSnapshot) => {
-			if (!realSnapshot?.data()) return (window.location.href = '/login');
+// 	const docRef = doc(database, 'user_notes', noteId);
 
-			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
+// 	onSnapshot(
+// 		docRef,
+// 		async (realSnapshot) => {
+// 			if (!realSnapshot?.data()) return (window.location.href = '/login');
 
-			const checkUser = realSnapshot?.data()?.noteSharedUsers?.find((user) => user.email === USER_DETAILS?.email);
-			const userPermission = checkUser
-				? { userExists: true, canEdit: checkUser.canEdit }
-				: { userExists: false, canEdit: false };
+// 			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
 
-			if (!realSnapshot?.data()?.isNoteSharedWithAll && !userPermission.userExists) {
-				return (window.location.href = '/login');
-			}
+// 			const checkUser = realSnapshot?.data()?.noteSharedUsers?.find((user) => user.email === USER_DETAILS?.email);
+// 			const userPermission = checkUser
+// 				? { userExists: true, canEdit: checkUser.canEdit }
+// 				: { userExists: false, canEdit: false };
 
-			const sharedNoteData = {
-				noteId: realSnapshot.id,
-				noteTitle: decryptText(realSnapshot.data().noteTitle),
-				noteText: decryptText(realSnapshot.data().noteText),
-				noteData: decryptText(realSnapshot.data().noteData),
-				updatedOn: realSnapshot.data().updatedOn,
-				noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
-				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
-			};
+// 			if (!realSnapshot?.data()?.isNoteSharedWithAll && !userPermission.userExists) {
+// 				return (window.location.href = '/login');
+// 			}
 
-			setCanEdit(userPermission.canEdit);
-			setSearchedUserData(sharedNoteData);
+// 			const sharedNoteData = {
+// 				index: 0,
+// 				noteId: realSnapshot.id,
+// 				noteTitle: decryptText(realSnapshot.data().noteTitle),
+// 				noteText: decryptText(realSnapshot.data().noteText),
+// 				noteData: decryptText(realSnapshot.data().noteData),
+// 				canEdit: userPermission.canEdit,
+// 				updatedOn: realSnapshot.data().updatedOn,
+// 				noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
+// 				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
+// 			};
 
-			setIsGetApiLoading(false);
-		},
-		(err) => {
-			setIsGetApiLoading(false);
-			console.log(err);
-			handleMsgShown(err.code, 'error');
-		}
-	);
-}
+// 			setSearchedUserData([sharedNoteData]);
+// 			setOpenedNoteAllData(sharedNoteData);
+// 			setIsGetApiLoading(false);
+// 		},
+// 		(err) => {
+// 			setIsGetApiLoading(false);
+// 			console.log(err);
+// 			handleMsgShown(err.code, 'error');
+// 		}
+// 	);
+// }
 
 //get user all info like share, folders, etc
 function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
@@ -172,4 +179,4 @@ function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackB
 		});
 }
 
-export { updateNoteShareAccess, getSearchedNoteData, updateUserFolder, getUserAllData };
+export { updateNoteShareAccess, updateUserFolder, getUserAllData };

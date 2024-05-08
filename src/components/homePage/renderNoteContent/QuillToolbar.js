@@ -212,6 +212,13 @@ export function QuillToolbar({
 					Share
 				</MenuItem>
 
+				<MenuItem onClick={() => console.log('Lock')}>
+					<ListItemIcon>
+						<DeleteIcon fontSize="small" />
+					</ListItemIcon>
+					Lock
+				</MenuItem>
+
 				<MenuItem onClick={openConfirmationDialog}>
 					<ListItemIcon>
 						<DeleteIcon fontSize="small" />
