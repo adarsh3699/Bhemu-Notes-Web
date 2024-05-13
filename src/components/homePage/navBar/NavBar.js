@@ -131,7 +131,13 @@ function NavBar({
 						color="inherit"
 						size="small"
 						aria-haspopup="true"
-						onClick={isSharedNoteType ? null : toggleDrawer}
+						onClick={
+							isSharedNoteType
+								? USER_DETAILS?.userId
+									? toggleDrawer
+									: handleLogoutBtnClick
+								: toggleDrawer
+						}
 						sx={{ ml: 1.2 }}
 					>
 						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
@@ -147,7 +153,9 @@ function NavBar({
 					aria-haspopup="true"
 					onClick={
 						isSharedNoteType
-							? () => handleMsgShown('Please create a account to create own notes', 'warning')
+							? USER_DETAILS?.userId
+								? handleAddNewNote
+								: () => handleMsgShown('Please create a account to create own notes', 'warning')
 							: handleAddNewNote
 					}
 				>

@@ -36,10 +36,10 @@ const localFolderData = params.get('folder')
 	: undefined;
 
 const sharedNoteId = window.location?.pathname?.split('share/')?.[1];
+const isSharedNoteType = sharedNoteId ? true : false;
 
 function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
-	const [isSharedNoteType, setIsSharedNoteType] = useState(sharedNoteId ? true : false);
 
 	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [userAllNotes, setAllNotes] = useState(
@@ -77,7 +77,7 @@ function HomePage() {
 
 	// fetch All noteData
 	useEffect(() => {
-		// handleUserState(true);
+		if (!isSharedNoteType) handleUserState(true);
 		if (isNotesModalOpen === false && userDeviceType().desktop) setIsNotesModalOpen(true);
 		if (USER_DETAILS?.userId) {
 			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown, handleNoteOpening);
@@ -92,14 +92,16 @@ function HomePage() {
 					handleMsgShown,
 					handleNoteOpening
 				);
-		} else if (sharedNoteId) {
+		}
+		if (sharedNoteId) {
 			getOpenNoteData(
 				sharedNoteId,
 				setOpenedNoteAllData,
 				setOpenedNoteText,
 				setIsApiLoading,
 				handleMsgShown,
-				navigate
+				navigate,
+				isSharedNoteType
 			);
 		}
 		setIsPageLoaded(false);
@@ -116,6 +118,7 @@ function HomePage() {
 
 	const handleNoteOpening = useCallback(
 		(index, item, folder) => {
+			if (isSharedNoteType) return;
 			let { noteId, noteData } = item || {};
 			if (!noteId) return navigate('/');
 
@@ -182,6 +185,10 @@ function HomePage() {
 
 	//handle note or todo save
 	const handleSaveBtnClick = useCallback(() => {
+		if (isSharedNoteType)
+			return USER_DETAILS.userId
+				? handleMsgShown('Insufficient permissions. Contact the onwer for edit permission.', 'warning')
+				: handleMsgShown('Please create a account to edit this note.', 'warning');
 		setIsSaveBtnLoading(true);
 		const html = document.querySelector('.ql-editor').innerHTML;
 		const noteTitleValue = getTitleValue(html);
@@ -199,22 +206,21 @@ function HomePage() {
 	//add Note Function
 	const handleAddNewNote = useCallback(
 		(e) => {
-			e.preventDefault();
-			const newNoteText = e.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
+			e?.preventDefault();
+			const newNoteText = e?.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
 			const newNoteData = `<h1>${newNoteText}</h1><p><br></p><p><br></p><p><br></p>`;
 
 			const toSendNoteData = { newNoteText, newNoteData };
 			handleNoteOpening(0, { noteText: newNoteText, noteData: newNoteData });
-			addNewNote(toSendNoteData, setOpenedNoteAllData, handleMsgShown, setIsApiLoading);
-
-			if (e.target?.noteTitle?.value?.trim()) e.target.reset();
+			addNewNote(toSendNoteData, handleMsgShown, setIsApiLoading, isSharedNoteType);
+			if (e?.target?.noteTitle?.value?.trim()) e?.target?.reset();
 		},
 		[handleMsgShown, handleNoteOpening]
 	);
 
 	//handle note delete
 	const handleDeleteBtnClick = useCallback(async () => {
-		// userDeviceType().mobile && handleNotesModalClosing();
+		if (isSharedNoteType) return handleMsgShown('Only the owner can delete this note.', 'warning');
 		setIsConfirmationDialogOpen(false);
 
 		deleteData(
@@ -314,6 +320,8 @@ function HomePage() {
 								handleDeleteBtnClick={handleDeleteBtnClick}
 								handleAddShareNoteUser={handleAddShareNoteUser}
 								handleMsgShown={handleMsgShown}
+								SharedUserCanEdit={isSharedNoteType ? openedNoteAllData?.canEdit : true}
+								isSharedNoteType={isSharedNoteType}
 							/>
 						</div>
 					)}

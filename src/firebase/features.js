@@ -69,60 +69,6 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 // 	});
 // }
 
-//open anonymous sharenote
-
-// async function getSearchedNoteData(
-// 	noteId,
-// 	setSearchedUserData,
-// 	setOpenedNoteAllData,
-// 	handleMsgShown,
-// 	setIsGetApiLoading
-// ) {
-// 	setIsGetApiLoading(true);
-// 	if (!noteId) return (window.location.href = '/login') & console.log('Please Provide Note Id');
-
-// 	const docRef = doc(database, 'user_notes', noteId);
-
-// 	onSnapshot(
-// 		docRef,
-// 		async (realSnapshot) => {
-// 			if (!realSnapshot?.data()) return (window.location.href = '/login');
-
-// 			if (USER_DETAILS?.email) handleUserState('ShareNotePage');
-
-// 			const checkUser = realSnapshot?.data()?.noteSharedUsers?.find((user) => user.email === USER_DETAILS?.email);
-// 			const userPermission = checkUser
-// 				? { userExists: true, canEdit: checkUser.canEdit }
-// 				: { userExists: false, canEdit: false };
-
-// 			if (!realSnapshot?.data()?.isNoteSharedWithAll && !userPermission.userExists) {
-// 				return (window.location.href = '/login');
-// 			}
-
-// 			const sharedNoteData = {
-// 				index: 0,
-// 				noteId: realSnapshot.id,
-// 				noteTitle: decryptText(realSnapshot.data().noteTitle),
-// 				noteText: decryptText(realSnapshot.data().noteText),
-// 				noteData: decryptText(realSnapshot.data().noteData),
-// 				canEdit: userPermission.canEdit,
-// 				updatedOn: realSnapshot.data().updatedOn,
-// 				noteSharedUsers: realSnapshot.data().noteSharedUsers || [],
-// 				isNoteSharedWithAll: realSnapshot.data().isNoteSharedWithAll,
-// 			};
-
-// 			setSearchedUserData([sharedNoteData]);
-// 			setOpenedNoteAllData(sharedNoteData);
-// 			setIsGetApiLoading(false);
-// 		},
-// 		(err) => {
-// 			setIsGetApiLoading(false);
-// 			console.log(err);
-// 			handleMsgShown(err.code, 'error');
-// 		}
-// 	);
-// }
-
 //get user all info like share, folders, etc
 function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
 	const myEmail = auth?.currentUser?.email || USER_DETAILS?.email;

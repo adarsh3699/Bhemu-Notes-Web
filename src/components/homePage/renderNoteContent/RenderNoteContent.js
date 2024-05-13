@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import ReactQuill from 'react-quill';
 import QuillToolbar, { modules, formats } from './QuillToolbar';
@@ -12,24 +12,20 @@ function RenderNoteContent({
 	handleNotesModalClosing,
 	toggleShareDialogBox,
 	openedNoteAllData,
-	// noteText,
 	openedNoteText,
 	setOpenedNoteText,
 	handleSaveBtnClick,
 	openConfirmationDialog, // handleDeleteBtnClick,
 	handleAddShareNoteUser,
-	isShareNoteType,
 	handleMsgShown,
+	SharedUserCanEdit,
+	isSharedNoteType,
 }) {
 	const quillRef = useRef(null);
 
 	useEffect(() => {
-		if (!isShareNoteType) quillRef?.current?.focus();
-	}, [openedNoteAllData, isShareNoteType]);
-
-	const showShareNoteError = useCallback(() => {
-		handleMsgShown('Please create a account to edit this note', 'warning');
-	}, [handleMsgShown]);
+		if (SharedUserCanEdit) quillRef?.current?.focus();
+	}, [openedNoteAllData, SharedUserCanEdit]);
 
 	return (
 		<div className="text-editor">
@@ -40,17 +36,15 @@ function RenderNoteContent({
 				handleSaveBtnClick={handleSaveBtnClick}
 				handleAddShareNoteUser={handleAddShareNoteUser}
 				toggleShareDialogBox={toggleShareDialogBox}
-				isShareNoteType={isShareNoteType}
-				showShareNoteError={showShareNoteError}
+				isSharedNoteType={isSharedNoteType}
 			/>
 			<ReactQuill
 				ref={quillRef}
 				theme="snow"
 				formats={formats}
 				value={openedNoteText}
-				// defaultValue={new Delta().insert('Hello').insert('\n', { header: 1 }).insert('\n').insert('\n')}
 				onChange={setOpenedNoteText}
-				readOnly={isShareNoteType}
+				readOnly={!SharedUserCanEdit}
 				placeholder="Write something awesome..."
 				modules={modules}
 			/>

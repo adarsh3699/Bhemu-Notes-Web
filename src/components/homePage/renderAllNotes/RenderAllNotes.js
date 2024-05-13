@@ -53,8 +53,8 @@ function RenderAllNotes({
 							</div>
 							<div className="noteContent">
 								<div className="noteDisplay">
-									{item.noteText?.split(item.noteTitle)[1]
-										? item.noteText?.split(item.noteTitle)[1]
+									{item.noteText?.split(item.noteTitle)[1]?.trim()
+										? item.noteText?.split(item.noteTitle)[1]?.trim()
 										: 'Empty.......'}
 								</div>
 							</div>
