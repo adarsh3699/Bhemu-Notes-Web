@@ -10,7 +10,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
 const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const ShareNotePage = lazy(() => import('./pages/ShareNotePage'));
+// const ShareNotePage = lazy(() => import('./pages/ShareNotePage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 function Routes() {
@@ -43,12 +43,12 @@ function Routes() {
 				<Route exact path="/register" element={<CreateAcc />} />
 				<Route exact path="/forget-password" element={<ForgetPasswordPage />} />
 				<Route exact path="/" element={<HomePage />} />
-				<Route path="/share/*" element={<ShareNotePage />} />
+				<Route path="/share/*" element={<HomePage />} />
 				<Route exact path="/settings" element={<SettingsPage />} />
 				<Route exact path="/home" element={<Navigate to="/" />} />
 
 				<Route
-					path="*"
+					// path="*"
 					element={
 						<center>
 							<h1>Page not Found</h1>

@@ -27,7 +27,6 @@ import './folderDialog.css';
 function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
-	const [allNoteFolders, setAllNoteFolders] = useState(noteFolders || []);
 	const [currentFolderId, setCurrentFolderId] = useState('');
 	const [selectedNotes, setSelectedNotes] = useState(userAllNotes || []);
 	const [folderName, setFolderName] = useState('');
@@ -65,32 +64,37 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 	const toggleDrawer = (event) => {
 		setIsDrawerAllNoteOpen((prevState) => !prevState);
 	};
-
 	const handleBackBtnClick = useCallback(() => {
 		if (isEditFolderDialogOpen.isOpen) {
 			setIsEditFolderDialogOpen({ isOpen: false, openAsEdit: false });
 			setCurrentFolderId('');
 			setSelectedNotes(userAllNotes);
-			setAllNoteFolders(noteFolders);
 			setFolderName('');
 		} else {
 			toggleFolderDialog();
 		}
-	}, [userAllNotes, isEditFolderDialogOpen.isOpen, noteFolders, toggleFolderDialog]);
+	}, [userAllNotes, isEditFolderDialogOpen.isOpen, toggleFolderDialog]);
 
 	//handleCreateNewFolder btn click
 	const handleCreateNewFolder = useCallback(() => {
 		setCurrentFolderId(uid(16));
-		setAllNoteFolders(noteFolders);
 		setIsEditFolderDialogOpen({ isOpen: true, openAsEdit: false });
-	}, [noteFolders]);
+	}, []);
 
 	const handleFolderEditBtnClick = useCallback(
-		(itemOrg) => {
-			setCurrentFolderId(itemOrg.folderId);
-			setFolderName(itemOrg.folderName);
+		(folderDetails) => {
+			setCurrentFolderId(folderDetails.folderId);
+			setFolderName(folderDetails.folderName);
 			setIsEditFolderDialogOpen({ isOpen: true, openAsEdit: true });
-			const temp = userAllNotes.map((i) => itemOrg.folderData.find((j) => j.noteId === i.noteId) || i);
+
+			const temp = userAllNotes.map((userNote) => ({
+				noteId: userNote.noteId,
+				isNoteSelected:
+					folderDetails.folderData.find((folderNote) => folderNote.noteId === userNote.noteId)
+						?.isNoteSelected ?? false,
+				noteTitle: userNote.noteTitle,
+			}));
+
 			setSelectedNotes(temp);
 		},
 		[userAllNotes]
@@ -115,20 +119,23 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 	const handleSaveBtnClick = useCallback(() => {
 		if (!folderName) return handleMsgShown('Folder name is required');
 		if (!selectedNotes.filter((item) => item.isNoteSelected).length)
-			return handleMsgShown('Please select atleast one note');
+			return handleMsgShown('Please select atleast one note', 'warning');
 
 		let temp;
+		//Create new folder
 		if (!isEditFolderDialogOpen.openAsEdit) {
+			// console.log('no_isEditFolderDialogOpen');
 			temp = [
 				{
 					folderName,
 					folderId: currentFolderId,
 					folderData: selectedNotes.filter((item) => item.isNoteSelected),
 				},
-				...allNoteFolders,
+				...noteFolders,
 			];
 		} else {
-			temp = allNoteFolders.map((item) =>
+			// console.log('isEditFolderDialogOpen');
+			temp = noteFolders.map((item) =>
 				item.folderId === currentFolderId
 					? {
 							folderName,
@@ -139,21 +146,21 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 			);
 		}
 
-		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, handleBackBtnClick);
+		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, handleBackBtnClick, false, folderName);
 	}, [
-		allNoteFolders,
+		noteFolders,
 		currentFolderId,
 		folderName,
 		handleBackBtnClick,
 		handleMsgShown,
-		isEditFolderDialogOpen.openAsEdit,
+		isEditFolderDialogOpen?.openAsEdit,
 		selectedNotes,
 	]);
 
 	const handleDeleteFolderBtnClick = useCallback(() => {
-		let temp = allNoteFolders.filter((item) => item.folderId !== currentFolderId);
-		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, handleBackBtnClick, true);
-	}, [allNoteFolders, currentFolderId, handleBackBtnClick, handleMsgShown]);
+		let temp = noteFolders.filter((item) => item.folderId !== currentFolderId);
+		updateUserFolder(temp, setIsSaveBtnLoading, handleMsgShown, handleBackBtnClick, true, folderName);
+	}, [noteFolders, currentFolderId, folderName, handleBackBtnClick, handleMsgShown]);
 
 	const viewFolderContain = (
 		<div className="folderDialogBoxContainer">

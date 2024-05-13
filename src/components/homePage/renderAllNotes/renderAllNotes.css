@@ -68,6 +68,12 @@
 	margin-bottom: 150px;
 }
 
+.noteHeading {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
 .noteTitle {
 	font-size: 19px;
 	white-space: nowrap;

@@ -2,6 +2,8 @@ import React from 'react';
 import Loader from '../../Loader';
 
 import homePageSkeleton from '../../../img/homePageSkeleton.svg';
+// import LockOpenIcon from '@mui/icons-material/LockOpenOutlined';
+import LockIcon from '@mui/icons-material/Lock';
 
 import './renderAllNotes.css';
 
@@ -45,11 +47,14 @@ function RenderAllNotes({
 				{userAllNotes.map(function (item, index) {
 					return (
 						<div className="noteBox" key={index} onClick={() => handleNoteOpening(index, item)}>
-							<div className="noteTitle">{item.noteTitle || 'Note Title'}</div>
+							<div className="noteHeading">
+								<div className="noteTitle">{item.noteTitle || 'Note Title'}</div>
+								{item?.isLocked && <LockIcon />}
+							</div>
 							<div className="noteContent">
 								<div className="noteDisplay">
-									{item.noteText?.split(item.noteTitle)[1]
-										? item.noteText?.split(item.noteTitle)[1]
+									{item.noteText?.split(item.noteTitle)[1]?.trim()
+										? item.noteText?.split(item.noteTitle)[1]?.trim()
 										: 'Empty.......'}
 								</div>
 							</div>
@@ -75,7 +80,7 @@ function RenderAllNotes({
 												month: 'long',
 												year: 'numeric',
 										  })
-										: new Date()?.toLocaleDateString('en-US', {
+										: new Date()?.toLocaleDateString(undefined, {
 												day: '2-digit',
 												month: 'long',
 												year: 'numeric',

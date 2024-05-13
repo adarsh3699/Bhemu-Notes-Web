@@ -130,7 +130,7 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 			.catch((err) => {
 				setIsApiLoading(false);
 				setMsg(err.code);
-				console.log(err.code);
+				console.log('createUserWithEmailAndPassword', err);
 			});
 	}
 }

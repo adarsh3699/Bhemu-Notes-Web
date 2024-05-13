@@ -71,12 +71,10 @@ export const formats = [
 export function QuillToolbar({
 	handleNotesModalClosing,
 	isSaveBtnLoading,
-	handleAddTodoBtn,
 	handleSaveBtnClick,
 	openConfirmationDialog,
 	toggleShareDialogBox,
-	isShareNoteType,
-	showShareNoteError,
+	isSharedNoteType,
 }) {
 	const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
@@ -108,11 +106,7 @@ export function QuillToolbar({
 					</IconButton>
 
 					<Tooltip title="Save" arrow>
-						<IconButton
-							color="inherit"
-							aria-label="save"
-							onClick={isShareNoteType ? showShareNoteError : handleSaveBtnClick}
-						>
+						<IconButton color="inherit" aria-label="save" onClick={handleSaveBtnClick}>
 							{isSaveBtnLoading ? <CircularProgress size={24} /> : <SaveIcon fontSize="inherit" />}
 						</IconButton>
 					</Tooltip>
@@ -167,7 +161,7 @@ export function QuillToolbar({
 						aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
 						aria-haspopup="true"
 						aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
-						onClick={toggleSettingsMenu}
+						onClick={isSharedNoteType ? null : toggleSettingsMenu}
 					>
 						<MenuIcon fontSize="inherit" />
 					</IconButton>
@@ -211,6 +205,13 @@ export function QuillToolbar({
 					</ListItemIcon>
 					Share
 				</MenuItem>
+
+				{/* <MenuItem onClick={() => console.log('Lock')}>
+					<ListItemIcon>
+						<DeleteIcon fontSize="small" />
+					</ListItemIcon>
+					Lock
+				</MenuItem> */}
 
 				<MenuItem onClick={openConfirmationDialog}>
 					<ListItemIcon>
