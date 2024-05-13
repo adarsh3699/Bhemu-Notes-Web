@@ -1,5 +1,5 @@
 import { database, auth } from './initFirebase';
-import { encryptText, decryptText, USER_DETAILS } from '../utils';
+import { encryptText, USER_DETAILS } from '../utils';
 
 import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 
@@ -24,7 +24,8 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 		})
 		.catch((err) => {
 			setIsSaveBtnLoading(false);
-			console.log(err.message);
+			console.log('updateNoteShareAccess:', err);
+			handleErrorShown(err.message);
 		});
 }
 
@@ -156,7 +157,7 @@ function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
 	);
 }
 
-function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackBtnClick, isDeleteFolder) {
+function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackBtnClick, isDeleteFolder, folderName) {
 	const myEmail = auth?.currentUser.email;
 	setIsSaveBtnLoading(true);
 
@@ -166,9 +167,14 @@ function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackB
 	})
 		.then(() => {
 			handleBackBtnClick();
-			isDeleteFolder
-				? setMsg('Folder deleted successfully', 'success')
-				: setMsg('Folder save successfully', 'success');
+			if (isDeleteFolder) {
+				localStorage.removeItem(folderName);
+				setMsg('Folder deleted successfully', 'success');
+			} else {
+				setMsg('Folder save successfully', 'success');
+				// const encryptNotesData = encryptText(JSON.stringify(incomingData));
+				// localStorage.setItem(folderName, encryptNotesData);
+			}
 		})
 		.catch((err) => {
 			console.log(err.message);

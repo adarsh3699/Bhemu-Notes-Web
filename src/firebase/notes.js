@@ -239,15 +239,7 @@ async function getOpenNoteData(
 	);
 }
 
-function getAllNotesOfFolder(
-	folder,
-	setAllNotes,
-	setIsApiLoading,
-	handleMsgShown,
-	urlNoteId,
-	folderName,
-	handleNoteOpening
-) {
+function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown, folderName, handleNoteOpening) {
 	const noteIds = folder.folderData.map((item) => item.noteId);
 
 	try {
@@ -256,6 +248,7 @@ function getAllNotesOfFolder(
 			getDataQuery,
 			async (realSnapshot) => {
 				let folderAllNotesData = [];
+				const urlNoteId = window.location.hash.slice(1);
 				realSnapshot.forEach((doc, index) => {
 					folderAllNotesData.push({
 						index,
@@ -271,8 +264,7 @@ function getAllNotesOfFolder(
 				});
 
 				setAllNotes(folderAllNotesData);
-				console.log(urlNoteId, folderName);
-				if (folderName) {
+				if (folderName && !urlNoteId) {
 					handleNoteOpening(0, folderAllNotesData?.[0] || [], folderName);
 				}
 				const encryptNotesData = encryptText(JSON.stringify(folderAllNotesData));

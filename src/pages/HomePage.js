@@ -63,7 +63,6 @@ function HomePage() {
 	const navigate = useNavigate();
 	const folderName = searchParams.get('folder');
 	const urlNoteId = window.location.hash.slice(1);
-	// console.log('urlNoteId', urlNoteId);
 
 	const handleMsgShown = useCallback((msgText, type) => {
 		if (msgText) {
@@ -75,33 +74,6 @@ function HomePage() {
 			console.log('Please Provide Text Msg');
 		}
 	}, []);
-
-	const handleNoteOpening = useCallback(
-		(index, item, folder) => {
-			let { noteId, noteData } = item || {};
-			if (!noteId) return navigate('/');
-
-			if (urlNoteId === noteId || !noteId) return;
-
-			navigate(folder ? `/?folder=${folder}#${noteId}` : `#${noteId}`);
-			unsubscribeAllNotes();
-			setOpenedNoteText(noteData);
-			getOpenNoteData(
-				item?.noteId,
-				setOpenedNoteAllData,
-				setOpenedNoteText,
-				setIsApiLoading,
-				handleMsgShown,
-				handleNoteOpening
-			);
-
-			setOpenedNoteAllData(item);
-			setIsNotesModalOpen(true);
-			setOpenedNoteIndex(index);
-			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
-		},
-		[navigate, urlNoteId, handleMsgShown]
-	);
 
 	// fetch All noteData
 	useEffect(() => {
@@ -142,19 +114,33 @@ function HomePage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// //handle open 1st note on page Load
-	// useEffect(() => {
-	// 	if (!isNotesModalOpen === false && !userDeviceType().desktop) return;
-	// 	setIsNotesModalOpen(true);
-	// 	// if (urlNoteId) return;
-	// 	// console.log('sd');
-	// 	// if (!folderName) {
-	// 	// 	handleNoteOpening(0, userAllNotes?.[0] || []);
-	// 	// } else {
-	// 	// 	handleNoteOpening(0, currentFolderNotes?.[0] || []);
-	// 	// }
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, []);
+	const handleNoteOpening = useCallback(
+		(index, item, folder) => {
+			let { noteId, noteData } = item || {};
+			if (!noteId) return navigate('/');
+
+			if (urlNoteId === noteId || !noteId) return;
+			folder = folder || folderName;
+
+			navigate(folder ? `/?folder=${folder}#${noteId}` : `#${noteId}`);
+			unsubscribeAllNotes();
+			setOpenedNoteText(noteData);
+			getOpenNoteData(
+				item?.noteId,
+				setOpenedNoteAllData,
+				setOpenedNoteText,
+				setIsApiLoading,
+				handleMsgShown,
+				handleNoteOpening
+			);
+
+			setOpenedNoteAllData(item);
+			setIsNotesModalOpen(true);
+			setOpenedNoteIndex(index);
+			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
+		},
+		[navigate, urlNoteId, folderName, handleMsgShown]
+	);
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
@@ -164,19 +150,20 @@ function HomePage() {
 	const handleFolderChange = useCallback(
 		(item) => {
 			if (folderName === item?.folderName) return;
+
 			setSearchParams({ folder: item?.folderName });
 			unsubscribeAllFolders();
+
 			getAllNotesOfFolder(
 				item,
 				setCurrentFolderNotes,
 				setIsApiLoading,
 				handleMsgShown,
-				urlNoteId,
 				item?.folderName,
 				handleNoteOpening
 			);
 		},
-		[folderName, handleMsgShown, handleNoteOpening, setSearchParams, urlNoteId]
+		[folderName, handleMsgShown, handleNoteOpening, setSearchParams]
 	);
 
 	//get title value from html string
@@ -267,7 +254,6 @@ function HomePage() {
 			e.preventDefault();
 			const email = e.target.shareEmailInput.value.trim();
 			if (email === '' || USER_DETAILS?.email === email) return;
-			console.log(email);
 
 			for (let i = 0; i < openedNoteAllData.noteSharedUsers.length; i++) {
 				if (openedNoteAllData.noteSharedUsers[i]?.email === email) {
