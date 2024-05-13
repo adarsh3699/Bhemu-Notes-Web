@@ -80,7 +80,7 @@ function RenderAllNotes({
 												month: 'long',
 												year: 'numeric',
 										  })
-										: new Date()?.toLocaleDateString('en-US', {
+										: new Date()?.toLocaleDateString(undefined, {
 												day: '2-digit',
 												month: 'long',
 												year: 'numeric',

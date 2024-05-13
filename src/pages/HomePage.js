@@ -32,7 +32,7 @@ document.title = 'Bhemu Notes';
 let params = new URL(document.location).searchParams;
 
 const localFolderData = params.get('folder')
-	? JSON.parse(decryptText(localStorage.getItem(params.get('folder'))))
+	? localStorage.getItem(params.get('folder')) && JSON.parse(decryptText(localStorage.getItem(params.get('folder'))))
 	: undefined;
 
 const sharedNoteId = window.location?.pathname?.split('share/')?.[1];
@@ -41,12 +41,13 @@ function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
 	const [isSharedNoteType, setIsSharedNoteType] = useState(sharedNoteId ? true : false);
 
+	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [userAllNotes, setAllNotes] = useState(
 		(localStorage.getItem('note_data') && JSON.parse(decryptText(localStorage.getItem('note_data')))) || []
 	);
-	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
+	const [openedNoteIndex, setOpenedNoteIndex] = useState(0);
 	const [openedNoteText, setOpenedNoteText] = useState('');
 	const [openedNoteAllData, setOpenedNoteAllData] = useState({});
 
@@ -62,6 +63,7 @@ function HomePage() {
 	const navigate = useNavigate();
 	const folderName = searchParams.get('folder');
 	const urlNoteId = window.location.hash.slice(1);
+	// console.log('urlNoteId', urlNoteId);
 
 	const handleMsgShown = useCallback((msgText, type) => {
 		if (msgText) {
@@ -74,63 +76,85 @@ function HomePage() {
 		}
 	}, []);
 
+	const handleNoteOpening = useCallback(
+		(index, item, folder) => {
+			let { noteId, noteData } = item || {};
+			if (!noteId) return navigate('/');
+
+			if (urlNoteId === noteId || !noteId) return;
+
+			navigate(folder ? `/?folder=${folder}#${noteId}` : `#${noteId}`);
+			unsubscribeAllNotes();
+			setOpenedNoteText(noteData);
+			getOpenNoteData(
+				item?.noteId,
+				setOpenedNoteAllData,
+				setOpenedNoteText,
+				setIsApiLoading,
+				handleMsgShown,
+				handleNoteOpening
+			);
+
+			setOpenedNoteAllData(item);
+			setIsNotesModalOpen(true);
+			setOpenedNoteIndex(index);
+			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
+		},
+		[navigate, urlNoteId, handleMsgShown]
+	);
+
 	// fetch All noteData
 	useEffect(() => {
 		// handleUserState(true);
-
+		if (isNotesModalOpen === false && userDeviceType().desktop) setIsNotesModalOpen(true);
 		if (USER_DETAILS?.userId) {
-			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown);
+			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown, handleNoteOpening);
 			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
+
 			urlNoteId &&
-				getOpenNoteData(urlNoteId, setOpenedNoteAllData, setOpenedNoteText, setIsApiLoading, handleMsgShown);
+				getOpenNoteData(
+					urlNoteId,
+					setOpenedNoteAllData,
+					setOpenedNoteText,
+					setIsApiLoading,
+					handleMsgShown,
+					handleNoteOpening
+				);
 		} else if (sharedNoteId) {
-			getOpenNoteData(sharedNoteId, setOpenedNoteAllData, setOpenedNoteText, setIsApiLoading, handleMsgShown);
-			// console.log(sharedNoteId);
-			// getSearchedNoteData(sharedNoteId, setAllNotes, setOpenedNoteAllData, handleMsgShown, setIsApiLoading);
+			getOpenNoteData(
+				sharedNoteId,
+				setOpenedNoteAllData,
+				setOpenedNoteText,
+				setIsApiLoading,
+				handleMsgShown,
+				navigate
+			);
 		}
 		setIsPageLoaded(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [handleMsgShown]);
+		const isNoteTitlePresent = userAllDetails?.userFolders?.some((folder) => {
+			return folder.folderName === folderName;
+		});
 
-	const openFirstNote = useCallback((allNotesAtr, index) => {
-		if (allNotesAtr.length === 0) return;
-		// console.log(allNotesAtr);
-		setOpenedNoteText(allNotesAtr[index]?.noteData || '');
-		setOpenedNoteAllData(allNotesAtr[index]);
-		// setCurrentNoteIndex(index);
-	}, []);
-
-	//handle open 1st note on page Load
-	useEffect(() => {
-		// console.log(userAllNotes);
-		if (isNotesModalOpen === false && userDeviceType().desktop) {
-			setIsNotesModalOpen(true);
-			// if (!folderName) {
-			// 	openFirstNote(userAllNotes, 0);
-			// 	// console.log('if');
-			// } else {
-			// 	// console.log('else');
-			// 	openFirstNote(currentFolderNotes, 0);
-			// }
+		if (!isNoteTitlePresent && folderName) {
+			navigate('/');
+			handleNoteOpening(0, userAllNotes?.[0] || []);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userAllNotes]);
+	}, []);
 
-	const handleNoteOpening = useCallback(
-		(index, item) => {
-			console.log(item);
-			navigate(folderName ? `/?folder=${folderName}#${item.noteId}` : `#${item.noteId}`);
-			unsubscribeAllNotes();
-			setOpenedNoteText(item.noteData);
-			getOpenNoteData(item.noteId, setOpenedNoteAllData, setOpenedNoteText, setIsApiLoading, handleMsgShown);
-
-			// setCurrentNoteIndex(index);
-			setOpenedNoteAllData(item);
-			setIsNotesModalOpen(true);
-			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
-		},
-		[handleMsgShown, navigate, folderName]
-	);
+	// //handle open 1st note on page Load
+	// useEffect(() => {
+	// 	if (!isNotesModalOpen === false && !userDeviceType().desktop) return;
+	// 	setIsNotesModalOpen(true);
+	// 	// if (urlNoteId) return;
+	// 	// console.log('sd');
+	// 	// if (!folderName) {
+	// 	// 	handleNoteOpening(0, userAllNotes?.[0] || []);
+	// 	// } else {
+	// 	// 	handleNoteOpening(0, currentFolderNotes?.[0] || []);
+	// 	// }
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, []);
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
@@ -139,27 +163,20 @@ function HomePage() {
 
 	const handleFolderChange = useCallback(
 		(item) => {
-			unsubscribeAllFolders();
+			if (folderName === item?.folderName) return;
 			setSearchParams({ folder: item?.folderName });
-			getAllNotesOfFolder(item, setCurrentFolderNotes, setIsApiLoading, handleMsgShown);
+			unsubscribeAllFolders();
+			getAllNotesOfFolder(
+				item,
+				setCurrentFolderNotes,
+				setIsApiLoading,
+				handleMsgShown,
+				urlNoteId,
+				item?.folderName,
+				handleNoteOpening
+			);
 		},
-		[handleMsgShown, setSearchParams]
-	);
-
-	//add Note Function
-	const handleAddNewNote = useCallback(
-		(e) => {
-			e.preventDefault();
-			const newNoteText = e.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
-			const newNoteData = `<h1>${newNoteText}</h1><p><br></p><p><br></p><p><br></p>`;
-
-			const toSendNoteData = { newNoteText, newNoteData };
-			handleNoteOpening(0, { noteText: newNoteText, noteData: newNoteData });
-			addNewNote(toSendNoteData, setOpenedNoteAllData, handleMsgShown, setIsApiLoading);
-
-			if (e.target?.noteTitle?.value?.trim()) e.target.reset();
-		},
-		[handleNoteOpening, handleMsgShown]
+		[folderName, handleMsgShown, handleNoteOpening, setSearchParams, urlNoteId]
 	);
 
 	//get title value from html string
@@ -189,8 +206,39 @@ function HomePage() {
 			noteData: openedNoteText,
 		};
 
-		updateDocument(toSendData, setIsSaveBtnLoading, setIsNotesModalOpen, handleMsgShown);
-	}, [getTitleValue, openedNoteAllData.noteId, openedNoteText, handleMsgShown]);
+		updateDocument(toSendData, setIsSaveBtnLoading, handleMsgShown);
+	}, [getTitleValue, openedNoteAllData, openedNoteText, handleMsgShown]);
+
+	//add Note Function
+	const handleAddNewNote = useCallback(
+		(e) => {
+			e.preventDefault();
+			const newNoteText = e.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
+			const newNoteData = `<h1>${newNoteText}</h1><p><br></p><p><br></p><p><br></p>`;
+
+			const toSendNoteData = { newNoteText, newNoteData };
+			handleNoteOpening(0, { noteText: newNoteText, noteData: newNoteData });
+			addNewNote(toSendNoteData, setOpenedNoteAllData, handleMsgShown, setIsApiLoading);
+
+			if (e.target?.noteTitle?.value?.trim()) e.target.reset();
+		},
+		[handleMsgShown, handleNoteOpening]
+	);
+
+	//handle note delete
+	const handleDeleteBtnClick = useCallback(async () => {
+		// userDeviceType().mobile && handleNotesModalClosing();
+		setIsConfirmationDialogOpen(false);
+
+		deleteData(
+			openedNoteAllData.noteId,
+			setIsApiLoading,
+			handleMsgShown,
+			openedNoteIndex,
+			userAllNotes,
+			handleNoteOpening
+		);
+	}, [openedNoteAllData, handleMsgShown, openedNoteIndex, userAllNotes, handleNoteOpening]);
 
 	//handle Save when "ctrl + s" is pressed
 	useHotkeys(
@@ -207,21 +255,6 @@ function HomePage() {
 			enableOnContentEditable: true,
 		}
 	);
-
-	//handle note delete
-	const handleDeleteBtnClick = useCallback(async () => {
-		// userDeviceType().mobile && handleNotesModalClosing();
-		setIsConfirmationDialogOpen(false);
-		// console.log(openedNoteAllData.noteId);
-		deleteData(
-			openedNoteAllData.noteId,
-			setIsApiLoading,
-			handleMsgShown,
-			openFirstNote,
-			userAllNotes,
-			openedNoteAllData.index
-		);
-	}, [openedNoteAllData, handleMsgShown, openFirstNote, userAllNotes]);
 
 	//toggle share dialog box
 	const toggleShareDialogBox = useCallback(() => {
@@ -249,7 +282,7 @@ function HomePage() {
 			}));
 			e.target.reset();
 		},
-		[openedNoteAllData.noteSharedUsers, handleMsgShown]
+		[openedNoteAllData, handleMsgShown]
 	);
 
 	if (isPageLoaded) return;

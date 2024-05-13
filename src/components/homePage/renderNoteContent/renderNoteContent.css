@@ -32,6 +32,10 @@
 	fill: #f1f1f1;
 }
 
+.ql-snow a {
+	color: rgb(102, 163, 224);
+}
+
 .ql-toolbar .ql-picker {
 	color: #f1f1f1;
 }

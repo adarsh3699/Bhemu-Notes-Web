@@ -25,7 +25,7 @@ function RenderNoteContent({
 
 	useEffect(() => {
 		if (!isShareNoteType) quillRef?.current?.focus();
-	}, [openedNoteAllData.noteId, isShareNoteType]);
+	}, [openedNoteAllData, isShareNoteType]);
 
 	const showShareNoteError = useCallback(() => {
 		handleMsgShown('Please create a account to edit this note', 'warning');
