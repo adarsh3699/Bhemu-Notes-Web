@@ -27,8 +27,6 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import '../styles/homePage.css';
 
-document.title = 'Bhemu Notes';
-
 let params = new URL(document.location).searchParams;
 
 const localFolderData = params.get('folder')

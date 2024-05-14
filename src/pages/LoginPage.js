@@ -12,6 +12,8 @@ import { amber } from '@mui/material/colors';
 import logo from '../img/newLogo.webp';
 import '../styles/loginPage.css';
 
+document.title = 'Bhemu Notes | Sign in';
+
 function LoginPage() {
 	const [msg, setMsg] = useState('');
 	const [isLoading, setIsLoading] = useState(true);

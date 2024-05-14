@@ -24,8 +24,10 @@ function RenderNoteContent({
 	const quillRef = useRef(null);
 
 	useEffect(() => {
+		if (openedNoteAllData?.noteTitle) document.title = `Bhemu Notes | ${openedNoteAllData?.noteTitle}`;
 		if (SharedUserCanEdit) quillRef?.current?.focus();
-	}, [openedNoteAllData, SharedUserCanEdit]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [SharedUserCanEdit, openedNoteAllData?.noteId]);
 
 	return (
 		<div className="text-editor">
