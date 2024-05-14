@@ -67,6 +67,7 @@
 		0px 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
 }
 
+/* ............toolbar_end.............. */
 .ql-container {
 	border: unset !important; /* text area style*/
 	font-size: 17px;
@@ -93,6 +94,10 @@
 
 .ql-snow a {
 	color: rgb(102, 163, 224);
+}
+
+.ql-snow .ql-editor blockquote {
+	border-color: red;
 }
 
 .ql-editor li s {
