@@ -23,25 +23,21 @@
 
 .ql-toolbar .ql-stroke {
 	fill: none;
-	stroke: #f1f1f1;
+	stroke: #f1f1f1; /*fill toolobar icon color */
 }
 
 .ql-toolbar .ql-fill,
 .ql-snow .ql-fill,
 .ql-snow .ql-stroke.ql-fill {
-	fill: #f1f1f1;
-}
-
-.ql-snow a {
-	color: rgb(102, 163, 224);
+	fill: #f1f1f1; /*fill toolobar icon color */
 }
 
 .ql-toolbar .ql-picker {
-	color: #f1f1f1;
+	color: #f1f1f1; /*toolobar heading picker font color */
 }
 
 .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
-	margin-top: -13px;
+	margin-top: -13px; /*toolobar heading arow icon alignment */
 }
 
 .ql-snow.ql-toolbar button,
@@ -49,38 +45,41 @@
 .ql-snow .ql-color-picker,
 .ql-snow .ql-icon-picker,
 .ql-snow .ql-icon-picker .ql-picker-item {
-	height: 30px;
+	height: 30px; /*toolobar icon size */
 	width: 30px;
 }
 
 .ql-picker-label svg {
-	height: 25px;
+	height: 25px; /*toolobar icon size */
 	width: 25px;
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-	border: unset; /*picker border remove*/
+	border: unset; /*picker title | icon border remove*/
 }
 
 .ql-picker-options {
-	border: unset !important; /*picker option border remove*/
+	border: unset !important; /* option picker style*/
 	border-radius: 5px;
 	background-color: #121212 !important; /*picker option background color*/
 	background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12));
+	box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+		0px 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
 }
 
 .ql-container {
-	border: unset !important;
+	border: unset !important; /* text area style*/
 	font-size: 17px;
 	/* background-color: rgb(37, 37, 117); */
 }
 
 .ql-editor {
-	height: calc(100vh - 91px);
+	height: calc(100vh - 91px); /* text area style*/
 	overflow-y: auto;
 	overflow-x: hidden;
 	overflow-wrap: break-word;
 	padding-bottom: 400px !important;
+	/* background-color: rgb(37, 37, 117); */
 }
 
 .quill > .ql-container > .ql-editor.ql-blank::before {
@@ -90,6 +89,14 @@
 
 .ql-editor span {
 	border-radius: 3px;
+}
+
+.ql-snow a {
+	color: rgb(102, 163, 224);
+}
+
+.ql-editor li s {
+	text-decoration-color: #ff0000;
 }
 
 .ql-editor ol,

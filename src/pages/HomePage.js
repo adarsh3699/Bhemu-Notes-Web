@@ -319,7 +319,7 @@ function HomePage() {
 								handleSaveBtnClick={handleSaveBtnClick}
 								handleDeleteBtnClick={handleDeleteBtnClick}
 								handleAddShareNoteUser={handleAddShareNoteUser}
-								handleMsgShown={handleMsgShown}
+								// handleMsgShown={handleMsgShown}
 								SharedUserCanEdit={isSharedNoteType ? openedNoteAllData?.canEdit : true}
 								isSharedNoteType={isSharedNoteType}
 							/>
