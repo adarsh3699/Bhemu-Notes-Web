@@ -183,12 +183,22 @@ function HomePage() {
 		}
 	}, []);
 
+	const checkShareUserPermission = useCallback(() => {
+		if (USER_DETAILS.userId) {
+			if (!openedNoteAllData?.canEdit) {
+				handleMsgShown('Insufficient permissions. Contact the onwer for edit permission.', 'warning');
+				return true;
+			}
+		} else {
+			handleMsgShown('Please create a account to edit this note.', 'warning');
+			return true;
+		}
+	}, [handleMsgShown, openedNoteAllData?.canEdit]);
+
 	//handle note or todo save
 	const handleSaveBtnClick = useCallback(() => {
-		if (isSharedNoteType)
-			return USER_DETAILS.userId
-				? handleMsgShown('Insufficient permissions. Contact the onwer for edit permission.', 'warning')
-				: handleMsgShown('Please create a account to edit this note.', 'warning');
+		if (isSharedNoteType) if (checkShareUserPermission()) return;
+
 		setIsSaveBtnLoading(true);
 		const html = document.querySelector('.ql-editor').innerHTML;
 		const noteTitleValue = getTitleValue(html);
@@ -201,7 +211,7 @@ function HomePage() {
 		};
 
 		updateDocument(toSendData, setIsSaveBtnLoading, handleMsgShown);
-	}, [getTitleValue, openedNoteAllData, openedNoteText, handleMsgShown]);
+	}, [checkShareUserPermission, getTitleValue, openedNoteAllData?.noteId, openedNoteText, handleMsgShown]);
 
 	//add Note Function
 	const handleAddNewNote = useCallback(
