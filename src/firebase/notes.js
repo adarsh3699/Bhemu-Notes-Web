@@ -21,7 +21,7 @@ let unsubscribeFolderFunctions = [];
 let unsubscribeNoteFunctions = [];
 
 //get user all notes
-function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg, handleNoteOpening) {
+function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg, handleNoteOpening, isDesktopMode) {
 	const getDataQuery = query(colRef, where('userId', '==', USER_DETAILS?.userId || ''), orderBy('updatedOn', 'desc')); // orderBy('name', 'desc || ase')
 	setIsApiLoading(true);
 
@@ -50,7 +50,7 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg, handleNoteOpen
 			const encryptNotesData = encryptText(JSON.stringify(allNotesData));
 			localStorage.setItem('note_data', encryptNotesData);
 
-			if (!urlNoteId && !folderName && allNotesData.length > 0) {
+			if (!urlNoteId && !folderName && allNotesData.length > 0 && isDesktopMode) {
 				handleNoteOpening(0, allNotesData?.[0] || []);
 			}
 		},
@@ -63,7 +63,15 @@ function getUserAllNoteData(setAllNotes, setIsApiLoading, setMsg, handleNoteOpen
 }
 
 //get folder all notes
-function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShown, folderName, handleNoteOpening) {
+function getAllNotesOfFolder(
+	folder,
+	setAllNotes,
+	setIsApiLoading,
+	handleMsgShown,
+	folderName,
+	handleNoteOpening,
+	isDesktopMode
+) {
 	const noteIds = folder.folderData.map((item) => item.noteId);
 
 	try {
@@ -88,7 +96,7 @@ function getAllNotesOfFolder(folder, setAllNotes, setIsApiLoading, handleMsgShow
 				});
 
 				setAllNotes(folderAllNotesData);
-				if (folderName && !urlNoteId) {
+				if (folderName && !urlNoteId && isDesktopMode) {
 					handleNoteOpening(0, folderAllNotesData?.[0] || [], folderName);
 				}
 				const encryptNotesData = encryptText(JSON.stringify(folderAllNotesData));

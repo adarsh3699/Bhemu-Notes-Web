@@ -78,7 +78,13 @@ function HomePage() {
 		if (!isSharedNoteType) handleUserState(true);
 		if (isNotesModalOpen === false && userDeviceType().desktop) setIsNotesModalOpen(true);
 		if (USER_DETAILS?.userId) {
-			getUserAllNoteData(setAllNotes, setIsApiLoading, handleMsgShown, handleNoteOpening);
+			getUserAllNoteData(
+				setAllNotes,
+				setIsApiLoading,
+				handleMsgShown,
+				handleNoteOpening,
+				userDeviceType().desktop
+			);
 			getUserAllData(setUserAllDetails, setIsApiLoading, handleMsgShown);
 
 			urlNoteId &&
@@ -116,11 +122,12 @@ function HomePage() {
 
 	const handleNoteOpening = useCallback(
 		(index, item, folder) => {
+			if (sharedNoteId) return setIsNotesModalOpen(true);
+
 			let { noteId, noteData } = item || {};
 			if (!noteId) return navigate('/');
 
-			// let urlNoteId = sharedNoteId ? sharedNoteId : urlNoteId;
-			// if (urlNoteId === noteId || !noteId) return;
+			if (urlNoteId === noteId || !noteId) return;
 			folder = folder || folderName;
 
 			navigate(folder ? `/?folder=${folder}#${noteId}` : `#${noteId}`);
@@ -145,8 +152,9 @@ function HomePage() {
 
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
+		if (!sharedNoteId) navigate(folderName ? `/?folder=${folderName}` : ``);
 		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
-	}, []);
+	}, [folderName, navigate]);
 
 	const handleFolderChange = useCallback(
 		(item) => {
@@ -161,7 +169,8 @@ function HomePage() {
 				setIsApiLoading,
 				handleMsgShown,
 				item?.folderName,
-				handleNoteOpening
+				handleNoteOpening,
+				userDeviceType().desktop
 			);
 		},
 		[folderName, handleMsgShown, handleNoteOpening, setSearchParams]
