@@ -116,7 +116,7 @@ function HomePage() {
 
 	const handleNoteOpening = useCallback(
 		(index, item, folder) => {
-			if (isSharedNoteType) return;
+			// if (isSharedNoteType) return;
 			let { noteId, noteData } = item || {};
 			if (!noteId) return navigate('/');
 
