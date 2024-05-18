@@ -224,6 +224,9 @@ function HomePage() {
 	const handleAddNewNote = useCallback(
 		(e) => {
 			e?.preventDefault();
+			if (isSharedNoteType)
+				if (!USER_DETAILS.userId)
+					return handleMsgShown('Please create a account to edit this note.', 'warning');
 			const newNoteText = e?.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
 			const newNoteData = `<h1>${newNoteText}</h1><p><br></p><p><br></p><p><br></p>`;
 

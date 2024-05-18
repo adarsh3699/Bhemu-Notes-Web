@@ -7,27 +7,10 @@ import LockIcon from '@mui/icons-material/Lock';
 
 import './renderAllNotes.css';
 
-function RenderAllNotes({
-	userAllNotes,
-	handleNoteOpening,
-	isApiLoading,
-	handleAddNewNote,
-	handleMsgShown,
-	isShareNoteType,
-}) {
+function RenderAllNotes({ userAllNotes, handleNoteOpening, isApiLoading, handleAddNewNote }) {
 	return (
 		<>
-			<form
-				id="addNotesInputBox"
-				onSubmit={
-					isShareNoteType
-						? (e) => {
-								e.preventDefault();
-								handleMsgShown('Please create a account to create own notes', 'warning');
-						  }
-						: handleAddNewNote
-				}
-			>
+			<form id="addNotesInputBox" onSubmit={handleAddNewNote}>
 				<input
 					id="addNotesInput"
 					name="noteTitle"
