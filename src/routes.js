@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Navigate, Routes as Switch, Route } from 'react-router-dom';
+import Loader from './components/loader/Loader';
 
 // import LoginPage from './pages/LoginPage';
 // import HomePage from "./pages/HomePage";
@@ -10,7 +11,6 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
 const CreateAcc = lazy(() => import('./pages/CreateAcc'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-// const ShareNotePage = lazy(() => import('./pages/ShareNotePage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 function Routes() {
@@ -19,22 +19,7 @@ function Routes() {
 			fallback={
 				<div id="loadingScreen">
 					Loading
-					<div id="loadingIcon">
-						<div className="lds-spinner">
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-						</div>
-					</div>
+					<Loader isLoading={true} sx={{ marginTop: '10px' }} />
 				</div>
 			}
 		>
@@ -48,10 +33,12 @@ function Routes() {
 				<Route exact path="/home" element={<Navigate to="/" />} />
 
 				<Route
-					// path="*"
+					path="*"
 					element={
-						<center>
-							<h1>Page not Found</h1>
+						<center id="pageNotFound">
+							<h1>Sorry, this page isn't available.</h1>
+							<h2>Error: 404</h2>
+							<a href="/login"> Go to Login Page</a>
 						</center>
 					}
 				/>

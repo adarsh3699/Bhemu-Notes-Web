@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from '../../Loader';
+import Loader from '../../loader/Loader';
 
 import homePageSkeleton from '../../../img/homePageSkeleton.svg';
 // import LockOpenIcon from '@mui/icons-material/LockOpenOutlined';

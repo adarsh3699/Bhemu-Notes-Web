@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { handleSignUpForm } from '../firebase/auth';
-import Loader from '../components/Loader';
+import Loader from '../components/loader/Loader';
 
 import logo from '../img/newLogo.webp';
 import '../styles/loginPage.css';

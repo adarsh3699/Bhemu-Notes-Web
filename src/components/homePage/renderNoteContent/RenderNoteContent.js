@@ -15,9 +15,8 @@ function RenderNoteContent({
 	openedNoteText,
 	setOpenedNoteText,
 	handleSaveBtnClick,
-	openConfirmationDialog, // handleDeleteBtnClick,
+	openConfirmationDialog, // handleDeleteBtnClickOnYesClick,
 	handleAddShareNoteUser,
-	// handleMsgShown,
 	SharedUserCanEdit,
 	isSharedNoteType,
 }) {

@@ -3,7 +3,7 @@ import { handleUserState, handleLoginForm } from '../firebase/auth';
 import { USER_DETAILS } from '../utils';
 
 import { NavLink } from 'react-router-dom';
-import Loader from '../components/Loader';
+import Loader from '../components/loader/Loader';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
