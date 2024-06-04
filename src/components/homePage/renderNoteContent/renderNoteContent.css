@@ -88,7 +88,11 @@
 	color: rgb(213, 213, 213); /*placeholder color*/
 }
 
-.ql-editor span {
+.ql-editor span,
+.ql-editor strong,
+.ql-editor u,
+.ql-editor em,
+.ql-editor s {
 	border-radius: 3px;
 }
 
