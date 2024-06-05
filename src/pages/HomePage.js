@@ -29,6 +29,7 @@ import '../styles/homePage.css';
 
 let params = new URL(document.location).searchParams;
 
+const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
 const localFolderData = params.get('folder')
 	? localStorage.getItem(params.get('folder')) && JSON.parse(decryptText(localStorage.getItem(params.get('folder'))))
 	: undefined;
@@ -40,9 +41,7 @@ function HomePage() {
 	const [msg, setMsg] = useState({ text: '', type: '' });
 
 	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
-	const [userAllNotes, setAllNotes] = useState(
-		(localStorage.getItem('note_data') && JSON.parse(decryptText(localStorage.getItem('note_data')))) || []
-	);
+	const [userAllNotes, setAllNotes] = useState(localStorageNotesData || []);
 	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
 	const [openedNoteIndex, setOpenedNoteIndex] = useState(0);
