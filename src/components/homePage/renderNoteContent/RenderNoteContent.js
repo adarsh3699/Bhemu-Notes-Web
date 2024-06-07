@@ -19,6 +19,7 @@ function RenderNoteContent({
 	handleAddShareNoteUser,
 	SharedUserCanEdit,
 	isSharedNoteType,
+	handleMsgShown,
 }) {
 	const quillRef = useRef(null);
 
@@ -31,6 +32,9 @@ function RenderNoteContent({
 	return (
 		<div className="text-editor">
 			<QuillToolbar
+				quillRef={quillRef}
+				noteTitle={openedNoteAllData?.noteTitle}
+				handleMsgShown={handleMsgShown}
 				handleNotesModalClosing={handleNotesModalClosing}
 				isSaveBtnLoading={isSaveBtnLoading}
 				openConfirmationDialog={openConfirmationDialog}

@@ -71,15 +71,23 @@
 .ql-container {
 	border: unset !important; /* text area style*/
 	font-size: 17px;
-	/* background-color: rgb(37, 37, 117); */
+	height: calc(100vh - 91px);
+	/* background-color: rgb(26, 26, 97); */
+}
+
+.disable_height {
+	height: auto; /*  text area style */
+}
+
+.disable_height .ql-editor {
+	padding-bottom: unset;
 }
 
 .ql-editor {
-	height: calc(100vh - 91px); /* text area style*/
 	overflow-y: auto;
 	overflow-x: hidden;
 	overflow-wrap: break-word;
-	padding-bottom: 400px !important;
+	padding-bottom: 400px;
 	/* background-color: rgb(37, 37, 117); */
 }
 
@@ -94,6 +102,10 @@
 .ql-editor em,
 .ql-editor s {
 	border-radius: 3px;
+}
+
+.ql-editor p {
+	color: white;
 }
 
 .ql-snow a {
@@ -138,7 +150,7 @@
 }
 
 @media screen and (max-width: 586px) {
-	.ql-editor {
+	.ql-container {
 		height: calc(100vh - 121px);
 	}
 }

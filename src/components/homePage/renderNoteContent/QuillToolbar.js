@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react';
-// import { Quill } from 'react-quill';
+
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,6 +12,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
 import MenuIcon from '@mui/icons-material/Menu';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import SaveIcon from '@mui/icons-material/Save';
 import ShareIcon from '@mui/icons-material/Share';
 
@@ -69,6 +72,9 @@ export const formats = [
 
 // Quill Toolbar component
 export function QuillToolbar({
+	quillRef,
+	noteTitle,
+	handleMsgShown,
 	handleNotesModalClosing,
 	isSaveBtnLoading,
 	handleSaveBtnClick,
@@ -81,6 +87,54 @@ export function QuillToolbar({
 
 	const toggleSettingsMenu = (event) => {
 		setSettingMenuAddNotesAnchorEl(event.currentTarget);
+	};
+
+	const exportAsPDF = async () => {
+		const editorElement = quillRef.current?.editor?.container;
+		if (!editorElement) {
+			return handleMsgShown('Nothing to export as PDF', 'warning');
+		}
+
+		// Temporarily expand the editor container to fit all content
+		editorElement.classList.add('disable_height');
+
+		try {
+			// Create the canvas with the expanded editor
+			const canvas = await html2canvas(editorElement, {
+				backgroundColor: 'rgb(30, 30, 30)',
+				scale: 2, // Increase scale for better quality
+			});
+
+			// Restore the original height
+			editorElement.classList.remove('disable_height');
+
+			const imgData = canvas.toDataURL('image/jpeg', 1); // Use JPEG for smaller size
+			const pdf = new jsPDF('p', 'mm', 'a4');
+			const pdfWidth = pdf.internal.pageSize.getWidth();
+			const pdfHeight = pdf.internal.pageSize.getHeight();
+
+			const imgProps = pdf.getImageProperties(imgData);
+			const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+			let position = 0;
+			while (position < imgHeight) {
+				pdf.setFillColor(30, 30, 30);
+				pdf.rect(0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), 'F');
+				pdf.addImage(imgData, 'JPEG', 0, position ? -position : 0, pdfWidth, imgHeight);
+				position += pdfHeight;
+				if (position < imgHeight) {
+					pdf.addPage();
+				}
+			}
+
+			pdf.save(`${noteTitle || 'Untitled Notes'}.pdf`);
+			handleMsgShown('PDF exported successfully', 'success');
+		} catch (error) {
+			// Restore the original height in case of error
+			editorElement.classList.remove('disable_height');
+			handleMsgShown('Error exporting PDF', 'error');
+			console.error('Error exporting PDF:', error);
+		}
 	};
 
 	const renderToolbarBtns = useCallback((tooltip, className, value) => {
@@ -204,6 +258,13 @@ export function QuillToolbar({
 						<ShareIcon fontSize="small" />
 					</ListItemIcon>
 					Share
+				</MenuItem>
+
+				<MenuItem onClick={exportAsPDF}>
+					<ListItemIcon>
+						<FileDownloadIcon fontSize="small" />
+					</ListItemIcon>
+					Export
 				</MenuItem>
 
 				{/* <MenuItem onClick={() => console.log('Lock')}>

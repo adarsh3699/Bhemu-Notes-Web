@@ -337,6 +337,7 @@ function HomePage() {
 								handleAddShareNoteUser={handleAddShareNoteUser}
 								SharedUserCanEdit={isSharedNoteType ? openedNoteAllData?.canEdit : true}
 								isSharedNoteType={isSharedNoteType}
+								handleMsgShown={handleMsgShown}
 							/>
 						</div>
 					)}
