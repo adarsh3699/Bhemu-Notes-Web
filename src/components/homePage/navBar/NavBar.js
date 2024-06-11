@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { handleSignOut } from '../../../firebase/auth';
-import FolderDialog from '../../folderDialog/FolderDialog';
+import FolderDialog from '../folderDialog/FolderDialog';
 import { USER_DETAILS } from '../../../utils';
 
 import { unsubscribeAllFolders } from '../../../firebase/notes';

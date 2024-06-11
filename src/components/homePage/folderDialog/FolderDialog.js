@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateUserFolder } from '../../firebase/features';
+import { updateUserFolder } from '../../../firebase/features';
 import { uid } from 'uid';
 
 import Button from '@mui/material/Button';

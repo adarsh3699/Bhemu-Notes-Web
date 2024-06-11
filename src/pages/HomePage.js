@@ -20,7 +20,7 @@ import NavBar from '../components/homePage/navBar/NavBar';
 import RenderAllNotes from '../components/homePage/renderAllNotes/RenderAllNotes';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
 import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
-import ShareDialogBox from '../components/shareDialog/ShareDialogBox';
+import ShareDialogBox from '../components/homePage/shareDialog/ShareDialogBox';
 import ShowMsg from '../components/showMsg/ShowMsg';
 
 import { useHotkeys } from 'react-hotkeys-hook';

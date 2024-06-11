@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import ExportDialog from '../exportDialog/ExportDialog';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -17,58 +18,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import ShareIcon from '@mui/icons-material/Share';
 
 import CircularProgress from '@mui/material/CircularProgress';
-
-// Add sizes to whitelist and register them
-// const Size = Quill.import('formats/size');
-// Size.whitelist = ['small', 'medium', 'large'];
-// Quill.register(Size, true);
-
-// // Add fonts to whitelist and register them
-// const Font = Quill.import('formats/font');
-// Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida'];
-// Quill.register(Font, true);
-
-// // Modules object for setting up the Quill editor
-export const modules = {
-	clipboard: {
-		matchVisual: false,
-	},
-	toolbar: {
-		container: '#toolbar',
-		handlers: {
-			// undo: undoChange,
-			// redo: redoChange,
-		},
-	},
-	history: {
-		delay: 500,
-		maxStack: 100,
-		userOnly: true,
-	},
-};
-
-// Formats objects for setting up the Quill editor
-export const formats = [
-	'header',
-	'font',
-	'size',
-	'bold',
-	'italic',
-	'underline',
-	'align',
-	'strike',
-	'script',
-	'blockquote',
-	'background',
-	'list',
-	'bullet',
-	'indent',
-	'link',
-	'image',
-	'video',
-	'color',
-	// 'code-block',
-];
 
 // Quill Toolbar component
 export function QuillToolbar({
@@ -286,3 +235,55 @@ export function QuillToolbar({
 }
 
 export default QuillToolbar;
+
+// Add sizes to whitelist and register them
+// const Size = Quill.import('formats/size');
+// Size.whitelist = ['small', 'medium', 'large'];
+// Quill.register(Size, true);
+
+// // Add fonts to whitelist and register them
+// const Font = Quill.import('formats/font');
+// Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida'];
+// Quill.register(Font, true);
+
+// // Modules object for setting up the Quill editor
+export const modules = {
+	clipboard: {
+		matchVisual: false,
+	},
+	toolbar: {
+		container: '#toolbar',
+		handlers: {
+			// undo: undoChange,
+			// redo: redoChange,
+		},
+	},
+	history: {
+		delay: 500,
+		maxStack: 100,
+		userOnly: true,
+	},
+};
+
+// Formats objects for setting up the Quill editor
+export const formats = [
+	'header',
+	'font',
+	'size',
+	'bold',
+	'italic',
+	'underline',
+	'align',
+	'strike',
+	'script',
+	'blockquote',
+	'background',
+	'list',
+	'bullet',
+	'indent',
+	'link',
+	'image',
+	'video',
+	'color',
+	// 'code-block',
+];

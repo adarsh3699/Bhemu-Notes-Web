@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateNoteShareAccess } from '../../firebase/features';
-import { USER_DETAILS } from '../../utils';
+import { updateNoteShareAccess } from '../../../firebase/features';
+import { USER_DETAILS } from '../../../utils';
 
 import Button from '@mui/material/Button';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import userProflie from '../../img/userProfile.svg';
+import userProflie from '../../../img/userProfile.svg';
 
 import './shareDialogBox.css';
 
