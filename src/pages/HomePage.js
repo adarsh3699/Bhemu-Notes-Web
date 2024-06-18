@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
+import { getUserAllData } from '../firebase/features';
 import { handleUserState } from '../firebase/auth';
-
 import {
 	getUserAllNoteData,
 	addNewNote,
@@ -13,8 +14,6 @@ import {
 	unsubscribeAllFolders,
 	unsubscribeAllNotes,
 } from '../firebase/notes';
-import { getUserAllData } from '../firebase/features';
-import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
 
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderAllNotes from '../components/homePage/renderAllNotes/RenderAllNotes';
@@ -122,7 +121,7 @@ function HomePage() {
 			let { noteId, noteData } = item || {};
 			if (!noteId) return navigate('/');
 
-			if (urlNoteId === noteId || !noteId) return;
+			if ((urlNoteId === noteId && userDeviceType().desktop) || !noteId) return;
 			folder = folder || folderName;
 
 			navigate(folder ? `/?folder=${folder}#${noteId}` : `#${noteId}`);
