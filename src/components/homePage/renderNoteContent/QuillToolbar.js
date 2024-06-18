@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import ExportDialog from '../exportDialog/ExportDialog';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -27,7 +26,7 @@ export function QuillToolbar({
 	handleNotesModalClosing,
 	isSaveBtnLoading,
 	handleSaveBtnClick,
-	openConfirmationDialog,
+	toggleConfirmationDeleteDialog,
 	toggleShareDialogBox,
 	isSharedNoteType,
 }) {
@@ -223,7 +222,7 @@ export function QuillToolbar({
 					Lock
 				</MenuItem> */}
 
-				<MenuItem onClick={openConfirmationDialog}>
+				<MenuItem onClick={toggleConfirmationDeleteDialog}>
 					<ListItemIcon>
 						<DeleteIcon fontSize="small" />
 					</ListItemIcon>

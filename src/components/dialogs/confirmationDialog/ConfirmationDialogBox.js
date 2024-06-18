@@ -3,20 +3,16 @@ import { Button } from '@mui/material';
 
 import './confirmationDialogBox.css';
 
-function ConfirmationDialogBox({ title, message, onYesClick, setIsConfirmationDialogOpen, sx }) {
+function ConfirmationDialogBox({ title, message, onYesClick, toggleConfirmationDialog, sx }) {
 	const backgroundRef = useRef();
-
-	const handleDialogBoxClosing = useCallback(() => {
-		setIsConfirmationDialogOpen(false);
-	}, [setIsConfirmationDialogOpen]);
 
 	const handleClickOutside = useCallback(
 		(e) => {
 			if (backgroundRef.current && !backgroundRef.current.contains(e.target)) {
-				handleDialogBoxClosing();
+				toggleConfirmationDialog();
 			}
 		},
-		[handleDialogBoxClosing]
+		[toggleConfirmationDialog]
 	);
 
 	useEffect(
@@ -55,7 +51,7 @@ function ConfirmationDialogBox({ title, message, onYesClick, setIsConfirmationDi
 						color="info"
 						fullWidth
 						sx={{ fontSize: '17px' }}
-						onClick={handleDialogBoxClosing}
+						onClick={toggleConfirmationDialog}
 					>
 						No
 					</Button>

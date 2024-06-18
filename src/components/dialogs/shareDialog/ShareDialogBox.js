@@ -17,7 +17,7 @@ const userProfileImg = localStorage.getItem('user_profile_img');
 function ShareDialogBox({
 	title,
 	handleMsgShown,
-	toggleBtn,
+	toggleShareDialog,
 	handleAddShareNoteUser,
 	openedNoteAllData,
 	setOpenedNoteAllData,
@@ -29,10 +29,10 @@ function ShareDialogBox({
 	const handleClickOutside = useCallback(
 		(e) => {
 			if (backgroundRef.current && !backgroundRef.current.contains(e.target)) {
-				toggleBtn();
+				toggleShareDialog();
 			}
 		},
-		[toggleBtn]
+		[toggleShareDialog]
 	);
 
 	useEffect(

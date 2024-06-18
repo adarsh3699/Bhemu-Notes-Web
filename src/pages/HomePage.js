@@ -19,8 +19,6 @@ import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
 import NavBar from '../components/homePage/navBar/NavBar';
 import RenderAllNotes from '../components/homePage/renderAllNotes/RenderAllNotes';
 import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
-import ConfirmationDialog from '../components/confirmationDialog/ConfirmationDialogBox';
-import ShareDialogBox from '../components/homePage/shareDialog/ShareDialogBox';
 import ShowMsg from '../components/showMsg/ShowMsg';
 
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -49,8 +47,6 @@ function HomePage() {
 	const [openedNoteAllData, setOpenedNoteAllData] = useState({});
 
 	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-	const [isShareDialogBoxOpen, setIsShareDialogBoxOpen] = useState(false);
 
 	const [isPageLoaded, setIsPageLoaded] = useState(true);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
@@ -239,7 +235,6 @@ function HomePage() {
 	//handle note delete
 	const handleDeleteBtnClick = useCallback(async () => {
 		if (isSharedNoteType) return handleMsgShown('Only the owner can delete this note.', 'warning');
-		setIsConfirmationDialogOpen(false);
 
 		deleteData(
 			openedNoteAllData.noteId,
@@ -266,11 +261,6 @@ function HomePage() {
 			enableOnContentEditable: true,
 		}
 	);
-
-	//toggle share dialog box
-	const toggleShareDialogBox = useCallback(() => {
-		setIsShareDialogBoxOpen((prev) => !prev);
-	}, []);
 
 	/// handle add share note user
 	const handleAddShareNoteUser = useCallback(
@@ -328,12 +318,12 @@ function HomePage() {
 							<RenderNoteContent
 								isSaveBtnLoading={isSaveBtnLoading}
 								handleNotesModalClosing={handleNotesModalClosing}
-								toggleShareDialogBox={toggleShareDialogBox}
 								openedNoteAllData={openedNoteAllData}
+								setOpenedNoteAllData={setOpenedNoteAllData}
 								openedNoteText={openedNoteText}
 								setOpenedNoteText={setOpenedNoteText}
 								handleSaveBtnClick={handleSaveBtnClick}
-								openConfirmationDialog={() => setIsConfirmationDialogOpen(true)}
+								handleDeleteBtnClick={handleDeleteBtnClick}
 								handleAddShareNoteUser={handleAddShareNoteUser}
 								SharedUserCanEdit={isSharedNoteType ? openedNoteAllData?.canEdit : true}
 								isSharedNoteType={isSharedNoteType}
@@ -343,27 +333,6 @@ function HomePage() {
 					)}
 				</div>
 			</div>
-
-			{isConfirmationDialogOpen && (
-				<ConfirmationDialog
-					title="Are You Sure?"
-					message="You can't undo this action."
-					isOpen={isConfirmationDialogOpen}
-					setIsConfirmationDialogOpen={setIsConfirmationDialogOpen}
-					onYesClick={handleDeleteBtnClick}
-				/>
-			)}
-
-			{isShareDialogBoxOpen && (
-				<ShareDialogBox
-					title="Share Note"
-					toggleBtn={toggleShareDialogBox}
-					handleAddShareNoteUser={handleAddShareNoteUser}
-					openedNoteAllData={openedNoteAllData}
-					setOpenedNoteAllData={setOpenedNoteAllData}
-					handleMsgShown={handleMsgShown}
-				/>
-			)}
 
 			{msg && <ShowMsg msgText={msg?.text} type={msg?.type} />}
 		</>

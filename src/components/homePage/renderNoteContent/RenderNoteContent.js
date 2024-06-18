@@ -1,4 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
+
+import RenderDialogs from '../../dialogs/RenderDialogs';
 
 import ReactQuill from 'react-quill';
 import QuillToolbar, { modules, formats } from './QuillToolbar';
@@ -10,18 +12,21 @@ import './renderNoteContent.css';
 function RenderNoteContent({
 	isSaveBtnLoading,
 	handleNotesModalClosing,
-	toggleShareDialogBox,
 	openedNoteAllData,
+	setOpenedNoteAllData,
 	openedNoteText,
 	setOpenedNoteText,
 	handleSaveBtnClick,
-	openConfirmationDialog, // handleDeleteBtnClickOnYesClick,
+	handleDeleteBtnClick, // handleDeleteBtnClickOnYesClick,
 	handleAddShareNoteUser,
 	SharedUserCanEdit,
 	isSharedNoteType,
 	handleMsgShown,
 }) {
 	const quillRef = useRef(null);
+	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+	const [isShareDialogOpen, setIsShareDialogBoxOpen] = useState(false);
+	const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
 	useEffect(() => {
 		if (openedNoteAllData?.noteTitle) document.title = `Bhemu Notes | ${openedNoteAllData?.noteTitle}`;
@@ -29,31 +34,62 @@ function RenderNoteContent({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [SharedUserCanEdit, openedNoteAllData?.noteId]);
 
+	const toggleConfirmationDialog = useCallback(() => {
+		setIsConfirmationDialogOpen((prev) => !prev);
+	}, []);
+
+	const toggleShareDialogBox = useCallback(() => {
+		setIsShareDialogBoxOpen((prev) => !prev);
+	}, []);
+
+	const toggleExportDialog = useCallback(() => {
+		console.log('sdf');
+		setIsExportDialogOpen((prev) => !prev);
+	}, []);
+
 	return (
-		<div className="text-editor">
-			<QuillToolbar
-				quillRef={quillRef}
-				noteTitle={openedNoteAllData?.noteTitle}
-				handleMsgShown={handleMsgShown}
-				handleNotesModalClosing={handleNotesModalClosing}
-				isSaveBtnLoading={isSaveBtnLoading}
-				openConfirmationDialog={openConfirmationDialog}
-				handleSaveBtnClick={handleSaveBtnClick}
-				handleAddShareNoteUser={handleAddShareNoteUser}
-				toggleShareDialogBox={toggleShareDialogBox}
-				isSharedNoteType={isSharedNoteType}
-			/>
-			<ReactQuill
-				ref={quillRef}
-				theme="snow"
-				formats={formats}
-				value={openedNoteText}
-				onChange={setOpenedNoteText}
-				readOnly={!SharedUserCanEdit}
-				placeholder="Write something awesome..."
-				modules={modules}
-			/>
-		</div>
+		<>
+			<div className="text-editor">
+				<QuillToolbar
+					quillRef={quillRef}
+					noteTitle={openedNoteAllData?.noteTitle}
+					handleMsgShown={handleMsgShown}
+					handleNotesModalClosing={handleNotesModalClosing}
+					isSaveBtnLoading={isSaveBtnLoading}
+					toggleConfirmationDeleteDialog={toggleConfirmationDialog}
+					handleSaveBtnClick={handleSaveBtnClick}
+					handleAddShareNoteUser={handleAddShareNoteUser}
+					toggleShareDialogBox={toggleShareDialogBox}
+					isSharedNoteType={isSharedNoteType}
+				/>
+				<ReactQuill
+					ref={quillRef}
+					theme="snow"
+					formats={formats}
+					value={openedNoteText}
+					onChange={setOpenedNoteText}
+					readOnly={!SharedUserCanEdit}
+					placeholder="Write something awesome..."
+					modules={modules}
+				/>
+			</div>
+
+			{(isConfirmationDialogOpen || isShareDialogOpen || isExportDialogOpen) && (
+				<RenderDialogs
+					isConfirmationDialogOpen={isConfirmationDialogOpen}
+					isShareDialogOpen={isShareDialogOpen}
+					isExportDialogOpen={isExportDialogOpen}
+					toggleConfirmationDialog={toggleConfirmationDialog}
+					toggleShareDialog={toggleShareDialogBox}
+					toggleExportDialog={toggleExportDialog}
+					handleDeleteBtnClick={handleDeleteBtnClick}
+					handleAddShareNoteUser={handleAddShareNoteUser}
+					openedNoteAllData={openedNoteAllData}
+					setOpenedNoteAllData={setOpenedNoteAllData}
+					handleMsgShown={handleMsgShown}
+				/>
+			)}
+		</>
 	);
 }
 

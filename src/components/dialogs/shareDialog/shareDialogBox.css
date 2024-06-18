@@ -17,9 +17,7 @@
 	width: 600px;
 	padding: 20px;
 	color: white;
-	box-shadow:
-		0px 11px 15px -7px rgba(0, 0, 0, 0.2),
-		0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
 		0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 	background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
 	margin: 32px;
@@ -114,17 +112,6 @@
 	/* align-items: center; */
 	margin-top: 10px;
 	font-size: 30px;
-}
-
-.shareUserAccessSelect {
-	margin-left: 10px;
-	background-color: unset;
-	color: white;
-	font-size: 16px;
-	border-radius: 5px;
-	padding: 5px 10px;
-	flex-grow: 1;
-	outline: none;
 }
 
 .shareCopySaveBtns {

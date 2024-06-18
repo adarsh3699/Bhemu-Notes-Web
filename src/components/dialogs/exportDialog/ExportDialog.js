@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
+// import Button from '@mui/material/Button';
+// import CircularProgress from '@mui/material/CircularProgress';
 
 import './exportDialog.css';
 
 function ExportDialog({ title, handleMsgShown, toggleBtn, sx }) {
 	const backgroundRef = useRef();
-	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
+	// const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 
 	const handleClickOutside = useCallback(
 		(e) => {

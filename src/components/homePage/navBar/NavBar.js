@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+
+import RenderDialogs from '../../dialogs/RenderDialogs';
 import { handleSignOut } from '../../../firebase/auth';
-import FolderDialog from '../folderDialog/FolderDialog';
 import { USER_DETAILS } from '../../../utils';
 
 import { unsubscribeAllFolders } from '../../../firebase/notes';
@@ -234,12 +235,12 @@ function NavBar({
 			</Drawer>
 
 			{isFolderDialogOpen && (
-				<FolderDialog
+				<RenderDialogs
+					isFolderDialogOpen={isFolderDialogOpen}
 					handleMsgShown={handleMsgShown}
 					toggleFolderDialog={toggleFolderDialog}
 					userAllNotes={userAllNotes}
 					noteFolders={noteFolders}
-					// isFolderDialogOpen={isFolderDialogOpen}
 				/>
 			)}
 		</>
