@@ -55,6 +55,10 @@
 	margin-bottom: 10px;
 }
 
+.lableTitle {
+	font-weight: 500;
+}
+
 .dialogSubContainer {
 	background-color: rgba(79, 79, 79, 0.5);
 	padding: 15px;

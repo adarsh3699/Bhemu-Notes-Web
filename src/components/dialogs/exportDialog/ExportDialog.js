@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -11,7 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './exportDialog.css';
 
 function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog, sx }) {
-	const backgroundRef = useRef();
+	const [exportTitle, setExportTitle] = useState(noteTitle || 'Untitled Note');
 	const [scale, setScale] = useState(20);
 	const [quality, setQuality] = useState(100);
 	const [isExportBtnLoading, setIsExportBtnLoading] = useState(false);
@@ -54,7 +54,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 				}
 			}
 
-			pdf.save(`${noteTitle || 'Untitled Notes'}.pdf`);
+			pdf.save(`${exportTitle}.pdf`);
 			setIsExportBtnLoading(false);
 			handleMsgShown('PDF exported successfully', 'success');
 		} catch (error) {
@@ -64,12 +64,12 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 			handleMsgShown('Error exporting PDF', 'error');
 			console.error('Error exporting PDF:', error);
 		}
-	}, [quillRef, noteTitle, scale, quality, handleMsgShown]);
+	}, [quillRef, handleMsgShown, scale, quality, exportTitle]);
 
 	// console.log(scale <= 1 ? 0.1 : scale >= 100 ? 10 : scale / 10);
 	return (
 		<div className="dialogBoxBg">
-			<div className="dialogBox" ref={backgroundRef} style={sx}>
+			<div className="dialogBox" style={sx}>
 				<div className="dialogBoxNavBar">
 					<div className="dialogBoxTitle">Export Note</div>
 					<Button
@@ -84,10 +84,16 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 				{/* <div className="dialogBoxMessage">Export note as PDF</div> */}
 				<div className="dialogTitle_2">Name</div>
 
-				<input type="text" placeholder="Name" className="dialogInputFullSize" />
+				<input
+					type="text"
+					placeholder="Name"
+					className="dialogInputFullSize"
+					value={exportTitle}
+					onChange={(e) => setExportTitle(e.target.value)}
+				/>
 				<div className="dialogSubContainer">
 					<div className="exportFormatContainer">
-						<label htmlFor="exportFormatSelect" className="">
+						<label htmlFor="exportFormatSelect" className="lableTitle">
 							Format
 						</label>
 						<select className="exportSelect" id="exportFormatSelect">
@@ -97,7 +103,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 						</select>
 					</div>
 					<div className="exportTitle_Input">
-						<div className="">Scale:</div>
+						<div className="lableTitle">Scale:</div>
 						<input
 							type="number"
 							placeholder="Scale"
@@ -115,7 +121,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 					{/* <span>Note higher scale may delay the export process.</span> */}
 
 					<div className="exportTitle_Input">
-						<div className="dialogTitle_2">Quality</div>
+						<div className="lableTitle">Quality</div>
 						<input
 							type="number"
 							placeholder="Quality"
@@ -135,7 +141,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 					<div className="dailog2BtnsFlex">
 						<Button
 							variant="contained"
-							color="warning"
+							color="error"
 							onClick={toggleExportDialog}
 							sx={{ my: 2, mr: 2, width: '50%' }}
 						>
@@ -143,7 +149,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 						</Button>
 						<Button
 							variant="contained"
-							// onClick={handleSaveBtnClick}
+							onClick={exportAsPDF}
 							color="success"
 							disabled={isExportBtnLoading}
 							sx={{ my: 2, width: '50%' }}
