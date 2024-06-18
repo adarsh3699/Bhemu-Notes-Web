@@ -2,6 +2,8 @@ import React, { useState, useCallback } from 'react';
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import { pdfExporter } from 'quill-to-pdf';
 
 import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
@@ -12,6 +14,7 @@ import './exportDialog.css';
 
 function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog, sx }) {
 	const [exportTitle, setExportTitle] = useState(noteTitle || 'Untitled Note');
+	const [exportFormat, setExportFormat] = useState('pdfOnly');
 	const [scale, setScale] = useState(20);
 	const [quality, setQuality] = useState(100);
 	const [isExportBtnLoading, setIsExportBtnLoading] = useState(false);
@@ -21,9 +24,10 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 		if (!editorElement) {
 			return handleMsgShown('Nothing to export as PDF', 'warning');
 		}
-		setIsExportBtnLoading(true);
+
 		// Temporarily expand the editor container to fit all content
 		editorElement.classList.add('disable_height');
+		setIsExportBtnLoading(true);
 
 		try {
 			// Create the canvas with the expanded editor
@@ -66,7 +70,27 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 		}
 	}, [quillRef, handleMsgShown, scale, quality, exportTitle]);
 
-	// console.log(scale <= 1 ? 0.1 : scale >= 100 ? 10 : scale / 10);
+	const exportAsPDFOnly = useCallback(async () => {
+		const delta = quillRef.current?.editor?.getContents(); // gets the Quill delta
+		if (!delta) return handleMsgShown('Nothing to export as PDF', 'warning');
+
+		setIsExportBtnLoading(true);
+
+		try {
+			const pdfAsBlob = await pdfExporter.generatePdf(delta); // converts to PDF
+
+			saveAs(pdfAsBlob, `${exportTitle}.pdf`); // downloads from the browser
+
+			setIsExportBtnLoading(false);
+			handleMsgShown('PDF exported successfully', 'success');
+		} catch (error) {
+			handleMsgShown('Error exporting PDF', 'error');
+			setIsExportBtnLoading(false);
+			console.error('Error exporting PDF:', error);
+		}
+	}, [exportTitle, handleMsgShown, quillRef]);
+
+	console.log('exportFormat:', exportFormat);
 	return (
 		<div className="dialogBoxBg">
 			<div className="dialogBox" style={sx}>
@@ -96,47 +120,57 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 						<label htmlFor="exportFormatSelect" className="lableTitle">
 							Format
 						</label>
-						<select className="exportSelect" id="exportFormatSelect">
+						<select
+							className="exportSelect"
+							id="exportFormatSelect"
+							onChange={(e) => setExportFormat(e.target.value)}
+						>
 							<option value="pdfOnly">PDF Only (Recommended)</option>
 							<option value="pdfStyled">PDF (With Style)</option>
-							<option value="word">Word (.docx)</option>
+							<option value="word" disabled>
+								Word (.docx)
+							</option>
 						</select>
 					</div>
-					<div className="exportTitle_Input">
-						<div className="lableTitle">Scale:</div>
-						<input
-							type="number"
-							placeholder="Scale"
-							className=""
-							value={scale}
-							onChange={(e) => setScale(Number(e.target.value))}
-						/>
-					</div>
-					<Slider
-						value={scale}
-						valueLabelDisplay="auto"
-						onChange={(e) => setScale(e.target.value)}
-						aria-labelledby="input-slider"
-					/>
-					{/* <span>Note higher scale may delay the export process.</span> */}
+					{exportFormat === 'pdfStyled' && (
+						<>
+							<div className="exportTitle_Input">
+								<div className="lableTitle">Scale:</div>
+								<input
+									type="number"
+									placeholder="Scale"
+									className=""
+									value={scale}
+									onChange={(e) => setScale(Number(e.target.value))}
+								/>
+							</div>
+							<Slider
+								value={scale}
+								valueLabelDisplay="auto"
+								onChange={(e) => setScale(e.target.value)}
+								aria-labelledby="input-slider"
+							/>
+							{/* <span>Note higher scale may delay the export process.</span> */}
 
-					<div className="exportTitle_Input">
-						<div className="lableTitle">Quality</div>
-						<input
-							type="number"
-							placeholder="Quality"
-							className=""
-							value={quality}
-							onChange={(e) => setQuality(Number(e.target.value))}
-						/>
-					</div>
-					<Slider
-						value={quality}
-						valueLabelDisplay="auto"
-						onChange={(e) => setQuality(e.target.value)}
-						min={10}
-						aria-labelledby="input-slider"
-					/>
+							<div className="exportTitle_Input">
+								<div className="lableTitle">Quality</div>
+								<input
+									type="number"
+									placeholder="Quality"
+									className=""
+									value={quality}
+									onChange={(e) => setQuality(Number(e.target.value))}
+								/>
+							</div>
+							<Slider
+								value={quality}
+								valueLabelDisplay="auto"
+								onChange={(e) => setQuality(e.target.value)}
+								min={10}
+								aria-labelledby="input-slider"
+							/>
+						</>
+					)}
 
 					<div className="dailog2BtnsFlex">
 						<Button
@@ -149,7 +183,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 						</Button>
 						<Button
 							variant="contained"
-							onClick={exportAsPDF}
+							onClick={exportFormat === 'pdfOnly' ? exportAsPDFOnly : exportAsPDF}
 							color="success"
 							disabled={isExportBtnLoading}
 							sx={{ my: 2, width: '50%' }}
