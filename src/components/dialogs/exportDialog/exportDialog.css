@@ -1,0 +1,45 @@
+.exportFormatContainer {
+	display: grid;
+	grid-template-columns: 0.1fr 1fr;
+	gap: 20px;
+	align-items: center;
+}
+
+.exportFormatContainer select {
+	width: 100%;
+	padding: 7px 10px;
+	border-radius: 5px;
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+		0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+	color: white;
+	font-size: 16px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+.exportTitle_Input {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 30px;
+}
+
+.exportTitle_Input input {
+	width: 150px;
+	padding: 7px 10px;
+	border-radius: 5px;
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+	color: white;
+	font-size: 16px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+/* @media (pointer: coarse) {
+	.css-kixqzs-MuiSlider-root {
+		padding: 13px 0 !important;
+	}
+} */

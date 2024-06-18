@@ -1,0 +1,95 @@
+.dialogBoxBg {
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dialogBox {
+	background-color: #121212;
+	border-radius: 5px;
+	width: 600px;
+	padding: 20px;
+	color: white;
+	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+		0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+	background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+	box-sizing: border-box;
+}
+
+.dialogBoxNavBar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.dialogBoxTitle {
+	font-family: Roboto, Helvetica, Arial, sans-serif;
+	font-weight: 700;
+	font-size: 1.25rem;
+	line-height: 1.5;
+	letter-spacing: 0.0075em;
+	padding-bottom: 10px;
+}
+
+.dialogBoxMessage {
+	font-family: Roboto, Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	font-size: 1rem;
+	line-height: 1.5;
+	letter-spacing: 0.00938em;
+	color: rgba(255, 255, 255, 0.7);
+	padding-bottom: 24px;
+}
+
+/* ................... */
+
+.dialogTitle_2 {
+	font-weight: 500;
+	margin-bottom: 10px;
+}
+
+.dialogSubContainer {
+	background-color: rgba(79, 79, 79, 0.5);
+	padding: 15px;
+	border-radius: 10px;
+}
+
+.dialogInputFullSize {
+	width: 100%;
+	padding: 9px 10px;
+	border-radius: 5px;
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	background-color: unset;
+	color: white;
+	font-size: 16px;
+	margin-bottom: 16px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+.dialogInputFullSize::placeholder {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.dialogInputFullSize:focus {
+	border: 1px solid #3271b4;
+}
+
+.dailog2BtnsFlex {
+	display: flex;
+	justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+	.dialogBox {
+		width: 90%;
+		padding: 15px;
+	}
+}

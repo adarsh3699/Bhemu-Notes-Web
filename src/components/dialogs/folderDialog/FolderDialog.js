@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateUserFolder } from '../../firebase/features';
+import { updateUserFolder } from '../../../firebase/features';
 import { uid } from 'uid';
 
 import Button from '@mui/material/Button';
@@ -164,7 +164,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 
 	const viewFolderContain = (
 		<div className="folderDialogBoxContainer">
-			<div className="folderDialogBoxMessage">Edit folders and quickly switch between them.</div>
+			<div className="dialogBoxMessage">Edit folders and quickly switch between them.</div>
 			<div className="folderDialogTableTitle">Folders</div>
 
 			<div className="folderDialogBoxTable">
@@ -201,18 +201,18 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 
 	const editFolderContain = (
 		<div className="folderDialogBoxContainer">
-			<div className="folderDialogBoxMessage">
+			<div className="dialogBoxMessage">
 				Create new folders for different Notes and quickly switch between them.
 			</div>
-			<div className="folderDialogInputLable">Folder Name</div>
+			<div className="dialogTitle_2">Folder Name</div>
 			<input
 				type="text"
-				className="folderDialogInput"
+				className="dialogInputFullSize"
 				value={folderName}
 				onChange={(e) => setFolderName(e.target.value)}
 				placeholder="Enter Folder Name"
 			/>
-			<div className="folderDialogInputLable">Add Notes</div>
+			<div className="dialogTitle_2">Add Notes</div>
 
 			<div className="folderDialogBoxTable">
 				<div className="folderDialogBoxTableColAddBtn" onClick={toggleDrawer}>
@@ -258,10 +258,10 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 	);
 
 	return (
-		<div className="folderDialogBoxBg">
+		<div className="dialogBoxBg">
 			<div className="folderDialogBox" ref={backgroundRef} style={sx}>
-				<div className="folderDialogBoxNavBar">
-					<div className="folderDialogBoxTitle">Note Folders</div>
+				<div className="dialogBoxNavBar">
+					<div className="dialogBoxTitle">Note Folders</div>
 					<Button
 						size="small"
 						sx={{ color: '#2894d1' }}

@@ -1,6 +1,6 @@
 {
 	"name": "bhemu-notes",
-	"version": "3.2.0",
+	"version": "3.2.2",
 	"private": true,
 	"author": {
 		"email": "adarsh3699@gmail.com",
@@ -14,6 +14,8 @@
 		"@mui/material": "^5.15.14",
 		"crypto-js": "^4.2.0",
 		"firebase": "^10.9.0",
+		"html2canvas": "^1.4.1",
+		"jspdf": "^2.5.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-hotkeys-hook": "^4.5.0",

@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-import { updateNoteShareAccess } from '../../firebase/features';
-import { USER_DETAILS } from '../../utils';
+import { updateNoteShareAccess } from '../../../firebase/features';
+import { USER_DETAILS } from '../../../utils';
 
 import Button from '@mui/material/Button';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import userProflie from '../../img/userProfile.svg';
+import userProflie from '../../../img/userProfile.svg';
 
 import './shareDialogBox.css';
 
@@ -15,9 +15,8 @@ const userDetails = USER_DETAILS || {};
 const userProfileImg = localStorage.getItem('user_profile_img');
 
 function ShareDialogBox({
-	title,
 	handleMsgShown,
-	toggleBtn,
+	toggleShareDialog,
 	handleAddShareNoteUser,
 	openedNoteAllData,
 	setOpenedNoteAllData,
@@ -29,10 +28,10 @@ function ShareDialogBox({
 	const handleClickOutside = useCallback(
 		(e) => {
 			if (backgroundRef.current && !backgroundRef.current.contains(e.target)) {
-				toggleBtn();
+				toggleShareDialog();
 			}
 		},
-		[toggleBtn]
+		[toggleShareDialog]
 	);
 
 	useEffect(
@@ -94,13 +93,18 @@ function ShareDialogBox({
 	}, [openedNoteAllData, handleMsgShown]);
 
 	return (
-		<div className="shareDialogBoxBg">
-			<div className="shareDialogBox" ref={backgroundRef} style={sx}>
-				<div className="ConfirmationDialogBoxTitle">{title}</div>
-				{/* <div className="ConfirmationDialogBoxMessage">{message}</div> */}
+		<div className="dialogBoxBg">
+			<div className="dialogBox" ref={backgroundRef} style={sx}>
+				<div className="dialogBoxTitle">Share Note</div>
+				{/* <div className="dialogBoxMessage">{message}</div> */}
 
 				<form onSubmit={handleAddShareNoteUser}>
-					<input type="email" className="shareEmailInput" name="shareEmailInput" placeholder="Add Email" />
+					<input
+						type="email"
+						className="dialogInputFullSize"
+						name="shareEmailInput"
+						placeholder="Add Email"
+					/>
 				</form>
 				<div className="shareUserDetailsBox">
 					<img
@@ -110,8 +114,8 @@ function ShareDialogBox({
 					/>
 					<div className="shareUserDetails">
 						<div>
-							<div className="shareUserName">{userDetails?.userName}</div>
-							<div className="shareUserEmail">{userDetails?.email}</div>
+							<div className="ownerUserName">{userDetails?.userName}</div>
+							<div className="ownerUserEmail">{userDetails?.email}</div>
 						</div>
 						<div>Owner</div>
 					</div>
@@ -122,9 +126,7 @@ function ShareDialogBox({
 						<div className="shareUserDetailsBox" key={index}>
 							<img src={userProflie} className="shareUserProflie" alt="" />
 							<div className="shareUserDetails">
-								<div>
-									<div className="shareUserOthersEmail">{item?.email}</div>
-								</div>
+								<div className="shareUserOthersEmail">{item?.email}</div>
 
 								<select
 									className="shareUserPermission"
@@ -139,7 +141,7 @@ function ShareDialogBox({
 						</div>
 					);
 				})}
-				<div className="shareUserAccessBox">
+				<div className="dialogSubContainer">
 					<div>Who can access</div>
 					<div className="shareUserAccess">
 						<ManageAccountsIcon fontSize="inherit" />
@@ -152,7 +154,7 @@ function ShareDialogBox({
 							<option value={true}>Anyone with the link can comment</option>
 						</select>
 					</div>
-					<div className="shareCopySaveBtns">
+					<div className="dailog2BtnsFlex">
 						<Button
 							variant="contained"
 							onClick={handleCopyLinkBtnClick}

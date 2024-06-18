@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-// import { Quill } from 'react-quill';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,70 +9,20 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
 import MenuIcon from '@mui/icons-material/Menu';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import SaveIcon from '@mui/icons-material/Save';
 import ShareIcon from '@mui/icons-material/Share';
 
 import CircularProgress from '@mui/material/CircularProgress';
-
-// Add sizes to whitelist and register them
-// const Size = Quill.import('formats/size');
-// Size.whitelist = ['small', 'medium', 'large'];
-// Quill.register(Size, true);
-
-// // Add fonts to whitelist and register them
-// const Font = Quill.import('formats/font');
-// Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida'];
-// Quill.register(Font, true);
-
-// // Modules object for setting up the Quill editor
-export const modules = {
-	clipboard: {
-		matchVisual: false,
-	},
-	toolbar: {
-		container: '#toolbar',
-		handlers: {
-			// undo: undoChange,
-			// redo: redoChange,
-		},
-	},
-	history: {
-		delay: 500,
-		maxStack: 100,
-		userOnly: true,
-	},
-};
-
-// Formats objects for setting up the Quill editor
-export const formats = [
-	'header',
-	'font',
-	'size',
-	'bold',
-	'italic',
-	'underline',
-	'align',
-	'strike',
-	'script',
-	'blockquote',
-	'background',
-	'list',
-	'bullet',
-	'indent',
-	'link',
-	'image',
-	'video',
-	'color',
-	// 'code-block',
-];
 
 // Quill Toolbar component
 export function QuillToolbar({
 	handleNotesModalClosing,
 	isSaveBtnLoading,
 	handleSaveBtnClick,
-	openConfirmationDialog,
+	toggleConfirmationDeleteDialog,
 	toggleShareDialogBox,
+	toggleExportDialog,
 	isSharedNoteType,
 }) {
 	const [settingMenuAnchorEl, setSettingMenuAddNotesAnchorEl] = useState(null);
@@ -206,6 +155,13 @@ export function QuillToolbar({
 					Share
 				</MenuItem>
 
+				<MenuItem onClick={toggleExportDialog}>
+					<ListItemIcon>
+						<FileDownloadIcon fontSize="small" />
+					</ListItemIcon>
+					Export
+				</MenuItem>
+
 				{/* <MenuItem onClick={() => console.log('Lock')}>
 					<ListItemIcon>
 						<DeleteIcon fontSize="small" />
@@ -213,7 +169,7 @@ export function QuillToolbar({
 					Lock
 				</MenuItem> */}
 
-				<MenuItem onClick={openConfirmationDialog}>
+				<MenuItem onClick={toggleConfirmationDeleteDialog}>
 					<ListItemIcon>
 						<DeleteIcon fontSize="small" />
 					</ListItemIcon>
@@ -225,3 +181,55 @@ export function QuillToolbar({
 }
 
 export default QuillToolbar;
+
+// Add sizes to whitelist and register them
+// const Size = Quill.import('formats/size');
+// Size.whitelist = ['small', 'medium', 'large'];
+// Quill.register(Size, true);
+
+// // Add fonts to whitelist and register them
+// const Font = Quill.import('formats/font');
+// Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida'];
+// Quill.register(Font, true);
+
+// // Modules object for setting up the Quill editor
+export const modules = {
+	clipboard: {
+		matchVisual: false,
+	},
+	toolbar: {
+		container: '#toolbar',
+		handlers: {
+			// undo: undoChange,
+			// redo: redoChange,
+		},
+	},
+	history: {
+		delay: 500,
+		maxStack: 100,
+		userOnly: true,
+	},
+};
+
+// Formats objects for setting up the Quill editor
+export const formats = [
+	'header',
+	'font',
+	'size',
+	'bold',
+	'italic',
+	'underline',
+	'align',
+	'strike',
+	'script',
+	'blockquote',
+	'background',
+	'list',
+	'bullet',
+	'indent',
+	'link',
+	'image',
+	'video',
+	'color',
+	// 'code-block',
+];

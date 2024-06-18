@@ -1,0 +1,62 @@
+.shareUserDetailsBox {
+	display: flex;
+	font-size: 15px;
+	margin-bottom: 15px;
+}
+
+.shareUserProflie {
+	height: 35px;
+	width: 35px;
+	border-radius: 50%;
+	aspect-ratio: 1;
+	margin-right: 10px;
+}
+
+.shareUserDetails {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	overflow: hidden;
+}
+
+.ownerUserName {
+	margin-bottom: 2px;
+}
+
+.ownerUserEmail {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.shareUserOthersEmail {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.shareUserPermission {
+	padding: 5px 10px;
+	background-color: unset;
+	color: white;
+	outline: unset;
+	border-radius: 5px;
+}
+
+.shareUserAccess {
+	display: flex;
+	/* align-items: center; */
+	margin-top: 10px;
+	font-size: 30px;
+}
+
+.shareUserAccessSelect {
+	margin-left: 10px;
+	background-color: unset;
+	width: 100%;
+	color: white;
+	font-size: 16px;
+	border-radius: 5px;
+	padding: 5px 10px;
+	flex-grow: 1;
+	outline: none;
+}
