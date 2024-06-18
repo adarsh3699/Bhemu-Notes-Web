@@ -4,6 +4,8 @@ import ExportDialog from './exportDialog/ExportDialog';
 import FolderDialog from './folderDialog/FolderDialog';
 import ShareDialogBox from './shareDialog/ShareDialogBox';
 
+import './dialogs.css';
+
 function RenderDialogs({
 	isConfirmationDialogOpen,
 	isFolderDialogOpen,
@@ -20,6 +22,8 @@ function RenderDialogs({
 	handleAddShareNoteUser,
 	openedNoteAllData,
 	setOpenedNoteAllData,
+	quillRef,
+	noteTitle,
 }) {
 	const dialogArray = [
 		{
@@ -38,7 +42,18 @@ function RenderDialogs({
 			),
 			isOpen: isConfirmationDialogOpen,
 		},
-		{ dialog: 'exportDialog', component: <ExportDialog />, isOpen: isExportDialogOpen },
+		{
+			dialog: 'exportDialog',
+			component: (
+				<ExportDialog
+					quillRef={quillRef}
+					noteTitle={noteTitle}
+					toggleExportDialog={toggleExportDialog}
+					handleMsgShown={handleMsgShown}
+				/>
+			),
+			isOpen: isExportDialogOpen,
+		},
 		{
 			dialog: 'folderDialog',
 			component: (
@@ -55,7 +70,6 @@ function RenderDialogs({
 			dialog: 'shareDialog',
 			component: (
 				<ShareDialogBox
-					title="Share Note"
 					toggleShareDialog={toggleShareDialog}
 					handleAddShareNoteUser={handleAddShareNoteUser}
 					openedNoteAllData={openedNoteAllData}

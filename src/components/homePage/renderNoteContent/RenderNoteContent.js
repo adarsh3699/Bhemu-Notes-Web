@@ -43,7 +43,6 @@ function RenderNoteContent({
 	}, []);
 
 	const toggleExportDialog = useCallback(() => {
-		console.log('sdf');
 		setIsExportDialogOpen((prev) => !prev);
 	}, []);
 
@@ -51,15 +50,13 @@ function RenderNoteContent({
 		<>
 			<div className="text-editor">
 				<QuillToolbar
-					quillRef={quillRef}
-					noteTitle={openedNoteAllData?.noteTitle}
-					handleMsgShown={handleMsgShown}
 					handleNotesModalClosing={handleNotesModalClosing}
 					isSaveBtnLoading={isSaveBtnLoading}
 					toggleConfirmationDeleteDialog={toggleConfirmationDialog}
 					handleSaveBtnClick={handleSaveBtnClick}
 					handleAddShareNoteUser={handleAddShareNoteUser}
 					toggleShareDialogBox={toggleShareDialogBox}
+					toggleExportDialog={toggleExportDialog}
 					isSharedNoteType={isSharedNoteType}
 				/>
 				<ReactQuill
@@ -87,6 +84,8 @@ function RenderNoteContent({
 					openedNoteAllData={openedNoteAllData}
 					setOpenedNoteAllData={setOpenedNoteAllData}
 					handleMsgShown={handleMsgShown}
+					quillRef={quillRef}
+					noteTitle={openedNoteAllData?.noteTitle}
 				/>
 			)}
 		</>

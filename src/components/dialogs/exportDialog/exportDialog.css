@@ -1,137 +1,45 @@
-.shareDialogBoxBg {
-	background-color: rgba(0, 0, 0, 0.5);
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 100;
-	display: flex;
-	justify-content: center;
+.exportFormatContainer {
+	display: grid;
+	grid-template-columns: 0.1fr 1fr;
+	gap: 20px;
 	align-items: center;
 }
 
-.shareDialogBox {
-	background-color: #121212;
-	border-radius: 5px;
-	width: 600px;
-	padding: 20px;
-	color: white;
-	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
-		0px 9px 46px 8px rgba(0, 0, 0, 0.12);
-	background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
-	margin: 32px;
-}
-
-.ConfirmationDialogBoxTitle {
-	font-family: Roboto, Helvetica, Arial, sans-serif;
-	font-weight: 500;
-	font-size: 1.25rem;
-	line-height: 1.5;
-	letter-spacing: 0.0075em;
-	padding-bottom: 16px;
-}
-
-.ConfirmationDialogBoxMessage {
-	font-family: Roboto, Helvetica, Arial, sans-serif;
-	font-weight: 400;
-	font-size: 1rem;
-	line-height: 1.5;
-	letter-spacing: 0.00938em;
-	color: rgba(255, 255, 255, 0.7);
-	padding-bottom: 24px;
-}
-
-.shareEmailInput {
+.exportFormatContainer select {
 	width: 100%;
-	padding: 9px 10px;
+	padding: 7px 10px;
 	border-radius: 5px;
 	border: 1px solid rgba(255, 255, 255, 0.7);
-	background-color: unset;
+	background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+	box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+		0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 	color: white;
 	font-size: 16px;
-	margin-bottom: 16px;
 	box-sizing: border-box;
 	outline: none;
 }
 
-.shareEmailInput::placeholder {
-	color: rgba(255, 255, 255, 0.7);
-}
-
-.shareEmailInput:focus {
-	border: 1px solid #3271b4;
-}
-
-.shareUserDetailsBox {
+.exportTitle_Input {
 	display: flex;
-	font-size: 15px;
-	margin-bottom: 15px;
-}
-
-.shareUserProflie {
-	height: 35px;
-	width: 35px;
-	border-radius: 50%;
-	aspect-ratio: 1;
-	margin-right: 10px;
-}
-
-.shareUserDetails {
-	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	width: 100%;
+	justify-content: space-between;
+	margin-top: 30px;
 }
 
-.shareUserName {
-	margin-bottom: 2px;
-}
-
-.shareUserEmail {
-	font-size: 13px;
-	color: rgba(255, 255, 255, 0.7);
-}
-
-.shareUserPermission {
-	padding: 5px 10px;
-	background-color: unset;
-	color: white;
-	outline: unset;
+.exportTitle_Input input {
+	width: 150px;
+	padding: 7px 10px;
 	border-radius: 5px;
-}
-
-.shareUserAccessBox {
-	background-color: rgba(79, 79, 79, 0.5);
-	padding: 15px;
-	border-radius: 10px;
-}
-
-.shareUserAccess {
-	display: flex;
-	/* align-items: center; */
-	margin-top: 10px;
-	font-size: 30px;
-}
-
-.shareUserAccessSelect {
-	margin-left: 10px;
-	background-color: unset;
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
 	color: white;
 	font-size: 16px;
-	border-radius: 5px;
-	padding: 5px 10px;
-	flex-grow: 1;
+	box-sizing: border-box;
 	outline: none;
 }
 
-.shareCopySaveBtns {
-	display: flex;
-	justify-content: space-between;
-}
-
-@media screen and (max-width: 768px) {
-	.shareDialogBox {
-		width: 90%;
+/* @media (pointer: coarse) {
+	.css-kixqzs-MuiSlider-root {
+		padding: 13px 0 !important;
 	}
-}
+} */

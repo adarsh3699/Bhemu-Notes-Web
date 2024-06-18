@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 import { Button } from '@mui/material';
 
-import './confirmationDialogBox.css';
+// import './confirmationDialogBox.css';
 
 function ConfirmationDialogBox({ title, message, onYesClick, toggleConfirmationDialog, sx }) {
 	const backgroundRef = useRef();
@@ -29,12 +29,12 @@ function ConfirmationDialogBox({ title, message, onYesClick, toggleConfirmationD
 	);
 
 	return (
-		<div className="ConfirmationDialogBoxBg">
-			<div className="ConfirmationDialogBox" ref={backgroundRef} style={sx}>
-				<div className="ConfirmationDialogBoxTitle">{title}</div>
-				<div className="ConfirmationDialogBoxMessage">{message}</div>
+		<div className="dialogBoxBg">
+			<div className="dialogBox" ref={backgroundRef} style={sx}>
+				<div className="dialogBoxTitle">{title}</div>
+				<div className="dialogBoxMessage">{message}</div>
 
-				<div className="ConfirmationDialogBoxBtns">
+				<div className="dailog2BtnsFlex">
 					<Button
 						className="ConfirmationDialogBoxYesBtn"
 						variant="contained"
