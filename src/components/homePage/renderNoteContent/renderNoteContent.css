@@ -55,13 +55,13 @@
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-	border: unset; /*picker title | icon border remove*/
+	border: unset; /* toolobar picker title | icon border remove*/
 }
 
 .ql-picker-options {
-	border: unset !important; /* option picker style*/
+	border: unset !important; /* toolobar option picker style*/
 	border-radius: 5px;
-	background-color: #121212 !important; /*picker option background color*/
+	background-color: #121212 !important; /*toolobar picker option background color*/
 	background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12));
 	box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
 		0px 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
@@ -129,6 +129,41 @@
 .ql-editor ul li:not(.ql-direction-rtl) {
 	margin-bottom: 5px;
 }
+
+.ql-editor ul[data-checked='true'] > li::before,
+.ql-editor ul[data-checked='false'] > li::before {
+	color: white;
+	font-family: system-ui;
+	font-size: 20px;
+}
+
+.ql-editor ul[data-checked='false'] > li::before {
+	font-weight: bold;
+}
+
+.ql-editor ul[data-checked='true'] > li {
+	text-decoration: line-through;
+}
+
+/* .ql-editor ul[data-checked='true'] > li { */
+/* position: relative;
+	display: table; */
+/* } */
+
+/* .ql-editor ul[data-checked='true'] > li::after { */
+/* text-decoration: line-through;
+	text-decoration-color: red;
+	text-decoration-thickness: 2px;
+	 text-decoration-style: solid */
+
+/* content: '';
+	position: absolute;
+	bottom: 50%;
+	left: 0;
+	right: 0;
+	transform: translateY(-50%);
+	border-top: 1px solid red; */
+/* } */
 
 /* ...............M-Web................ */
 @media screen and (max-width: 1088px) {

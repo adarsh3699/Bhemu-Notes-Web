@@ -73,13 +73,14 @@ export function QuillToolbar({
 					<span className="ql-formats notForPhone">
 						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
 						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
+						{renderToolbarBtns('Bullet List', 'ql-list', 'check')}
 						{renderToolbarBtns('Indent', 'ql-indent', '-1')}
 						{renderToolbarBtns('Indent', 'ql-indent', '+1')}
 					</span>
 
 					<span className="ql-formats notForPc">
 						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
-						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
+						{renderToolbarBtns('Bullet List', 'ql-list', 'check')}
 						<select className="ql-align" />
 					</span>
 					<span className="ql-formats notForPhone">
@@ -226,6 +227,7 @@ export const formats = [
 	'background',
 	'list',
 	'bullet',
+	'check',
 	'indent',
 	'link',
 	'image',
