@@ -134,11 +134,13 @@
 .ql-editor ul[data-checked='false'] > li::before {
 	color: white;
 	font-family: system-ui;
-	font-size: 20px;
+	/* font-size: 20px; */
+	transform: translate(-2px) scale(1.3);
 }
 
 .ql-editor ul[data-checked='false'] > li::before {
 	font-weight: bold;
+	transform: translate(-3px, -1.5px) scale(1.5);
 }
 
 .ql-editor ul[data-checked='true'] > li {
