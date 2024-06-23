@@ -76,7 +76,7 @@
 }
 
 .disable_height {
-	height: auto; /*  text area style */
+	height: auto !important; /*  text area style */
 }
 
 .disable_height .ql-editor {
@@ -134,7 +134,6 @@
 .ql-editor ul[data-checked='false'] > li::before {
 	color: white;
 	font-family: system-ui;
-	/* font-size: 20px; */
 	transform: translate(-2px) scale(1.3);
 }
 

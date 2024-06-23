@@ -19,6 +19,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 	const [quality, setQuality] = useState(100);
 	const [isExportBtnLoading, setIsExportBtnLoading] = useState(false);
 
+	//exportAsPDF With Style
 	const exportAsPDF = useCallback(async () => {
 		const editorElement = quillRef.current?.editor?.container;
 		if (!editorElement) {
@@ -90,7 +91,6 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 		}
 	}, [exportTitle, handleMsgShown, quillRef]);
 
-	console.log('exportFormat:', exportFormat);
 	return (
 		<div className="dialogBoxBg">
 			<div className="dialogBox" style={sx}>
