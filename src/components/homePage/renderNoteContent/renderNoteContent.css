@@ -135,6 +135,7 @@
 	color: white;
 	font-family: system-ui;
 	transform: translate(-2px) scale(1.3);
+	cursor: pointer;
 }
 
 .ql-editor ul[data-checked='false'] > li::before {
@@ -143,28 +144,9 @@
 }
 
 .ql-editor ul[data-checked='true'] > li {
-	text-decoration: line-through;
-}
-
-/* .ql-editor ul[data-checked='true'] > li { */
-/* position: relative;
-	display: table; */
-/* } */
-
-/* .ql-editor ul[data-checked='true'] > li::after { */
-/* text-decoration: line-through;
+	text-decoration-line: line-through;
 	text-decoration-color: red;
-	text-decoration-thickness: 2px;
-	 text-decoration-style: solid */
-
-/* content: '';
-	position: absolute;
-	bottom: 50%;
-	left: 0;
-	right: 0;
-	transform: translateY(-50%);
-	border-top: 1px solid red; */
-/* } */
+}
 
 /* ...............M-Web................ */
 @media screen and (max-width: 1088px) {
