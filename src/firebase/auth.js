@@ -75,17 +75,18 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 					userId: cred?.user?.uid,
 					noteTitle: encryptText('Welcome to Bhemu Notes'),
 					noteText:
-						'U2FsdGVkX1/fwTR0hPGpV/eoPnACYhAfSp18C/5NtFq2E1SQ7WODpF7AFhjuc4udRgx/kY2pafeLx/cUewGPbsWsqajwCNOUu+GpcYpyxnX1x/r9cEd5GEmkOsHctQ5WgFlenGjNEvNFIryrtBOcvCzpURf4o754axdlrobrG0lvKNQG40ZhYHvhXEtiqNKVaaIAP+CZ5SpiSMCvpG+Sma54IMNKyLgiRMYFGGyD3+Nq9GXnCA84ml7g6erN/poyUdOrMfLFr/p0NWHEfwbmPu0taieEdNytzFHnYX6YeTkjumF0Sy/NM/gB+I3dLMlMjWpz6gTWjPBJ6K4qyOa8CyzNRIEv5Cx5xScT0Mqluz34E8XhCQ+GWtiN5p+utM6YiJn2tBL6JnVk4VfPcMuPOlpDxNork0fX6MOytWKtKoPjYpV60lqK28gdi/cindT6hGZ1zsHuWdGgQFy09aqc8mIWRb5CpKuiTUjxB8WNm07do3KrYXGkpZrFBZmmqAUIxQ3fVBxm6ndu9FzrBjHa9ojJ+tnQQf4YtkukfdztvN0rLFr+dQDs9QjN1Al3oDVv5HZCe7Q/OO/GqqVAg/+5djOLIgrGPE+SuV7pA5s/Pgg=',
+						'U2FsdGVkX19ucr/GsG+FS0rif5anE16NH1AjLRJ7D9gEKXSUKMjtfULpOobNULVV/hgf7b8F/0jw/uIYq1BLOjzdLj2+StMgU1Qmrnk97M1ZQn/fv3mlYQMjd2X2fico0KeQBXD13/GvGGtNfDxFCo/2NcXSjuDdju0DdSvCDsx7nzj0eas2bIatdR2QBl1fYtIFgwUN/o+iO0dLY1YUFLyB51TLYYENYcWLV5EbWU00X8d5ET12ltZR+oZkLOk4zapN2fHytkxikELkbeY7bU5TAAwn9n5APGzTrvzAvou7mh6t5T31hE6JfqCABgJY2gbFYdYWNGCWnY93HG/yTNdghX1/UqEz3kTaIbc1+eBT3c6AJC+GYwp639KCL/4wPC08iox+/Cd2azEEGJZiCN/2t8i1AnoNssV1Iy8qB2Rrox13ks/Q1q7EcciVJlldofGc8zp51EreUaLRpXKH6udx24tpEIMOzSbOIZmkjQ2ikGF6D1/34oM8+BX7iUNkL3kZ12J+IzpYY+kvblbWJQEtNmHQDmoIOnEv0dFOqJHaq3zyGHvrejEQvweTGDBjaSjyHrKbDtc6NVgiF5Uz9E70ZqedEOMSGiLnVz0amPKPkD/Jq9E6FeGfynp07aGk7waVd0ntpm0qDw2Sy8T5fOIQ6rbS8MiyLBRmDJr3SZQraGwZUJyaUUNrNQu6Ie27',
 
 					noteData: encryptText(
-						`<h1>Welcome to <em>Bhemu Notes</em></h1>
-						<p><br></p><h3>This is an advanced notes app called <em>Bhemu Notes.</em></h3>
+						`<h1>Welcome to <em>Bhemu Notes</em></h1><p><br></p><h3><em>Bhemu Notes</em> is an advanced note-taking app.</h3>
 						<h3>User data and their notes are stored securely in <em><u>encrypted</u></em> form on the server.</h3>
-						<p><br></p><h2>New Features:</h2><ul><li>Now you can organise your notes in a folder</li>
-						<li>You can send a particular note to anyone</li><li>Introduce new features in the in the rice text editor.</li></ul>
-						<p><br></p><p>Know more: <a href="https://bhemu.me/works" rel="noopener noreferrer" target="_blank" style="color: rgb(102, 163, 224);">https://bhemu.me/works</a></p>
-						<p>About developer:<span style="color: rgb(102, 163, 224);"> </span><a href="https://www.bhemu.me/about" rel="noopener noreferrer" target="_blank" style="color: rgb(102, 163, 224);">https://www.bhemu.me/about</a>
-						</p><p><br></p><p><br></p><h1 class="ql-align-center"><span style="color: rgb(194, 133, 255);">-----Thank you for joining-----</span></h1>`
+						<p><br></p><h2>New Features:</h2><ul><li>Now you can organise your notes in a <strong>folder.</strong></li>
+						<li>Now you can <strong>export</strong> a note as PDF.</li>
+						<li>You can <strong>share</strong> a particular note with anyone as a viewer or editor.</li>
+						<li>Introduce a new feature in the rice text editor for more creative notes.</li></ul><p><br></p><p>
+						Know more: <a href="https://bhemu.me/works" rel="noopener noreferrer" target="_blank">https://bhemu.me/works</a></p>
+						<p>About developer: <a href="https://www.bhemu.me/about" rel="noopener noreferrer" target="_blank">https://www.bhemu.me/about</a></p>
+						<p><br></p><p><br></p><h1 class="ql-align-center"><span style="color: rgb(194, 133, 255);">-----Thank you for joining-----</span></h1>`
 					),
 					isNoteSharedWithAll: false,
 					createdAt: serverTimestamp(),

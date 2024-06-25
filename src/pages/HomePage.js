@@ -199,10 +199,8 @@ function HomePage() {
 	//handle note or todo save
 	const handleSaveBtnClick = useCallback(() => {
 		if (isSharedNoteType && checkShareUserPermission()) return;
-
 		setIsSaveBtnLoading(true);
-		const html = document.querySelector('.ql-editor').innerHTML;
-		const noteTitleValue = getTitleValue(html);
+		const noteTitleValue = getTitleValue(openedNoteText);
 
 		const toSendData = {
 			noteId: openedNoteAllData.noteId,
