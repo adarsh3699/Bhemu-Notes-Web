@@ -239,9 +239,11 @@ function HomePage() {
 			handleMsgShown,
 			openedNoteIndex,
 			userAllNotes,
-			handleNoteOpening
+			handleNoteOpening,
+			userDeviceType().desktop,
+			handleNotesModalClosing
 		);
-	}, [openedNoteAllData, handleMsgShown, openedNoteIndex, userAllNotes, handleNoteOpening]);
+	}, [openedNoteAllData, handleMsgShown, openedNoteIndex, userAllNotes, handleNoteOpening, handleNotesModalClosing]);
 
 	//handle Save when "ctrl + s" is pressed
 	useHotkeys(
@@ -251,7 +253,6 @@ function HomePage() {
 				handleSaveBtnClick();
 			}
 		},
-
 		{
 			enableOnFormTags: true,
 			preventDefault: true,

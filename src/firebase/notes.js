@@ -147,13 +147,25 @@ function addNewNote(toSendNoteData, setMsg, setIsApiLoading, isSharedNoteType) {
 }
 
 //delete Notes
-function deleteData(noteId, setIsApiLoading, setMsg, index, userAllNotes, handleNoteOpening) {
+function deleteData(
+	noteId,
+	setIsApiLoading,
+	setMsg,
+	index,
+	userAllNotes,
+	handleNoteOpening,
+	isDesktopMode,
+	handleNotesModalClosing
+) {
 	if (!noteId) return setMsg('deleteData: Please Provide noteId');
 	const docRef = doc(database, 'user_notes', noteId);
 	setIsApiLoading(true);
 	deleteDoc(docRef)
 		.then(() => {
-			index === 0 ? handleNoteOpening(0, userAllNotes[1]) : handleNoteOpening(0, userAllNotes[0]);
+			console.log(isDesktopMode);
+			if (isDesktopMode)
+				index === 0 ? handleNoteOpening(0, userAllNotes[1]) : handleNoteOpening(0, userAllNotes[0]);
+			else handleNotesModalClosing();
 		})
 		.catch((err) => {
 			console.log('deleteData:', err);
