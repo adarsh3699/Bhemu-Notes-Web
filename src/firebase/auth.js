@@ -83,9 +83,9 @@ async function handleSignUpForm(e, setMsg, setIsApiLoading) {
 						<p><br></p><h2>New Features:</h2><ul><li>Now you can organise your notes in a <strong>folder.</strong></li>
 						<li>Now you can <strong>export</strong> a note as PDF.</li>
 						<li>You can <strong>share</strong> a particular note with anyone as a viewer or editor.</li>
-						<li>Introduce a new feature in the rice text editor for more creative notes.</li></ul><p><br></p><p>
-						Know more: <a href="https://adarshsuman.social/works" rel="noopener noreferrer" target="_blank">www.adarshsuman.social/works</a></p>
+						<li>Introduce a new feature in the rice text editor for more creative notes.</li></ul><p><br></p>
 						<p>About developer: <a href="https://adarshsuman.social/about" rel="noopener noreferrer" target="_blank">www.adarshsuman.social/about</a></p>
+						<p>LinkedIn: <a href="https://www.linkedin.com/in/adarsh3699/" rel="noopener noreferrer" target="_blank"www.linkedin.com/in/adarsh3699/</a></p>
 						<p><br></p><p><br></p><h1 class="ql-align-center"><span style="color: rgb(194, 133, 255);">-----Thank you for joining-----</span></h1>`
 					),
 					isNoteSharedWithAll: false,
