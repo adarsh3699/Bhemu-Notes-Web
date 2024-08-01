@@ -162,7 +162,6 @@ function deleteData(
 	setIsApiLoading(true);
 	deleteDoc(docRef)
 		.then(() => {
-			console.log(isDesktopMode);
 			if (isDesktopMode)
 				index === 0 ? handleNoteOpening(0, userAllNotes[1]) : handleNoteOpening(0, userAllNotes[0]);
 			else handleNotesModalClosing();
