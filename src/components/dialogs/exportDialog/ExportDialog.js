@@ -14,7 +14,7 @@ import './exportDialog.css';
 
 function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog, sx }) {
 	const [exportTitle, setExportTitle] = useState(noteTitle || 'Untitled Note');
-	const [exportFormat, setExportFormat] = useState('pdfOnly');
+	const [exportFormat, setExportFormat] = useState('pdfStyled');
 	const [scale, setScale] = useState(20);
 	const [quality, setQuality] = useState(100);
 	const [isExportBtnLoading, setIsExportBtnLoading] = useState(false);
@@ -125,8 +125,8 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 							id="exportFormatSelect"
 							onChange={(e) => setExportFormat(e.target.value)}
 						>
-							<option value="pdfOnly">PDF Only (Recommended)</option>
 							<option value="pdfStyled">PDF (With Style)</option>
+							<option value="pdfOnly">PDF Only</option>
 							<option value="word" disabled>
 								Word (.docx)
 							</option>

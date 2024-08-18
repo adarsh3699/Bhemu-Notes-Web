@@ -29,6 +29,8 @@ export function QuillToolbar({
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
 
 	const toggleSettingsMenu = (event) => {
+		console.log('dsf');
+
 		setSettingMenuAddNotesAnchorEl(event.currentTarget);
 	};
 
@@ -108,18 +110,33 @@ export function QuillToolbar({
 						{renderToolbarBtns('Clear All', 'ql-clean')}
 					</span>
 				</div>
-				<Tooltip title="Menu" arrow>
-					<IconButton
-						id="noteMenuBtn"
-						color="inherit"
-						aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
-						aria-haspopup="true"
-						aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
-						onClick={isSharedNoteType ? null : toggleSettingsMenu}
-					>
-						<MenuIcon fontSize="inherit" />
-					</IconButton>
-				</Tooltip>
+				{isSharedNoteType ? (
+					<Tooltip title="Export" arrow>
+						<IconButton
+							id="noteMenuBtn"
+							color="inherit"
+							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+							aria-haspopup="true"
+							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+							onClick={toggleExportDialog}
+						>
+							<FileDownloadIcon fontSize="inherit" />
+						</IconButton>
+					</Tooltip>
+				) : (
+					<Tooltip title="Menu" arrow>
+						<IconButton
+							id="noteMenuBtn"
+							color="inherit"
+							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+							aria-haspopup="true"
+							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+							onClick={isSharedNoteType ? null : toggleSettingsMenu}
+						>
+							<MenuIcon fontSize="inherit" />
+						</IconButton>
+					</Tooltip>
+				)}
 			</div>
 			<Menu
 				anchorEl={settingMenuAnchorEl}
