@@ -17,6 +17,10 @@ a {
 	text-decoration: unset;
 }
 
+option {
+	color: black;
+}
+
 #loadingScreen {
 	font-size: 50px;
 	color: white;
