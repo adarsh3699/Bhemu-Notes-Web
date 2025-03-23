@@ -130,6 +130,8 @@ function addNewNote(toSendNoteData, setMsg, setIsApiLoading, isSharedNoteType) {
 		noteText: encryptNoteText,
 		noteData: encryptNoteData,
 		isNoteSharedWithAll: false,
+		isDeleted: false,
+		isLocked: false,
 		createdAt: serverTimestamp(),
 		updatedOn: serverTimestamp(),
 	};
