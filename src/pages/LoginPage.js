@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { handleUserState, handleLoginForm } from '../firebase/auth';
+import { handleUserState, handleLoginForm, handleGoogleLogin } from '../firebase/auth';
 import { USER_DETAILS } from '../utils';
 
 import { NavLink } from 'react-router-dom';
@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { amber } from '@mui/material/colors';
 
 import logo from '../img/newLogo.webp';
+import googleIcon from '../img/google.svg';
 import '../styles/loginPage.css';
 
 document.title = 'Bhemu Notes | Sign in';
@@ -39,6 +40,10 @@ function LoginPage() {
 
 	const handleMsgHideOnKeyUp = useCallback((e) => {
 		setMsg('');
+	}, []);
+
+	const handleGoogleSignIn = useCallback(() => {
+		handleGoogleLogin(setMsg, setIsApiLoading);
 	}, []);
 
 	if (isLoading) return;
@@ -82,8 +87,16 @@ function LoginPage() {
 					/>
 				</div>
 
-				<button id="login" className={isApiLoading ? 'isLoginBtnLoading' : ''}>
+				<button id="login" type="submit" className={isApiLoading ? 'isLoginBtnLoading' : ''}>
 					LOGIN
+				</button>
+				<div className="auth-divider">
+					<span>OR</span>
+				</div>
+
+				<button className="google-signin-btn" onClick={handleGoogleSignIn} disabled={isApiLoading}>
+					<img src={googleIcon} alt="Google" />
+					Continue with Google
 				</button>
 			</form>
 

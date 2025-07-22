@@ -31,10 +31,7 @@
 		"build": "GENERATE_SOURCEMAP=false react-scripts build"
 	},
 	"eslintConfig": {
-		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
+		"extends": []
 	},
 	"browserslist": {
 		"production": [

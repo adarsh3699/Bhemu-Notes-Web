@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -96,13 +95,5 @@ function SettingsDrawer(
 		</Box>
 	);
 }
-
-SettingsDrawer.propTypes = {
-	/**
-	 * Injected by the documentation to work in an iframe.
-	 * You won't need it on your project.
-	 */
-	window: PropTypes.func,
-};
 
 export default SettingsDrawer;

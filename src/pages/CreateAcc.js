@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { handleSignUpForm } from '../firebase/auth';
+import { handleSignUpForm, handleGoogleLogin } from '../firebase/auth';
 import Loader from '../components/loader/Loader';
 
 import logo from '../img/newLogo.webp';
+import googleIcon from '../img/google.svg';
 import '../styles/loginPage.css';
 
 document.title = 'Bhemu Notes | Create Your Account';
@@ -19,6 +20,10 @@ function CreateAcc() {
 
 	const handleMsgHideOnKeyUp = useCallback(() => {
 		setMsg('');
+	}, []);
+
+	const handleGoogleSignUp = useCallback(() => {
+		handleGoogleLogin(setMsg, setIsApiLoading);
 	}, []);
 
 	return (
@@ -66,10 +71,17 @@ function CreateAcc() {
 					onChange={handleMsgHideOnKeyUp}
 				/>
 
-				<button className={isApiLoading ? 'isSignup button_2' : 'button_2'}>Sign Up</button>
+				<button className={isApiLoading ? 'isSignup button_2' : 'button_2'} type="submit">
+					Sign Up
+				</button>
 				<div id="updateMsg" className="error_msg" style={isApiLoading ? { marginBottom: '0px' } : {}}>
 					{msg}
 				</div>
+
+				<button className="google-signin-btn" onClick={handleGoogleSignUp} disabled={isApiLoading}>
+					<img src={googleIcon} alt="Google" />
+					Continue with Google
+				</button>
 			</form>
 
 			<Loader isLoading={isApiLoading} />

@@ -8,6 +8,8 @@ import {
 	signOut,
 	onAuthStateChanged,
 	sendPasswordResetEmail,
+	GoogleAuthProvider,
+	signInWithPopup,
 } from 'firebase/auth';
 
 import { getDoc, setDoc, addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
@@ -42,6 +44,94 @@ function handleLoginForm(e, setMsg, setIsApiLoading) {
 			setIsApiLoading(false);
 			setMsg(err.code);
 		});
+}
+
+async function handleGoogleLogin(setMsg, setIsApiLoading) {
+	setIsApiLoading(true);
+	const provider = new GoogleAuthProvider();
+
+	try {
+		const result = await signInWithPopup(auth, provider);
+		const user = result.user;
+
+		// Store user profile image
+		localStorage.setItem('user_profile_img', user?.photoURL || '');
+
+		// Store user details
+		localStorage.setItem(
+			'user_details',
+			encryptText(
+				JSON.stringify({
+					userName: user?.displayName || user?.email?.split('@')[0],
+					email: user?.email,
+					userId: user?.uid,
+				})
+			)
+		);
+
+		// Check if user exists in Firestore, if not create user document
+		const docRef = doc(database, 'user_details', user.email);
+		const docSnap = await getDoc(docRef);
+
+		if (!docSnap.exists()) {
+			// Create user document for first-time Google users
+			await setDoc(docRef, {
+				userName: user?.displayName || user?.email?.split('@')[0],
+				email: user?.email,
+				userId: user?.uid,
+				createdOn: serverTimestamp(),
+				lastloginedOn: serverTimestamp(),
+			});
+
+			// Create welcome note for new Google users
+			const welcomeNoteRef = collection(database, 'user_notes');
+			await addDoc(welcomeNoteRef, {
+				userId: user?.uid,
+				noteTitle: encryptText('Welcome to Bhemu Notes'),
+				noteText:
+					'U2FsdGVkX19ucr/GsG+FS0rif5anE16NH1AjLRJ7D9gEKXSUKMjtfULpOobNULVV/hgf7b8F/0jw/uIYq1BLOjzdLj2+StMgU1Qmrnk97M1ZQn/fv3mlYQMjd2X2fico0KeQBXD13/GvGGtNfDxFCo/2NcXSjuDdju0DdSvCDsx7nzj0eas2bIatdR2QBl1fYtIFgwUN/o+iO0dLY1YUFLyB51TLYYENYcWLV5EbWU00X8d5ET12ltZR+oZkLOk4zapN2fHytkxikELkbeY7bU5TAAwn9n5APGzTrvzAvou7mh6t5T31hE6JfqCABgJY2gbFYdYWNGCWnY93HG/yTNdghX1/UqEz3kTaIbc1+eBT3c6AJC+GYwp639KCL/4wPC08iox+/Cd2azEEGJZiCN/2t8i1AnoNssV1Iy8qB2Rrox13ks/Q1q7EcciVJlldofGc8zp51EreUaLRpXKH6udx24tpEIMOzSbOIZmkjQ2ikGF6D1/34oM8+BX7iUNkL3kZ12J+IzpYY+kvblbWJQEtNmHQDmoIOnEv0dFOqJHaq3zyGHvrejEQvweTGDBjaSjyHrKbDtc6NVgiF5Uz9E70ZqedEOMSGiLnVz0amPKPkD/Jq9E6FeGfynp07aGk7waVd0ntpm0qDw2Sy8T5fOIQ6rbS8MiyLBRmDJr3SZQraGwZUJyaUUNrNQu6Ie27',
+
+				noteData: encryptText(
+					`<h1>Welcome to <em>Bhemu Notes</em></h1><p><br></p><h3><em>Bhemu Notes</em> is an advanced note-taking app.</h3>
+					<h3>User data and their notes are stored securely in <em><u>encrypted</u></em> form on the server.</h3>
+					<p><br></p><h2>New Features:</h2><ul><li>Now you can organise your notes in a <strong>folder.</strong></li>
+					<li>Now you can <strong>export</strong> a note as PDF.</li>
+					<li>You can <strong>share</strong> a particular note with anyone as a viewer or editor.</li>
+					<li>Introduce a new feature in the rice text editor for more creative notes.</li></ul><p><br></p>
+					<p>About developer: <a href="https://adarshsuman.social/about" rel="noopener noreferrer" target="_blank">www.adarshsuman.social/about</a></p>
+					<p>LinkedIn: <a href="https://www.linkedin.com/in/adarsh3699/" rel="noopener noreferrer" target="_blank">www.linkedin.com/in/adarsh3699/</a></p>
+					<p><br></p><p><br></p><h1 class="ql-align-center"><span style="color: rgb(194, 133, 255);">-----Thank you for joining-----</span></h1>`
+				),
+				isNoteSharedWithAll: false,
+				createdAt: serverTimestamp(),
+				updatedOn: serverTimestamp(),
+			});
+		} else {
+			// Update last login time for existing users
+			await setDoc(
+				docRef,
+				{
+					lastloginedOn: serverTimestamp(),
+				},
+				{ merge: true }
+			);
+		}
+
+		setIsApiLoading(false);
+		document.location.href = '/';
+	} catch (error) {
+		setIsApiLoading(false);
+		console.error('Google sign-in error:', error);
+
+		// Handle specific error cases
+		if (error.code === 'auth/popup-closed-by-user') {
+			setMsg('Sign-in cancelled');
+		} else if (error.code === 'auth/popup-blocked') {
+			setMsg('Popup blocked. Please allow popups for this site');
+		} else {
+			setMsg('Failed to sign in with Google. Please try again.');
+		}
+	}
 }
 
 async function handleSignUpForm(e, setMsg, setIsApiLoading) {
@@ -176,4 +266,4 @@ function handleUserState(currentPage) {
 	});
 }
 
-export { handleSignUpForm, handleLoginForm, handleSignOut, handleUserState, handleForgetPassword };
+export { handleSignUpForm, handleLoginForm, handleGoogleLogin, handleSignOut, handleUserState, handleForgetPassword };
