@@ -33,7 +33,8 @@ A sophisticated, feature-rich note-taking application built with React and Fireb
 ### 🔒 **Security & Privacy**
 
 -   **End-to-End Encryption** - All notes encrypted with AES before storage
--   **Secure Authentication** - Firebase Auth with email/password
+-   **Multiple Authentication Methods** - Firebase Auth with email/password and Google Sign-In
+-   **OAuth Integration** - Secure Google authentication with automatic account creation
 -   **Private by Default** - Notes are private unless explicitly shared
 -   **Data Protection** - Encrypted local storage for offline access
 
@@ -69,7 +70,7 @@ A sophisticated, feature-rich note-taking application built with React and Fireb
 ### **Security & Utils**
 
 -   **CryptoJS** - Client-side encryption/decryption
--   **React Scripts** - Build tooling and development server
+-   **Vite** - Fast build tooling and development server
 
 ## 📋 Prerequisites
 
@@ -95,21 +96,33 @@ npm install
 ### 3. Firebase Configuration
 
 1. Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
-2. Enable **Firestore Database** and **Authentication** (Email/Password)
-3. Get your Firebase config from Project Settings
+2. Enable **Firestore Database** and **Authentication** (Email/Password + Google)
+    - Go to Authentication → Sign-in method
+    - Enable **Email/Password** provider
+    - Enable **Google** provider and add your project support email
+    - Add authorized domains (localhost, your production domain)
+3. Get your Firebase config from Project Settings:
+    - Go to Project Settings → General → Your apps
+    - Select "Config" under SDK setup and configuration
+    - Copy the configuration values
 4. Create a `.env` file in the root directory:
 
 ```env
-REACT_APP_FIREBASE_API_KEY=your_api_key
-REACT_APP_FIREBASE_AUTH_DOMAIN=your_auth_domain
-REACT_APP_FIREBASE_DATABASE_URL=your_database_url
-REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-REACT_APP_FIREBASE_STORAGE_BUSKET=your_storage_bucket
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-REACT_APP_FIREBASE_APP_ID=your_app_id
-REACT_APP_FIREBASE_MEASURMENT_ID=your_measurement_id
-REACT_APP_ENCRYPTION_KEY=your_encryption_key_here
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+VITE_FIREBASE_DATABASE_URL=https://your_project_id-default-rtdb.firebaseio.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUSKET=your_project_id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASURMENT_ID=your_measurement_id
+
+# Encryption Key for Note Security (generate a strong random key)
+VITE_ENCRYPTION_KEY=your_strong_encryption_key_here
 ```
+
+> **Security**: Generate a strong encryption key for `VITE_ENCRYPTION_KEY`. You can use online tools or command: `openssl rand -base64 32`
 
 ### 4. Firestore Security Rules
 
@@ -129,24 +142,33 @@ service cloud.firestore {
 }
 ```
 
-### 5. Start Development Server
+### 5. Google OAuth Setup (Production)
+
+For production deployment, configure OAuth consent screen:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Select your Firebase project
+3. Navigate to **APIs & Services** → **OAuth consent screen**
+4. Configure:
+    - App name: "Bhemu Notes"
+    - User support email
+    - App logo (optional)
+    - Privacy policy URL
+    - Terms of service URL
+5. Add your production domain to **Authorized domains**
+
+### 6. Start Development Server
 
 ```bash
-pnpm run dev
+npm run dev
 ```
 
-The application will open at [http://localhost:3000](http://localhost:3000)
+The application will open at [http://localhost:5173](http://localhost:5173)
 
 ## 🏗️ Build for Production
 
 ```bash
-pnpm run build
-```
-
-## 🔍 Preview Production Build
-
-```bash
-pnpm run preview
+npm run build
 ```
 
 This creates an optimized production build in the `build/` directory.
@@ -179,12 +201,22 @@ src/
 ## 🔐 Security Features
 
 -   **Client-side Encryption**: All notes are encrypted using AES before being stored
--   **Secure Authentication**: Firebase Authentication with email verification
+-   **Multiple Authentication Methods**: Firebase Authentication with email/password and Google OAuth
 -   **Permission-based Sharing**: Granular control over note access and editing rights
 -   **Environment Security**: Sensitive configuration stored in environment variables
 -   **HTTPS Only**: All communications secured with SSL/TLS
 
 ## 🎯 Usage Guide
+
+### Getting Started - Sign Up/Login
+
+**Multiple Authentication Options:**
+
+1. **Email & Password**: Create an account with your email address
+2. **Google Sign-In**: Use your Google account for instant access
+    - Click "Continue with Google" on login or registration page
+    - Authorize the app to access your basic profile information
+    - Automatic account creation for new Google users
 
 ### Creating Your First Note
 

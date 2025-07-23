@@ -18,7 +18,7 @@ function RenderNoteContent({
 	openedNoteText,
 	setOpenedNoteText,
 	handleSaveBtnClick,
-	handleDeleteBtnClick, // handleDeleteBtnClickOnYesClick,
+	handleDeleteBtnClick,
 	handleAddShareNoteUser,
 	SharedUserCanEdit,
 	isSharedNoteType,
@@ -30,8 +30,9 @@ function RenderNoteContent({
 	const [isShareDialogOpen, setIsShareDialogBoxOpen] = useState(false);
 	const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
-	// Initialize Quill editor
+	// Single useEffect for all editor management
 	useEffect(() => {
+		// Initialize editor if not exists
 		if (!editorRef.current && quillRef.current) {
 			editorRef.current = new Quill(quillRef.current, {
 				theme: "snow",
@@ -42,41 +43,45 @@ function RenderNoteContent({
 			});
 
 			// Handle text changes
-			editorRef.current.on("text-change", (delta, oldDelta, source) => {
-				if (source === "user") {
-					const content = editorRef.current.root.innerHTML;
-					setOpenedNoteText(content);
-				}
+			editorRef.current.on("text-change", () => {
+				const content = editorRef.current.root.innerHTML;
+				setOpenedNoteText(content);
 			});
 		}
-	}, [SharedUserCanEdit, setOpenedNoteText]);
 
-	// Update editor content when openedNoteText changes
-	useEffect(() => {
-		if (editorRef.current && openedNoteText !== editorRef.current.root.innerHTML) {
-			const currentSelection = editorRef.current.getSelection();
-			editorRef.current.root.innerHTML = openedNoteText || "";
-			if (currentSelection) {
-				editorRef.current.setSelection(currentSelection);
+		// Update content when openedNoteText changes
+		if (editorRef.current) {
+			const currentContent = editorRef.current.root.innerHTML;
+			if (openedNoteText !== currentContent) {
+				// Use Quill's setContents method for better handling
+				if (openedNoteText) {
+					editorRef.current.root.innerHTML = openedNoteText;
+				} else {
+					editorRef.current.setText("");
+				}
+			}
+
+			// Update readOnly state
+			editorRef.current.enable(SharedUserCanEdit);
+
+			// Handle focus - only after a short delay to ensure DOM is ready
+			if (SharedUserCanEdit) {
+				setTimeout(() => {
+					try {
+						editorRef.current?.focus();
+					} catch (error) {
+						// Silently ignore focus errors
+						console.debug("Focus error ignored:", error);
+					}
+				}, 100);
 			}
 		}
-	}, [openedNoteText]);
 
-	// Handle readOnly mode changes
-	useEffect(() => {
-		if (editorRef.current) {
-			editorRef.current.enable(SharedUserCanEdit);
+		// Update document title
+		if (openedNoteAllData?.noteTitle) {
+			document.title = `Bhemu Notes | ${openedNoteAllData?.noteTitle}`;
 		}
-	}, [SharedUserCanEdit]);
-
-	// Focus and title update logic
-	useEffect(() => {
-		if (openedNoteAllData?.noteTitle) document.title = `Bhemu Notes | ${openedNoteAllData?.noteTitle}`;
-		if (SharedUserCanEdit && editorRef.current) {
-			editorRef.current.focus();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [SharedUserCanEdit, openedNoteAllData?.noteId]);
+	}, [openedNoteText, SharedUserCanEdit, openedNoteAllData?.noteTitle, openedNoteAllData?.noteId, setOpenedNoteText]);
 
 	const toggleConfirmationDialog = useCallback(() => {
 		setIsConfirmationDialogOpen((prev) => !prev);
