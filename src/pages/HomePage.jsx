@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { decryptText, USER_DETAILS, userDeviceType } from "../utils";
@@ -50,6 +50,7 @@ function HomePage() {
 	const [isPageLoaded, setIsPageLoaded] = useState(true);
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isApiLoading, setIsApiLoading] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
@@ -245,6 +246,25 @@ function HomePage() {
 		);
 	}, [openedNoteAllData, handleMsgShown, openedNoteIndex, userAllNotes, handleNoteOpening, handleNotesModalClosing]);
 
+	//handle search functionality
+	const handleSearchNotes = useCallback((query) => {
+		setSearchQuery(query);
+	}, []);
+
+	// Filter notes based on search query
+	const filteredNotes = useMemo(() => {
+		if (!searchQuery.trim()) {
+			return isSharedNoteType ? [openedNoteAllData] : folderName ? currentFolderNotes : userAllNotes;
+		}
+
+		const notesToFilter = isSharedNoteType ? [openedNoteAllData] : folderName ? currentFolderNotes : userAllNotes;
+		return notesToFilter.filter(
+			(note) =>
+				note.noteTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				note.noteText?.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+	}, [searchQuery, userAllNotes, currentFolderNotes, openedNoteAllData, folderName]);
+
 	//handle Save when "ctrl + s" is pressed
 	useHotkeys(
 		"ctrl + s, meta + s",
@@ -252,6 +272,24 @@ function HomePage() {
 			if (isNotesModalOpen) {
 				handleSaveBtnClick();
 			}
+		},
+		{
+			enableOnFormTags: true,
+			preventDefault: true,
+			enableOnContentEditable: true,
+		}
+	);
+
+	//handle New Note when "ctrl + alt + n" is pressed
+	useHotkeys(
+		"ctrl + alt + n, meta + alt + n",
+		() => {
+			// Don't create new note if we're on a shared note page without user account
+			if (isSharedNoteType && !USER_DETAILS.userId) {
+				handleMsgShown("Please create a account to create own notes", "warning");
+				return;
+			}
+			handleAddNewNote();
 		},
 		{
 			enableOnFormTags: true,
@@ -300,12 +338,11 @@ function HomePage() {
 				<div id="allContent">
 					<div id="notesTitleContainer">
 						<RenderAllNotes
-							userAllNotes={
-								isSharedNoteType ? [openedNoteAllData] : folderName ? currentFolderNotes : userAllNotes
-							}
+							userAllNotes={filteredNotes}
 							handleNoteOpening={handleNoteOpening}
 							isApiLoading={isApiLoading}
-							handleAddNewNote={handleAddNewNote}
+							handleSearchNotes={handleSearchNotes}
+							searchQuery={searchQuery}
 						/>
 					</div>
 					{isNotesModalOpen && (

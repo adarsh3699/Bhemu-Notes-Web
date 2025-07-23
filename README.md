@@ -58,7 +58,7 @@ A sophisticated, feature-rich note-taking application built with React and Fireb
 -   **React 18** - Modern React with hooks and functional components
 -   **Material-UI (MUI)** - Professional UI components and theming
 -   **React Router** - Client-side routing and navigation
--   **ReactQuill** - Rich text editor component
+-   **Quill.js** - Powerful rich text editor with modular architecture
 -   **React Hot Keys** - Keyboard shortcut management
 
 ### **Backend & Services**
@@ -242,7 +242,7 @@ src/
 ### Keyboard Shortcuts
 
 -   `Ctrl/Cmd + S` - Save note
--   `Ctrl/Cmd + N` - New note (when focused)
+-   `Ctrl/Cmd + Alt + N` - New note
 
 ## 🤝 Contributing
 
@@ -265,7 +265,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
--   [ReactQuill New](https://github.com/zenoamaro/react-quill-new) for the rich text editor
+-   [Quill.js](https://quilljs.com/) for the powerful rich text editor
 -   [Material-UI](https://mui.com/) for the beautiful component library
 -   [Firebase](https://firebase.google.com/) for backend services
 -   [CryptoJS](https://github.com/brix/crypto-js) for encryption utilities

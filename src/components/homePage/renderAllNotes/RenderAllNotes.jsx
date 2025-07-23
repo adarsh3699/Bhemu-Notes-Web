@@ -7,24 +7,35 @@ import LockIcon from "@mui/icons-material/Lock";
 
 import "./renderAllNotes.css";
 
-function RenderAllNotes({ userAllNotes, handleNoteOpening, isApiLoading, handleAddNewNote }) {
+function RenderAllNotes({ userAllNotes, handleNoteOpening, isApiLoading, handleSearchNotes, searchQuery }) {
+	const handleSearchChange = (e) => {
+		handleSearchNotes(e.target.value);
+	};
+
 	return (
 		<>
-			<form id="addNotesInputBox" onSubmit={handleAddNewNote}>
+			<div id="addNotesInputBox">
 				<input
 					id="addNotesInput"
-					name="noteTitle"
+					name="searchNotes"
 					autoComplete="off"
 					type="text"
-					placeholder="Take a note..."
+					placeholder="Search notes..."
+					value={searchQuery}
+					onChange={handleSearchChange}
 				/>
-			</form>
+			</div>
 			<div id="renderNotes">
 				<Loader isLoading={isApiLoading} />
-				{userAllNotes.length === 0 && !isApiLoading && (
+				{userAllNotes.length === 0 && !isApiLoading && !searchQuery && (
 					<div id="homePageSkeleton">
 						<img src={homePageSkeleton} id="homePageSkeletonImg" alt="" />
 						<div id="homePageSkeletonText">Create your first note !</div>
+					</div>
+				)}
+				{userAllNotes.length === 0 && !isApiLoading && searchQuery && (
+					<div id="homePageSkeleton">
+						<div id="homePageSkeletonText">No notes found matching "{searchQuery}"</div>
 					</div>
 				)}
 				{userAllNotes.map(function (item, index) {
