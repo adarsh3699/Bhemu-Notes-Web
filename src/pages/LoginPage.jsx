@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { handleUserState, handleLoginForm, handleGoogleLogin } from '../firebase/auth';
-import { USER_DETAILS } from '../utils';
+import { useState, useEffect, useCallback } from "react";
+import { handleUserState, handleLoginForm, handleGoogleLogin } from "../firebase/auth";
+import { USER_DETAILS } from "../utils";
 
-import { NavLink } from 'react-router-dom';
-import Loader from '../components/loader/Loader';
+import { NavLink } from "react-router-dom";
+import Loader from "../components/loader/Loader";
 
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { amber } from '@mui/material/colors';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { amber } from "@mui/material/colors";
 
-import logo from '../img/newLogo.webp';
-import googleIcon from '../img/google.svg';
-import '../styles/loginPage.css';
+import logo from "../img/newLogo.webp";
+import googleIcon from "../img/google.svg";
+import "../styles/pages/loginPage.css";
 
-document.title = 'Bhemu Notes | Sign in';
+document.title = "Bhemu Notes | Sign in";
 
 function LoginPage() {
-	const [msg, setMsg] = useState('');
+	const [msg, setMsg] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [isApiLoading, setIsApiLoading] = useState(false);
 	const [ispasswordVisible, setIspasswordVisible] = useState(false);
@@ -24,7 +24,7 @@ function LoginPage() {
 	useEffect(() => {
 		handleUserState(false);
 		if (USER_DETAILS?.userId) {
-			document.location.href = '/';
+			document.location.href = "/";
 		} else {
 			setIsLoading(false);
 		}
@@ -38,8 +38,8 @@ function LoginPage() {
 		handleLoginForm(e, setMsg, setIsApiLoading);
 	}, []);
 
-	const handleMsgHideOnKeyUp = useCallback((e) => {
-		setMsg('');
+	const handleMsgHideOnKeyUp = useCallback((_e) => {
+		setMsg("");
 	}, []);
 
 	const handleGoogleSignIn = useCallback(() => {
@@ -62,7 +62,7 @@ function LoginPage() {
 					onKeyDown={handleMsgHideOnKeyUp}
 				/>
 				<input
-					type={ispasswordVisible ? 'text' : 'password'}
+					type={ispasswordVisible ? "text" : "password"}
 					name="password"
 					placeholder="Password"
 					disabled={isApiLoading}
@@ -77,7 +77,7 @@ function LoginPage() {
 								onClick={handlePasswordVisibility}
 								sx={{
 									color: amber[400],
-									'&.Mui-checked': {
+									"&.Mui-checked": {
 										color: amber[600],
 									},
 								}}
@@ -87,7 +87,7 @@ function LoginPage() {
 					/>
 				</div>
 
-				<button id="login" type="submit" className={isApiLoading ? 'isLoginBtnLoading' : ''}>
+				<button id="login" type="submit" className={isApiLoading ? "isLoginBtnLoading" : ""}>
 					LOGIN
 				</button>
 				<div className="auth-divider">
@@ -100,7 +100,7 @@ function LoginPage() {
 				</button>
 			</form>
 
-			<div id="msg" className="error_msg" style={isApiLoading ? { marginBottom: '0px' } : {}}>
+			<div id="msg" className="error_msg" style={isApiLoading ? { marginBottom: "0px" } : {}}>
 				{msg}
 			</div>
 			<Loader isLoading={isApiLoading} />

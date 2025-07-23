@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { decryptText, USER_DETAILS, userDeviceType } from '../utils';
-import { getUserAllData } from '../firebase/features';
-import { handleUserState } from '../firebase/auth';
+import { decryptText, USER_DETAILS, userDeviceType } from "../utils";
+import { getUserAllData } from "../firebase/features";
+import { handleUserState } from "../firebase/auth";
 import {
 	getUserAllNoteData,
 	addNewNote,
@@ -13,36 +13,36 @@ import {
 	getAllNotesOfFolder,
 	unsubscribeAllFolders,
 	unsubscribeAllNotes,
-} from '../firebase/notes';
+} from "../firebase/notes";
 
-import NavBar from '../components/homePage/navBar/NavBar';
-import RenderAllNotes from '../components/homePage/renderAllNotes/RenderAllNotes';
-import RenderNoteContent from '../components/homePage/renderNoteContent/RenderNoteContent';
-import ShowMsg from '../components/showMsg/ShowMsg';
+import NavBar from "../components/homePage/navBar/NavBar";
+import RenderAllNotes from "../components/homePage/renderAllNotes/RenderAllNotes";
+import RenderNoteContent from "../components/homePage/renderNoteContent/RenderNoteContent";
+import ShowMsg from "../components/showMsg/ShowMsg";
 
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useHotkeys } from "react-hotkeys-hook";
 
-import '../styles/homePage.css';
+import "../styles/pages/homePage.css";
 
 let params = new URL(document.location).searchParams;
 
-const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem('note_data')));
-const localFolderData = params.get('folder')
-	? localStorage.getItem(params.get('folder')) && JSON.parse(decryptText(localStorage.getItem(params.get('folder'))))
+const localStorageNotesData = JSON.parse(decryptText(localStorage.getItem("note_data")));
+const localFolderData = params.get("folder")
+	? localStorage.getItem(params.get("folder")) && JSON.parse(decryptText(localStorage.getItem(params.get("folder"))))
 	: undefined;
 
-const sharedNoteId = window.location?.pathname?.split('share/')?.[1];
+const sharedNoteId = window.location?.pathname?.split("share/")?.[1];
 const isSharedNoteType = sharedNoteId ? true : false;
 
 function HomePage() {
-	const [msg, setMsg] = useState({ text: '', type: '' });
+	const [msg, setMsg] = useState({ text: "", type: "" });
 
 	const [userAllDetails, setUserAllDetails] = useState(USER_DETAILS || {});
 	const [userAllNotes, setAllNotes] = useState(localStorageNotesData || []);
 	const [currentFolderNotes, setCurrentFolderNotes] = useState(localFolderData || []);
 
 	const [openedNoteIndex, setOpenedNoteIndex] = useState(0);
-	const [openedNoteText, setOpenedNoteText] = useState('');
+	const [openedNoteText, setOpenedNoteText] = useState("");
 	const [openedNoteAllData, setOpenedNoteAllData] = useState({});
 
 	const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
@@ -53,7 +53,7 @@ function HomePage() {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
-	const folderName = searchParams.get('folder');
+	const folderName = searchParams.get("folder");
 	const urlNoteId = window.location.hash.slice(1);
 
 	// fetch All noteData
@@ -98,7 +98,7 @@ function HomePage() {
 		});
 
 		if (!isNoteTitlePresent && folderName) {
-			window.location.href = '/';
+			window.location.href = "/";
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -107,10 +107,10 @@ function HomePage() {
 		if (msgText) {
 			setMsg({ text: msgText, type: type });
 			setTimeout(() => {
-				setMsg({ text: '', type: '' });
+				setMsg({ text: "", type: "" });
 			}, 2500);
 		} else {
-			console.log('Please Provide Text Msg');
+			console.log("Please Provide Text Msg");
 		}
 	}, []);
 
@@ -119,7 +119,7 @@ function HomePage() {
 			if (sharedNoteId) return setIsNotesModalOpen(true);
 
 			let { noteId, noteData } = item || {};
-			if (!noteId) return navigate('/');
+			if (!noteId) return navigate("/");
 
 			if ((urlNoteId === noteId && userDeviceType().desktop) || !noteId) return;
 			folder = folder || folderName;
@@ -139,7 +139,7 @@ function HomePage() {
 			setOpenedNoteAllData(item);
 			setIsNotesModalOpen(true);
 			setOpenedNoteIndex(index);
-			if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'hidden';
+			if (userDeviceType().mobile) document.querySelector("body").style.overflow = "hidden";
 		},
 		[navigate, urlNoteId, folderName, handleMsgShown]
 	);
@@ -147,7 +147,7 @@ function HomePage() {
 	const handleNotesModalClosing = useCallback(() => {
 		setIsNotesModalOpen(false);
 		if (!sharedNoteId) navigate(folderName ? `/?folder=${folderName}` : ``);
-		if (userDeviceType().mobile) document.querySelector('body').style.overflow = 'auto';
+		if (userDeviceType().mobile) document.querySelector("body").style.overflow = "auto";
 	}, [folderName, navigate]);
 
 	const handleFolderChange = useCallback(
@@ -173,7 +173,7 @@ function HomePage() {
 	//get title value from html string
 	const getTitleValue = useCallback((htmlString) => {
 		// Create a temporary element to parse the HTML string
-		const tempElement = document.createElement('div');
+		const tempElement = document.createElement("div");
 		tempElement.innerHTML = htmlString;
 
 		for (let i = 0; i < tempElement.children.length; i++) {
@@ -187,11 +187,11 @@ function HomePage() {
 	const checkShareUserPermission = useCallback(() => {
 		if (USER_DETAILS.userId) {
 			if (!openedNoteAllData?.canEdit) {
-				handleMsgShown('Insufficient permissions. Contact the onwer for edit permission.', 'warning');
+				handleMsgShown("Insufficient permissions. Contact the onwer for edit permission.", "warning");
 				return true;
 			}
 		} else {
-			handleMsgShown('Please create a account to edit this note.', 'warning');
+			handleMsgShown("Please create a account to edit this note.", "warning");
 			return true;
 		}
 	}, [handleMsgShown, openedNoteAllData?.canEdit]);
@@ -204,8 +204,8 @@ function HomePage() {
 
 		const toSendData = {
 			noteId: openedNoteAllData.noteId,
-			noteTitle: noteTitleValue || 'Enter Notes Title',
-			noteText: document.querySelector('.ql-editor')?.innerText || '',
+			noteTitle: noteTitleValue || "Enter Notes Title",
+			noteText: document.querySelector(".ql-editor")?.innerText || "",
 			noteData: openedNoteText,
 		};
 
@@ -217,8 +217,8 @@ function HomePage() {
 		(e) => {
 			e?.preventDefault();
 			if (isSharedNoteType && !USER_DETAILS.userId)
-				return handleMsgShown('Please create a account to create own notes', 'warning');
-			const newNoteText = e?.target?.noteTitle?.value?.trim() || 'Enter Notes Title';
+				return handleMsgShown("Please create a account to create own notes", "warning");
+			const newNoteText = e?.target?.noteTitle?.value?.trim() || "Enter Notes Title";
 			const newNoteData = `<h1>${newNoteText}</h1><p><br></p><p><br></p><p><br></p>`;
 
 			const toSendNoteData = { newNoteText, newNoteData };
@@ -231,7 +231,7 @@ function HomePage() {
 
 	//handle note delete
 	const handleDeleteBtnClick = useCallback(async () => {
-		if (isSharedNoteType) return handleMsgShown('Only the owner can delete this note.', 'warning');
+		if (isSharedNoteType) return handleMsgShown("Only the owner can delete this note.", "warning");
 
 		deleteData(
 			openedNoteAllData.noteId,
@@ -247,7 +247,7 @@ function HomePage() {
 
 	//handle Save when "ctrl + s" is pressed
 	useHotkeys(
-		'ctrl + s, meta + s',
+		"ctrl + s, meta + s",
 		() => {
 			if (isNotesModalOpen) {
 				handleSaveBtnClick();
@@ -265,11 +265,11 @@ function HomePage() {
 		(e) => {
 			e.preventDefault();
 			const email = e.target.shareEmailInput.value.trim();
-			if (email === '' || USER_DETAILS?.email === email) return;
+			if (email === "" || USER_DETAILS?.email === email) return;
 
 			for (let i = 0; i < openedNoteAllData.noteSharedUsers.length; i++) {
 				if (openedNoteAllData.noteSharedUsers[i]?.email === email) {
-					handleMsgShown('User Already Added');
+					handleMsgShown("User Already Added");
 					return;
 				}
 			}

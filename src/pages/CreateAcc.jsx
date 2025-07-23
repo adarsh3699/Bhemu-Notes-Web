@@ -1,17 +1,17 @@
-import React, { useState, useCallback } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useState, useCallback } from "react";
+import { NavLink } from "react-router-dom";
 
-import { handleSignUpForm, handleGoogleLogin } from '../firebase/auth';
-import Loader from '../components/loader/Loader';
+import { handleSignUpForm, handleGoogleLogin } from "../firebase/auth";
+import Loader from "../components/loader/Loader";
 
-import logo from '../img/newLogo.webp';
-import googleIcon from '../img/google.svg';
-import '../styles/loginPage.css';
+import logo from "../img/newLogo.webp";
+import googleIcon from "../img/google.svg";
+import "../styles/pages/loginPage.css";
 
-document.title = 'Bhemu Notes | Create Your Account';
+document.title = "Bhemu Notes | Create Your Account";
 
 function CreateAcc() {
-	const [msg, setMsg] = useState('');
+	const [msg, setMsg] = useState("");
 	const [isApiLoading, setIsApiLoading] = useState(false);
 
 	const handleUserSignUpForm = useCallback((e) => {
@@ -19,7 +19,7 @@ function CreateAcc() {
 	}, []);
 
 	const handleMsgHideOnKeyUp = useCallback(() => {
-		setMsg('');
+		setMsg("");
 	}, []);
 
 	const handleGoogleSignUp = useCallback(() => {
@@ -71,10 +71,10 @@ function CreateAcc() {
 					onChange={handleMsgHideOnKeyUp}
 				/>
 
-				<button className={isApiLoading ? 'isSignup button_2' : 'button_2'} type="submit">
+				<button className={isApiLoading ? "isSignup button_2" : "button_2"} type="submit">
 					Sign Up
 				</button>
-				<div id="updateMsg" className="error_msg" style={isApiLoading ? { marginBottom: '0px' } : {}}>
+				<div id="updateMsg" className="error_msg" style={isApiLoading ? { marginBottom: "0px" } : {}}>
 					{msg}
 				</div>
 

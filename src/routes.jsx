@@ -1,17 +1,17 @@
-import React, { Suspense, lazy } from 'react';
-import { Navigate, Routes as Switch, Route } from 'react-router-dom';
-import Loader from './components/loader/Loader';
+import { Suspense, lazy } from "react";
+import { Navigate, Routes as Switch, Route } from "react-router-dom";
+import Loader from "./components/loader/Loader";
 
 // import LoginPage from './pages/LoginPage';
 // import HomePage from "./pages/HomePage";
 // import NotesPage from "./pages/NotesPage"
 // import CreateAcc from "./pages/CreateAcc";
 
-const LoginPage = lazy(() => import('./pages/LoginPage'));
-const ForgetPasswordPage = lazy(() => import('./pages/ForgetPasswordPage'));
-const CreateAcc = lazy(() => import('./pages/CreateAcc'));
-const HomePage = lazy(() => import('./pages/HomePage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const ForgetPasswordPage = lazy(() => import("./pages/ForgetPasswordPage"));
+const CreateAcc = lazy(() => import("./pages/CreateAcc"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 function Routes() {
 	return (
@@ -19,7 +19,7 @@ function Routes() {
 			fallback={
 				<div id="loadingScreen">
 					Loading
-					<Loader isLoading={true} sx={{ marginTop: '10px' }} />
+					<Loader isLoading={true} sx={{ marginTop: "10px" }} />
 				</div>
 			}
 		>

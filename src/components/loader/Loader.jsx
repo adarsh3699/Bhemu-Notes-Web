@@ -1,6 +1,6 @@
-import React from 'react';
+// React import removed - not needed with JSX transform
 
-import './loader.css';
+import "./loader.css";
 
 function Loader({ isLoading, sx }) {
 	if (isLoading)

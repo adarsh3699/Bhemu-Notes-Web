@@ -1,47 +1,47 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
-import { saveAs } from 'file-saver';
-import { pdfExporter } from 'quill-to-pdf';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { saveAs } from "file-saver";
+import { pdfExporter } from "quill-to-pdf";
 
-import Slider from '@mui/material/Slider';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Slider from "@mui/material/Slider";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import './exportDialog.css';
+import "./exportDialog.css";
 
 function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog, sx }) {
-	const [exportTitle, setExportTitle] = useState(noteTitle || 'Untitled Note');
-	const [exportFormat, setExportFormat] = useState('pdfStyled');
+	const [exportTitle, setExportTitle] = useState(noteTitle || "Untitled Note");
+	const [exportFormat, setExportFormat] = useState("pdfStyled");
 	const [scale, setScale] = useState(20);
 	const [quality, setQuality] = useState(100);
 	const [isExportBtnLoading, setIsExportBtnLoading] = useState(false);
 
 	//exportAsPDF With Style
 	const exportAsPDF = useCallback(async () => {
-		const editorElement = quillRef.current?.editor?.container;
+		const editorElement = quillRef.current?.container;
 		if (!editorElement) {
-			return handleMsgShown('Nothing to export as PDF', 'warning');
+			return handleMsgShown("Nothing to export as PDF", "warning");
 		}
 
 		// Temporarily expand the editor container to fit all content
-		editorElement.classList.add('disable_height');
+		editorElement.classList.add("disable_height");
 		setIsExportBtnLoading(true);
 
 		try {
 			// Create the canvas with the expanded editor
 			const canvas = await html2canvas(editorElement, {
-				backgroundColor: 'rgb(30, 30, 30)',
+				backgroundColor: "rgb(30, 30, 30)",
 				scale: scale <= 1 ? 0.1 : scale >= 100 ? 10 : scale / 10, // Increase scale for better quality
 			});
 
 			// Restore the original height
-			editorElement.classList.remove('disable_height');
+			editorElement.classList.remove("disable_height");
 
-			const imgData = canvas.toDataURL('image/jpeg', quality <= 10 ? 0.1 : quality >= 100 ? 1 : quality / 100); // Use JPEG for smaller size (compression)
-			const pdf = new jsPDF('p', 'mm', 'a4');
+			const imgData = canvas.toDataURL("image/jpeg", quality <= 10 ? 0.1 : quality >= 100 ? 1 : quality / 100); // Use JPEG for smaller size (compression)
+			const pdf = new jsPDF("p", "mm", "a4");
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = pdf.internal.pageSize.getHeight();
 
@@ -51,8 +51,8 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 			let position = 0;
 			while (position < imgHeight) {
 				pdf.setFillColor(30, 30, 30);
-				pdf.rect(0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), 'F');
-				pdf.addImage(imgData, 'JPEG', 0, position ? -position : 0, pdfWidth, imgHeight);
+				pdf.rect(0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), "F");
+				pdf.addImage(imgData, "JPEG", 0, position ? -position : 0, pdfWidth, imgHeight);
 				position += pdfHeight;
 				if (position < imgHeight) {
 					pdf.addPage();
@@ -61,19 +61,19 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 
 			pdf.save(`${exportTitle}.pdf`);
 			setIsExportBtnLoading(false);
-			handleMsgShown('PDF exported successfully', 'success');
+			handleMsgShown("PDF exported successfully", "success");
 		} catch (error) {
 			// Restore the original height in case of error
-			editorElement.classList.remove('disable_height');
+			editorElement.classList.remove("disable_height");
 			setIsExportBtnLoading(false);
-			handleMsgShown('Error exporting PDF', 'error');
-			console.error('Error exporting PDF:', error);
+			handleMsgShown("Error exporting PDF", "error");
+			console.error("Error exporting PDF:", error);
 		}
 	}, [quillRef, handleMsgShown, scale, quality, exportTitle]);
 
 	const exportAsPDFOnly = useCallback(async () => {
-		const delta = quillRef.current?.editor?.getContents(); // gets the Quill delta
-		if (!delta) return handleMsgShown('Nothing to export as PDF', 'warning');
+		const delta = quillRef.current?.getContents(); // gets the Quill delta
+		if (!delta) return handleMsgShown("Nothing to export as PDF", "warning");
 
 		setIsExportBtnLoading(true);
 
@@ -83,11 +83,11 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 			saveAs(pdfAsBlob, `${exportTitle}.pdf`); // downloads from the browser
 
 			setIsExportBtnLoading(false);
-			handleMsgShown('PDF exported successfully', 'success');
+			handleMsgShown("PDF exported successfully", "success");
 		} catch (error) {
-			handleMsgShown('Error exporting PDF', 'error');
+			handleMsgShown("Error exporting PDF", "error");
 			setIsExportBtnLoading(false);
-			console.error('Error exporting PDF:', error);
+			console.error("Error exporting PDF:", error);
 		}
 	}, [exportTitle, handleMsgShown, quillRef]);
 
@@ -98,7 +98,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 					<div className="dialogBoxTitle">Export Note</div>
 					<Button
 						size="small"
-						sx={{ color: '#2894d1' }}
+						sx={{ color: "#2894d1" }}
 						onClick={toggleExportDialog}
 						startIcon={<ArrowBackIcon />}
 					>
@@ -132,7 +132,7 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 							</option>
 						</select>
 					</div>
-					{exportFormat === 'pdfStyled' && (
+					{exportFormat === "pdfStyled" && (
 						<>
 							<div className="exportTitle_Input">
 								<div className="lableTitle">Scale:</div>
@@ -177,18 +177,18 @@ function ExportDialog({ quillRef, noteTitle, handleMsgShown, toggleExportDialog,
 							variant="contained"
 							color="error"
 							onClick={toggleExportDialog}
-							sx={{ my: 2, mr: 2, width: '50%' }}
+							sx={{ my: 2, mr: 2, width: "50%" }}
 						>
 							Close
 						</Button>
 						<Button
 							variant="contained"
-							onClick={exportFormat === 'pdfOnly' ? exportAsPDFOnly : exportAsPDF}
+							onClick={exportFormat === "pdfOnly" ? exportAsPDFOnly : exportAsPDF}
 							color="success"
 							disabled={isExportBtnLoading}
-							sx={{ my: 2, width: '50%' }}
+							sx={{ my: 2, width: "50%" }}
 						>
-							{isExportBtnLoading ? <CircularProgress color="success" size={30} /> : ' Export'}
+							{isExportBtnLoading ? <CircularProgress color="success" size={30} /> : " Export"}
 						</Button>
 					</div>
 				</div>

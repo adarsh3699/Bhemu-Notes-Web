@@ -1,30 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { NavLink } from 'react-router-dom';
-import { handleSignOut, handleUserState } from '../firebase/auth';
-import { USER_DETAILS } from '../utils';
+import { useState, useEffect, useCallback } from "react";
+import { NavLink } from "react-router-dom";
+import { handleSignOut, handleUserState } from "../firebase/auth";
+import { USER_DETAILS } from "../utils";
 
-import SettingsDrawer from '../components/settingsPage/settingsDrawer/SettingsDrawer';
-import ProfileSettings from '../components/settingsPage/profileSettings/ProfileSettings';
-import AccountSettings from '../components/settingsPage/accountSettings/AccountSettings';
-import AboutSettings from '../components/settingsPage/aboutSettings/AboutSettings';
+import SettingsDrawer from "../components/settingsPage/settingsDrawer/SettingsDrawer";
+import ProfileSettings from "../components/settingsPage/profileSettings/ProfileSettings";
+import AccountSettings from "../components/settingsPage/accountSettings/AccountSettings";
+import AboutSettings from "../components/settingsPage/aboutSettings/AboutSettings";
 
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
 
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import SettingsIcon from '@mui/icons-material/Settings';
-import InfoIcon from '@mui/icons-material/Info';
-import LogoutIcon from '@mui/icons-material/Logout';
-import CloseIcon from '@mui/icons-material/Close';
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import SettingsIcon from "@mui/icons-material/Settings";
+import InfoIcon from "@mui/icons-material/Info";
+import LogoutIcon from "@mui/icons-material/Logout";
+import CloseIcon from "@mui/icons-material/Close";
 
-import '../styles/settingsPage.css';
+import "../styles/pages/settingsPage.css";
 
-document.title = 'Bhemu Notes | Settings';
+document.title = "Bhemu Notes | Settings";
 
 const drawerWidth = 240;
 
@@ -33,25 +33,25 @@ function SettingsPage() {
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [settingsDrawerMenu, setSettingsDrawerMenu] = useState([
 		{
-			name: 'Profile',
+			name: "Profile",
 			isSelected: true,
 			icon: <AccountBoxIcon />,
 			page: <ProfileSettings />,
 		},
 		{
-			name: 'Account',
+			name: "Account",
 			isSelected: false,
 			icon: <SettingsIcon />,
 			page: <AccountSettings />,
 		},
 		{
-			name: 'About',
+			name: "About",
 			isSelected: false,
 			icon: <InfoIcon />,
 			page: <AboutSettings />,
 		},
 		{
-			name: 'Log Out',
+			name: "Log Out",
 			isSelected: false,
 			icon: <LogoutIcon />,
 			page: undefined,
@@ -62,7 +62,7 @@ function SettingsPage() {
 		handleUserState(true);
 		if (USER_DETAILS) {
 			setIsPageLoaded(true);
-			document.title = 'Bhemu Notes | Settings ';
+			document.title = "Bhemu Notes | Settings ";
 		}
 	}, []);
 
@@ -72,10 +72,10 @@ function SettingsPage() {
 
 	const handleSelectedMenu = useCallback(
 		(menuName, index) => {
-			if (menuName === 'Log Out') {
+			if (menuName === "Log Out") {
 				handleSignOut();
 				localStorage.clear();
-				document.location.href = '/login';
+				document.location.href = "/login";
 				return;
 			}
 
@@ -96,16 +96,16 @@ function SettingsPage() {
 	return (
 		<>
 			{isPageLoaded && (
-				<Box sx={{ display: 'flex' }}>
+				<Box sx={{ display: "flex" }}>
 					<AppBar
 						position="fixed"
 						sx={{
 							width: { sm: `calc(100% - ${drawerWidth}px)` },
 							ml: { sm: `${drawerWidth}px` },
-							background: '#1e1e1e',
+							background: "#1e1e1e",
 						}}
 					>
-						<Toolbar sx={{ justifyContent: 'space-between' }}>
+						<Toolbar sx={{ justifyContent: "space-between" }}>
 							<div className="settingsMenu">
 								<IconButton
 									color="inherit"
@@ -115,13 +115,13 @@ function SettingsPage() {
 									sx={{
 										mr: 2,
 										ml: 0,
-										display: { sm: 'none' },
+										display: { sm: "none" },
 									}}
 								>
 									<MenuIcon />
 								</IconButton>
 
-								<Typography variant="h5" sx={{ fontWeight: '600' }} noWrap component="div">
+								<Typography variant="h5" sx={{ fontWeight: "600" }} noWrap component="div">
 									Settings
 								</Typography>
 							</div>

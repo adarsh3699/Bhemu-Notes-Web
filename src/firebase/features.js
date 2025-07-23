@@ -1,18 +1,18 @@
-import { database, auth } from './initFirebase';
-import { encryptText, USER_DETAILS } from '../utils';
+import { database, auth } from "./initFirebase";
+import { encryptText, USER_DETAILS } from "../utils";
 
-import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { onSnapshot, getDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 
 function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorShown) {
 	const { noteId, noteSharedUsers, isNoteSharedWithAll } = incomingData;
 
-	if (!noteId || noteSharedUsers === '') {
-		handleErrorShown('Please Provide all details (noteId, isNoteSharedWithAll)');
+	if (!noteId || noteSharedUsers === "") {
+		handleErrorShown("Please Provide all details (noteId, isNoteSharedWithAll)");
 		// setIsSaveBtnLoading(false);
 		return;
 	}
 	setIsSaveBtnLoading(true);
-	const docRef = doc(database, 'user_notes', noteId);
+	const docRef = doc(database, "user_notes", noteId);
 
 	updateDoc(docRef, {
 		isNoteSharedWithAll,
@@ -24,7 +24,7 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 		})
 		.catch((err) => {
 			setIsSaveBtnLoading(false);
-			console.log('updateNoteShareAccess:', err);
+			console.log("updateNoteShareAccess:", err);
 			handleErrorShown(err.message);
 		});
 }
@@ -73,12 +73,12 @@ function updateNoteShareAccess(incomingData, setIsSaveBtnLoading, handleErrorSho
 function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
 	const myEmail = auth?.currentUser?.email || USER_DETAILS?.email;
 	if (!myEmail) return;
-	const docRef = doc(database, 'user_details', myEmail);
+	const docRef = doc(database, "user_details", myEmail);
 
 	setIsApiLoading(true);
 	onSnapshot(
 		docRef,
-		async (realSnapshot) => {
+		async (_realSnapshot) => {
 			await getDoc(docRef)
 				.then((snapshot) => {
 					const data = snapshot.data();
@@ -87,7 +87,7 @@ function getUserAllData(setUserAllDetails, setIsApiLoading, setMsg) {
 
 					// const encryptNotesData = encryptText(JSON.stringify(noteData));
 					// localStorage.setItem('note_data', encryptNotesData);
-					localStorage.setItem('user_details', encryptText(JSON.stringify(data)));
+					localStorage.setItem("user_details", encryptText(JSON.stringify(data)));
 				})
 				.catch((err) => {
 					setIsApiLoading(false);
@@ -107,7 +107,7 @@ function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackB
 	const myEmail = auth?.currentUser.email;
 	setIsSaveBtnLoading(true);
 
-	const docRef = doc(database, 'user_details', myEmail);
+	const docRef = doc(database, "user_details", myEmail);
 	updateDoc(docRef, {
 		userFolders: incomingData,
 	})
@@ -115,9 +115,9 @@ function updateUserFolder(incomingData, setIsSaveBtnLoading, setMsg, handleBackB
 			handleBackBtnClick();
 			if (isDeleteFolder) {
 				localStorage.removeItem(folderName);
-				setMsg('Folder deleted successfully', 'success');
+				setMsg("Folder deleted successfully", "success");
 			} else {
-				setMsg('Folder save successfully', 'success');
+				setMsg("Folder save successfully", "success");
 				// const encryptNotesData = encryptText(JSON.stringify(incomingData));
 				// localStorage.setItem(folderName, encryptNotesData);
 			}

@@ -1,19 +1,19 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
-import { IconButton } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Tooltip from '@mui/material/Tooltip';
-import MenuIcon from '@mui/icons-material/Menu';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import SaveIcon from '@mui/icons-material/Save';
-import ShareIcon from '@mui/icons-material/Share';
+import { IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Tooltip from "@mui/material/Tooltip";
+import MenuIcon from "@mui/icons-material/Menu";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import SaveIcon from "@mui/icons-material/Save";
+import ShareIcon from "@mui/icons-material/Share";
 
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Quill Toolbar component
 export function QuillToolbar({
@@ -29,7 +29,7 @@ export function QuillToolbar({
 	const isSettingsAnchorElopen = Boolean(settingMenuAnchorEl);
 
 	const toggleSettingsMenu = (event) => {
-		console.log('dsf');
+		console.log("dsf");
 
 		setSettingMenuAddNotesAnchorEl(event.currentTarget);
 	};
@@ -64,50 +64,64 @@ export function QuillToolbar({
 				</div>
 				<div>
 					<span className="ql-formats">
-						<select className="ql-header" defaultValue="3" />
+						<select className="ql-header" defaultValue="">
+							<option value="1"></option>
+							<option value="2"></option>
+							<option value="3"></option>
+							<option value=""></option>
+						</select>
 					</span>
 					<span className="ql-formats">
-						{renderToolbarBtns('Bold', 'ql-bold')}
-						{renderToolbarBtns('Italic', 'ql-italic')}
-						{renderToolbarBtns('Underline', 'ql-underline')}
-						{renderToolbarBtns('Line Through', 'ql-strike')}
+						{renderToolbarBtns("Bold", "ql-bold")}
+						{renderToolbarBtns("Italic", "ql-italic")}
+						{renderToolbarBtns("Underline", "ql-underline")}
+						{renderToolbarBtns("Line Through", "ql-strike")}
 					</span>
 					<span className="ql-formats notForPhone">
-						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
-						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
-						{renderToolbarBtns('Bullet List', 'ql-list', 'check')}
+						{renderToolbarBtns("Number List", "ql-list", "ordered")}
+						{renderToolbarBtns("Bullet List", "ql-list", "bullet")}
+						{renderToolbarBtns("Check List", "ql-list", "check")}
 					</span>
 
 					<span className="ql-formats notForPhone">
-						{renderToolbarBtns('Indent', 'ql-indent', '-1')}
-						{renderToolbarBtns('Indent', 'ql-indent', '+1')}
-						<select className="ql-align" />
+						{renderToolbarBtns("Indent", "ql-indent", "-1")}
+						{renderToolbarBtns("Indent", "ql-indent", "+1")}
+						<select className="ql-align">
+							<option value=""></option>
+							<option value="center"></option>
+							<option value="right"></option>
+							<option value="justify"></option>
+						</select>
 					</span>
 
 					<span className="ql-formats notForPc">
-						{renderToolbarBtns('Number List', 'ql-list', 'ordered')}
-						{renderToolbarBtns('Bullet List', 'ql-list', 'bullet')}
-						{/* {renderToolbarBtns('Bullet List', 'ql-list', 'check')} */}
-						<select className="ql-align" />
+						{renderToolbarBtns("Number List", "ql-list", "ordered")}
+						{renderToolbarBtns("Bullet List", "ql-list", "bullet")}
+						<select className="ql-align">
+							<option value=""></option>
+							<option value="center"></option>
+							<option value="right"></option>
+							<option value="justify"></option>
+						</select>
 					</span>
 					<span className="ql-formats notForPhone">
-						<select className="ql-color" />
-						<select className="ql-background" />
+						<select className="ql-color"></select>
+						<select className="ql-background"></select>
 					</span>
 					<span className="ql-formats notForPhone">
-						{renderToolbarBtns('Link', 'ql-link')}
-						{renderToolbarBtns('Image', 'ql-image')}
-						{renderToolbarBtns('Video', 'ql-video')}
+						{renderToolbarBtns("Link", "ql-link")}
+						{renderToolbarBtns("Image", "ql-image")}
+						{renderToolbarBtns("Video", "ql-video")}
 					</span>
 					<span className="ql-formats notForPhone">
-						{renderToolbarBtns('Blockquote', 'ql-blockquote')}
+						{renderToolbarBtns("Blockquote", "ql-blockquote")}
 						{/* {renderToolbarBtns('Code Block', 'ql-code-block')} */}
-						{renderToolbarBtns('Clear All', 'ql-clean')}
+						{renderToolbarBtns("Clear All", "ql-clean")}
 					</span>
 					<span className="ql-formats notForPc">
-						<select className="ql-color" />
-						{renderToolbarBtns('Link', 'ql-link')}
-						{renderToolbarBtns('Clear All', 'ql-clean')}
+						<select className="ql-color"></select>
+						{renderToolbarBtns("Link", "ql-link")}
+						{renderToolbarBtns("Clear All", "ql-clean")}
 					</span>
 				</div>
 				{isSharedNoteType ? (
@@ -115,9 +129,9 @@ export function QuillToolbar({
 						<IconButton
 							id="noteMenuBtn"
 							color="inherit"
-							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+							aria-expanded={isSettingsAnchorElopen ? "true" : undefined}
 							aria-haspopup="true"
-							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+							aria-controls={isSettingsAnchorElopen ? "account-menu" : undefined}
 							onClick={toggleExportDialog}
 						>
 							<FileDownloadIcon fontSize="inherit" />
@@ -128,9 +142,9 @@ export function QuillToolbar({
 						<IconButton
 							id="noteMenuBtn"
 							color="inherit"
-							aria-expanded={isSettingsAnchorElopen ? 'true' : undefined}
+							aria-expanded={isSettingsAnchorElopen ? "true" : undefined}
 							aria-haspopup="true"
-							aria-controls={isSettingsAnchorElopen ? 'account-menu' : undefined}
+							aria-controls={isSettingsAnchorElopen ? "account-menu" : undefined}
 							onClick={isSharedNoteType ? null : toggleSettingsMenu}
 						>
 							<MenuIcon fontSize="inherit" />
@@ -146,29 +160,29 @@ export function QuillToolbar({
 				onClick={() => setSettingMenuAddNotesAnchorEl(null)}
 				PaperProps={{
 					sx: {
-						overflow: 'visible',
-						filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+						overflow: "visible",
+						filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
 						mt: 1,
-						'& .MuiMenuItem-root': {
+						"& .MuiMenuItem-root": {
 							height: 45,
 						},
-						'&:before': {
+						"&:before": {
 							content: '""',
-							display: 'block',
-							position: 'absolute',
+							display: "block",
+							position: "absolute",
 							top: 0,
 							right: 10,
 							width: 10,
 							height: 10,
-							bgcolor: '#121212',
-							backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))',
-							transform: 'translateY(-50%) rotate(45deg)',
+							bgcolor: "#121212",
+							backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))",
+							transform: "translateY(-50%) rotate(45deg)",
 							zIndex: 0,
 						},
 					},
 				}}
-				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-				anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+				transformOrigin={{ horizontal: "right", vertical: "top" }}
+				anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
 			>
 				<MenuItem onClick={toggleShareDialogBox}>
 					<ListItemIcon>
@@ -214,45 +228,4 @@ export default QuillToolbar;
 // Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida'];
 // Quill.register(Font, true);
 
-// // Modules object for setting up the Quill editor
-export const modules = {
-	clipboard: {
-		matchVisual: false,
-	},
-	toolbar: {
-		container: '#toolbar',
-		handlers: {
-			// undo: undoChange,
-			// redo: redoChange,
-		},
-	},
-	history: {
-		delay: 500,
-		maxStack: 100,
-		userOnly: true,
-	},
-};
-
-// Formats objects for setting up the Quill editor
-export const formats = [
-	'header',
-	'font',
-	'size',
-	'bold',
-	'italic',
-	'underline',
-	'align',
-	'strike',
-	'script',
-	'blockquote',
-	'background',
-	'list',
-	'bullet',
-	'check',
-	'indent',
-	'link',
-	'image',
-	'video',
-	'color',
-	// 'code-block',
-];
+// Configuration moved to separate file for better fast refresh support

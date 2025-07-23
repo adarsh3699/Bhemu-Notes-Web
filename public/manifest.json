@@ -10,12 +10,12 @@
 			"sizes": "64x64 32x32 24x24 16x16"
 		},
 		{
-			"src": "newLogo192.webp",
+			"src": "img/newLogo192.webp",
 			"type": "image/webp",
 			"sizes": "192x192"
 		},
 		{
-			"src": "newLogo512.webp",
+			"src": "img/newLogo512.webp",
 			"type": "image/webp",
 			"sizes": "512x512"
 		}

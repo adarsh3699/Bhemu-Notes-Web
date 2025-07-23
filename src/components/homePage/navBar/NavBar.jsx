@@ -1,39 +1,39 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import RenderDialogs from '../../dialogs/RenderDialogs';
-import { handleSignOut } from '../../../firebase/auth';
-import { USER_DETAILS } from '../../../utils';
+import RenderDialogs from "../../dialogs/RenderDialogs";
+import { handleSignOut } from "../../../firebase/auth";
+import { USER_DETAILS } from "../../../utils";
 
-import { unsubscribeAllFolders } from '../../../firebase/notes';
+import { unsubscribeAllFolders } from "../../../firebase/notes";
 
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import Collapse from '@mui/material/Collapse';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FolderIcon from '@mui/icons-material/Folder';
-import BallotIcon from '@mui/icons-material/Ballot';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FolderIcon from "@mui/icons-material/Folder";
+import BallotIcon from "@mui/icons-material/Ballot";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
-import Logout from '@mui/icons-material/Logout';
-import Settings from '@mui/icons-material/Settings';
+import Logout from "@mui/icons-material/Logout";
+import Settings from "@mui/icons-material/Settings";
 
-// import logo from './files/logo.jpeg';
-import logo from './files/newLogoNav.webp';
+// import logo from '../../../img/logo.jpeg';
+import logo from "../../../img/newLogoNav.webp";
 
-import './files/navBar.css';
+import "./navBar.css";
 
 function NavBar({
 	isSharedNoteType,
@@ -81,17 +81,17 @@ function NavBar({
 
 	const drawerList2 = [
 		{
-			name: 'Deleted',
+			name: "Deleted",
 			icon: <DeleteIcon />,
-			function: () => handleMsgShown('Coming Soon', 'warning'),
+			function: () => handleMsgShown("Coming Soon", "warning"),
 		},
 		{
-			name: 'Settings',
+			name: "Settings",
 			icon: <FolderIcon />,
-			navigateTo: '/Settings',
+			navigateTo: "/Settings",
 		},
 		{
-			name: 'Logout',
+			name: "Logout",
 			icon: <Logout />,
 			function: handleLogoutBtnClick,
 		},
@@ -143,7 +143,7 @@ function NavBar({
 					>
 						<Avatar alt="Remy Sharp" src={logo} sx={{ width: 30, height: 30 }} />
 					</IconButton>
-					<div id="name">{USER_DETAILS?.userName || 'Bhemu Notes'}</div>
+					<div id="name">{USER_DETAILS?.userName || "Bhemu Notes"}</div>
 				</div>
 
 				<Button
@@ -156,7 +156,7 @@ function NavBar({
 						isSharedNoteType
 							? USER_DETAILS?.userId
 								? handleAddNewNote
-								: () => handleMsgShown('Please create a account to create own notes', 'warning')
+								: () => handleMsgShown("Please create a account to create own notes", "warning")
 							: handleAddNewNote
 					}
 				>
@@ -170,15 +170,15 @@ function NavBar({
 
 				<Box sx={{ width: 250 }} role="presentation">
 					<List>
-						{renderDrawerListBtns('All Notes', <BallotIcon />, () => {
+						{renderDrawerListBtns("All Notes", <BallotIcon />, () => {
 							toggleDrawer();
-							navigate('/');
+							navigate("/");
 							unsubscribeAllFolders();
 						})}
-						{renderDrawerListBtns('Edit Folder', <EditIcon />, () => toggleFolderDialog(true))}
+						{renderDrawerListBtns("Edit Folder", <EditIcon />, () => toggleFolderDialog(true))}
 
 						{renderDrawerListBtns(
-							'Show Folders',
+							"Show Folders",
 							isNoteFolderListOpen ? <ExpandLess /> : <ExpandMore />,
 							() => setIsNoteFolderListOpen((prev) => !prev)
 						)}
@@ -197,8 +197,8 @@ function NavBar({
 												primary={item?.folderName}
 												primaryTypographyProps={{
 													style: {
-														overflow: 'hidden',
-														textOverflow: 'ellipsis',
+														overflow: "hidden",
+														textOverflow: "ellipsis",
 													},
 												}}
 											/>
@@ -212,8 +212,8 @@ function NavBar({
 
 					<List sx={{ mb: 20 }}>
 						{drawerList2.map((item, index) => (
-							<ListItem key={'drawer_' + index} disablePadding onClick={toggleDrawer}>
-								{item.name !== 'Settings' ? (
+							<ListItem key={"drawer_" + index} disablePadding onClick={toggleDrawer}>
+								{item.name !== "Settings" ? (
 									<ListItemButton sx={{ py: 1.5 }} onClick={item?.function}>
 										<ListItemIcon>{item.icon}</ListItemIcon>
 										<ListItemText primary={item.name} />

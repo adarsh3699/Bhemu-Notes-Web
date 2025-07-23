@@ -1,35 +1,35 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from "react";
 
-import { updateUserFolder } from '../../../firebase/features';
-import { uid } from 'uid';
+import { updateUserFolder } from "../../../firebase/features";
+import { uid } from "uid";
 
-import Button from '@mui/material/Button';
-import NotesIcon from '@mui/icons-material/Notes';
-import CircularProgress from '@mui/material/CircularProgress';
-import FolderIcon from '@mui/icons-material/Folder';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Checkbox from '@mui/material/Checkbox';
+import Button from "@mui/material/Button";
+import NotesIcon from "@mui/icons-material/Notes";
+import CircularProgress from "@mui/material/CircularProgress";
+import FolderIcon from "@mui/icons-material/Folder";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Checkbox from "@mui/material/Checkbox";
 
-import Box from '@mui/material/Box';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import Box from "@mui/material/Box";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
-import './folderDialog.css';
+import "./folderDialog.css";
 
 function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFolders, sx }) {
 	const backgroundRef = useRef();
 	const [isDrawerAllNoteOpen, setIsDrawerAllNoteOpen] = useState(false);
-	const [currentFolderId, setCurrentFolderId] = useState('');
+	const [currentFolderId, setCurrentFolderId] = useState("");
 	const [selectedNotes, setSelectedNotes] = useState(userAllNotes || []);
-	const [folderName, setFolderName] = useState('');
+	const [folderName, setFolderName] = useState("");
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
 	const [isEditFolderDialogOpen, setIsEditFolderDialogOpen] = useState({ isOpen: false, openAsEdit: false });
 
@@ -39,8 +39,8 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 				backgroundRef.current &&
 				!backgroundRef.current.contains(e.target) &&
 				!isDrawerAllNoteOpen &&
-				e.target.ariaHidden !== 'true' &&
-				e.target.localName !== 'body'
+				e.target.ariaHidden !== "true" &&
+				e.target.localName !== "body"
 			) {
 				toggleFolderDialog();
 			}
@@ -51,25 +51,25 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 	useEffect(
 		function () {
 			// document.body.style.overflow = 'hidden';
-			document.addEventListener('click', handleClickOutside, true);
+			document.addEventListener("click", handleClickOutside, true);
 
 			//component did un-mount
 			return function () {
-				document.removeEventListener('click', handleClickOutside, true);
+				document.removeEventListener("click", handleClickOutside, true);
 			};
 		},
 		[handleClickOutside]
 	);
 
-	const toggleDrawer = (event) => {
+	const toggleDrawer = (_event) => {
 		setIsDrawerAllNoteOpen((prevState) => !prevState);
 	};
 	const handleBackBtnClick = useCallback(() => {
 		if (isEditFolderDialogOpen.isOpen) {
 			setIsEditFolderDialogOpen({ isOpen: false, openAsEdit: false });
-			setCurrentFolderId('');
+			setCurrentFolderId("");
 			setSelectedNotes(userAllNotes);
-			setFolderName('');
+			setFolderName("");
 		} else {
 			toggleFolderDialog();
 		}
@@ -117,9 +117,9 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 	);
 
 	const handleSaveBtnClick = useCallback(() => {
-		if (!folderName) return handleMsgShown('Folder name is required');
+		if (!folderName) return handleMsgShown("Folder name is required");
 		if (!selectedNotes.filter((item) => item.isNoteSelected).length)
-			return handleMsgShown('Please select atleast one note', 'warning');
+			return handleMsgShown("Please select atleast one note", "warning");
 
 		let temp;
 		//Create new folder
@@ -170,7 +170,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 			<div className="folderDialogBoxTable">
 				<div
 					className="folderDialogBoxTableColAddBtn"
-					style={{ justifyContent: 'space-between' }}
+					style={{ justifyContent: "space-between" }}
 					onClick={handleCreateNewFolder}
 				>
 					<div className="colIconTitle">
@@ -183,7 +183,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 					return (
 						<div
 							className="folderDialogBoxTableCol"
-							style={{ justifyContent: 'space-between' }}
+							style={{ justifyContent: "space-between" }}
 							key={index}
 							onClick={() => handleFolderEditBtnClick(item, index)}
 						>
@@ -217,7 +217,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 			<div className="folderDialogBoxTable">
 				<div className="folderDialogBoxTableColAddBtn" onClick={toggleDrawer}>
 					<AddToPhotosIcon sx={{ fontSize: 30, mr: 2 }} />
-					{isEditFolderDialogOpen.openAsEdit ? 'Edit Notes' : 'Select Notes'}
+					{isEditFolderDialogOpen.openAsEdit ? "Edit Notes" : "Select Notes"}
 				</div>
 				{selectedNotes.map((item, index) => {
 					return (
@@ -229,7 +229,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 						)
 					);
 				})}
-				<div className="folderDialogBoxBtnAlign" style={{ justifyContent: 'space-between' }}>
+				<div className="folderDialogBoxBtnAlign" style={{ justifyContent: "space-between" }}>
 					{isEditFolderDialogOpen.openAsEdit && (
 						<Button
 							variant="contained"
@@ -250,7 +250,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 						disabled={isSaveBtnLoading}
 						sx={{ my: 2 }}
 					>
-						{isSaveBtnLoading ? <CircularProgress color="success" size={30} /> : ' Save'}
+						{isSaveBtnLoading ? <CircularProgress color="success" size={30} /> : " Save"}
 					</Button>
 				</div>
 			</div>
@@ -264,7 +264,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 					<div className="dialogBoxTitle">Note Folders</div>
 					<Button
 						size="small"
-						sx={{ color: '#2894d1' }}
+						sx={{ color: "#2894d1" }}
 						onClick={handleBackBtnClick}
 						startIcon={<ArrowBackIcon />}
 					>
@@ -281,18 +281,18 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 					onOpen={toggleDrawer}
 					className="huhuhu"
 					sx={{
-						'.MuiDrawer-paper': {
+						".MuiDrawer-paper": {
 							sm: {
-								boxSizing: 'border-box',
-								margin: 'auto',
-								width: '700px',
+								boxSizing: "border-box",
+								margin: "auto",
+								width: "700px",
 								borderTopLeftRadius: 10,
 								borderTopRightRadius: 10,
 							},
 						},
 					}}
 				>
-					<Box sx={{ width: 'auto' }} role="presentation">
+					<Box sx={{ width: "auto" }} role="presentation">
 						<div className="allNotesListDrawer">
 							<div>Select Notes</div>
 							<Button variant="text" onClick={toggleDrawer}>
@@ -302,7 +302,7 @@ function FolderDialog({ handleMsgShown, toggleFolderDialog, userAllNotes, noteFo
 						<Divider />
 						<List sx={{ mb: 5 }}>
 							{selectedNotes.map((item, index) => (
-								<ListItem key={'list' + index} disablePadding>
+								<ListItem key={"list" + index} disablePadding>
 									<ListItemButton onClick={() => handleSelectNote(index, item?.isNoteSelected)}>
 										<ListItemIcon>
 											<NotesIcon />

@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import { handleUserNameChange, handleUserProfileChange } from '../../../firebase/settings';
+import { handleUserNameChange, handleUserProfileChange } from "../../../firebase/settings";
 
-import myLogo from '../../../img/newLogo.webp';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import { USER_DETAILS } from '../../../utils';
+import myLogo from "../../../img/newLogo.webp";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import { USER_DETAILS } from "../../../utils";
 
-import './profileSettings.css';
+import "./profileSettings.css";
 
 const localUserDetails = USER_DETAILS;
 
@@ -19,9 +19,9 @@ function ProfileSettings() {
 		profilePicture: localUserDetails?.photoURL,
 		userId: localUserDetails?.userId,
 	});
-	const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem('user_profile_img'));
+	const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem("user_profile_img"));
 	const [isSaveBtnLoading, setIsSaveBtnLoading] = useState(false);
-	const [msg, setMsg] = useState('');
+	const [msg, setMsg] = useState("");
 
 	const handleUserDetailsChange = useCallback(
 		(e) => {
@@ -29,7 +29,7 @@ function ProfileSettings() {
 				...userDetails,
 				[e.target.name]: e.target.value,
 			});
-			if (msg) setMsg('');
+			if (msg) setMsg("");
 		},
 		[userDetails, setUserDetails, msg]
 	);
@@ -57,9 +57,9 @@ function ProfileSettings() {
 						src={
 							imageUpload
 								? URL.createObjectURL(imageUpload)
-								: profilePictureUrl === 'null' || !profilePictureUrl
-								  ? myLogo
-								  : profilePictureUrl
+								: profilePictureUrl === "null" || !profilePictureUrl
+								? myLogo
+								: profilePictureUrl
 						}
 						alt=""
 						className="ProfilePictureImg"
@@ -81,7 +81,7 @@ function ProfileSettings() {
 							name="userName"
 							placeholder="User Name"
 							autoComplete="off"
-							value={userDetails?.userName ? userDetails.userName : ''}
+							value={userDetails?.userName ? userDetails.userName : ""}
 							onChange={handleUserDetailsChange}
 						/>
 					</div>
@@ -101,7 +101,7 @@ function ProfileSettings() {
 								width: 140,
 							}}
 						>
-							{isSaveBtnLoading ? <CircularProgress size={30} /> : ' Save Changes'}
+							{isSaveBtnLoading ? <CircularProgress size={30} /> : " Save Changes"}
 						</Button>
 					</div>
 				</div>

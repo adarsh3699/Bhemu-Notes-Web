@@ -1,22 +1,22 @@
-import React, { useCallback, useState } from 'react';
-import { handlePasswordChange } from '../../../firebase/settings';
-import { USER_DETAILS } from '../../../utils';
+import { useCallback, useState } from "react";
+import { handlePasswordChange } from "../../../firebase/settings";
+import { USER_DETAILS } from "../../../utils";
 
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import './accountSettings.css';
+import "./accountSettings.css";
 
 const userDetails = USER_DETAILS;
 
 function AccountSettings() {
 	//change password
 	const [changePasswordData, setChangePasswordData] = useState({
-		currentPassword: '',
-		newPassword: '',
-		confPassword: '',
+		currentPassword: "",
+		newPassword: "",
+		confPassword: "",
 	});
-	const [changePasswordMsg, setChangePasswordMsg] = useState('');
+	const [changePasswordMsg, setChangePasswordMsg] = useState("");
 	const [isChangePasswordBtnLoading, setIsChangePasswordBtnLoading] = useState(false);
 
 	const handleChangePasswordInputChange = useCallback(
@@ -104,7 +104,7 @@ function AccountSettings() {
 						width: 185,
 					}}
 				>
-					{isChangePasswordBtnLoading ? <CircularProgress size={30} /> : 'Change Password'}
+					{isChangePasswordBtnLoading ? <CircularProgress size={30} /> : "Change Password"}
 				</Button>
 				<div className="changePasswordMsg">{changePasswordMsg}</div>
 			</div>

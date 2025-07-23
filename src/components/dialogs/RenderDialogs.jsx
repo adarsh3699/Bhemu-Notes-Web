@@ -1,10 +1,10 @@
-import React from 'react';
-import ConfirmationDialogBox from './confirmationDialog/ConfirmationDialogBox';
-import ExportDialog from './exportDialog/ExportDialog';
-import FolderDialog from './folderDialog/FolderDialog';
-import ShareDialogBox from './shareDialog/ShareDialogBox';
+import React from "react";
+import ConfirmationDialogBox from "./confirmationDialog/ConfirmationDialogBox";
+import ExportDialog from "./exportDialog/ExportDialog";
+import FolderDialog from "./folderDialog/FolderDialog";
+import ShareDialogBox from "./shareDialog/ShareDialogBox";
 
-import './dialogs.css';
+import "./dialogs.css";
 
 function RenderDialogs({
 	isConfirmationDialogOpen,
@@ -27,7 +27,7 @@ function RenderDialogs({
 }) {
 	const dialogArray = [
 		{
-			dialog: 'confirmationDialog',
+			dialog: "confirmationDialog",
 			component: (
 				<ConfirmationDialogBox
 					title="Are You Sure?"
@@ -43,7 +43,7 @@ function RenderDialogs({
 			isOpen: isConfirmationDialogOpen,
 		},
 		{
-			dialog: 'exportDialog',
+			dialog: "exportDialog",
 			component: (
 				<ExportDialog
 					quillRef={quillRef}
@@ -55,7 +55,7 @@ function RenderDialogs({
 			isOpen: isExportDialogOpen,
 		},
 		{
-			dialog: 'folderDialog',
+			dialog: "folderDialog",
 			component: (
 				<FolderDialog
 					handleMsgShown={handleMsgShown}
@@ -67,7 +67,7 @@ function RenderDialogs({
 			isOpen: isFolderDialogOpen,
 		},
 		{
-			dialog: 'shareDialog',
+			dialog: "shareDialog",
 			component: (
 				<ShareDialogBox
 					toggleShareDialog={toggleShareDialog}

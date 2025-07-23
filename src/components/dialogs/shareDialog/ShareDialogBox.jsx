@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from "react";
 
-import { updateNoteShareAccess } from '../../../firebase/features';
-import { USER_DETAILS } from '../../../utils';
+import { updateNoteShareAccess } from "../../../firebase/features";
+import { USER_DETAILS } from "../../../utils";
 
-import Button from '@mui/material/Button';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import CircularProgress from '@mui/material/CircularProgress';
+import Button from "@mui/material/Button";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import userProflie from '../../../img/userProfile.svg';
+import userProflie from "../../../img/userProfile.svg";
 
-import './shareDialogBox.css';
+import "./shareDialogBox.css";
 
 const userDetails = USER_DETAILS || {};
-const userProfileImg = localStorage.getItem('user_profile_img');
+const userProfileImg = localStorage.getItem("user_profile_img");
 
 function ShareDialogBox({
 	handleMsgShown,
@@ -37,11 +37,11 @@ function ShareDialogBox({
 	useEffect(
 		function () {
 			// document.body.style.overflow = 'hidden';
-			document.addEventListener('click', handleClickOutside, true);
+			document.addEventListener("click", handleClickOutside, true);
 
 			//component did un-mount
 			return function () {
-				document.removeEventListener('click', handleClickOutside, true);
+				document.removeEventListener("click", handleClickOutside, true);
 			};
 		},
 		[handleClickOutside]
@@ -49,9 +49,9 @@ function ShareDialogBox({
 
 	const handleSpecificUserPermissionChange = useCallback(
 		(e, index) => {
-			const toBoolean = e.target.value === 'true' ? true : e.target.value === 'false' ? false : 'remove';
+			const toBoolean = e.target.value === "true" ? true : e.target.value === "false" ? false : "remove";
 
-			if (toBoolean === 'remove') {
+			if (toBoolean === "remove") {
 				let userlist = openedNoteAllData.noteSharedUsers.filter((data, i) => {
 					return i !== index ? data : null;
 				});
@@ -70,19 +70,19 @@ function ShareDialogBox({
 
 	const handleAllUserPermissionChange = useCallback(
 		(e) => {
-			const permission = e.target.value === 'true' ? true : false;
+			const permission = e.target.value === "true" ? true : false;
 			setOpenedNoteAllData((prev) => ({ ...prev, isNoteSharedWithAll: permission }));
 		},
 		[setOpenedNoteAllData]
 	);
 
 	const handleCopyLinkBtnClick = useCallback(() => {
-		navigator.clipboard.writeText(window.location.origin + '/share/' + openedNoteAllData.noteId);
-		handleMsgShown('Copied to clipboard', 'success');
+		navigator.clipboard.writeText(window.location.origin + "/share/" + openedNoteAllData.noteId);
+		handleMsgShown("Copied to clipboard", "success");
 	}, [openedNoteAllData.noteId, handleMsgShown]);
 
 	const handleSaveBtnClick = useCallback(() => {
-		if (!openedNoteAllData.noteId) return console.log('Please Provide noteId');
+		if (!openedNoteAllData.noteId) return console.log("Please Provide noteId");
 		const data = {
 			noteId: openedNoteAllData.noteId,
 			noteSharedUsers: openedNoteAllData.noteSharedUsers,
@@ -108,7 +108,7 @@ function ShareDialogBox({
 				</form>
 				<div className="shareUserDetailsBox">
 					<img
-						src={userProfileImg === 'null' || !userProfileImg ? userProflie : userProfileImg}
+						src={userProfileImg === "null" || !userProfileImg ? userProflie : userProfileImg}
 						className="shareUserProflie"
 						alt=""
 					/>
@@ -158,7 +158,7 @@ function ShareDialogBox({
 						<Button
 							variant="contained"
 							onClick={handleCopyLinkBtnClick}
-							sx={{ my: 2, mr: 2, width: '50%' }}
+							sx={{ my: 2, mr: 2, width: "50%" }}
 						>
 							Copy Link
 						</Button>
@@ -167,9 +167,9 @@ function ShareDialogBox({
 							onClick={handleSaveBtnClick}
 							color="success"
 							disabled={isSaveBtnLoading}
-							sx={{ my: 2, width: '50%' }}
+							sx={{ my: 2, width: "50%" }}
 						>
-							{isSaveBtnLoading ? <CircularProgress color="success" size={30} /> : ' Save'}
+							{isSaveBtnLoading ? <CircularProgress color="success" size={30} /> : " Save"}
 						</Button>
 					</div>
 				</div>

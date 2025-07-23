@@ -132,7 +132,7 @@ service cloud.firestore {
 ### 5. Start Development Server
 
 ```bash
-npm start
+pnpm run dev
 ```
 
 The application will open at [http://localhost:3000](http://localhost:3000)
@@ -140,7 +140,13 @@ The application will open at [http://localhost:3000](http://localhost:3000)
 ## 🏗️ Build for Production
 
 ```bash
-npm run build
+pnpm run build
+```
+
+## 🔍 Preview Production Build
+
+```bash
+pnpm run preview
 ```
 
 This creates an optimized production build in the `build/` directory.
@@ -227,7 +233,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
--   [ReactQuill](https://github.com/zenoamaro/react-quill) for the rich text editor
+-   [ReactQuill New](https://github.com/zenoamaro/react-quill-new) for the rich text editor
 -   [Material-UI](https://mui.com/) for the beautiful component library
 -   [Firebase](https://firebase.google.com/) for backend services
 -   [CryptoJS](https://github.com/brix/crypto-js) for encryption utilities

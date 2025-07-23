@@ -1,6 +1,6 @@
-const { enc, AES, MD5 } = require('crypto-js');
+import { enc, AES, MD5 } from "crypto-js";
 
-const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
+const encryptionKey = import.meta.env.VITE_ENCRYPTION_KEY;
 
 function encryptText(text) {
 	try {
@@ -15,7 +15,7 @@ function encryptText(text) {
 function decryptText(enryptedValue) {
 	let value = null;
 	try {
-		if (!enryptedValue) throw new Error('enryptedValue is required');
+		if (!enryptedValue) throw new Error("enryptedValue is required");
 		const decrypted = AES.decrypt(enryptedValue, encryptionKey);
 		value = enc.Utf8.stringify(decrypted);
 	} catch (err) {
@@ -44,11 +44,11 @@ function userDeviceType() {
 	}
 }
 
-let USER_DETAILS = localStorage.getItem('user_details')
+let USER_DETAILS = localStorage.getItem("user_details")
 	? JSON?.parse(
-			decryptText(localStorage.getItem('user_details'))?.length === 0
-				? '{}'
-				: decryptText(localStorage.getItem('user_details'))
+			decryptText(localStorage.getItem("user_details"))?.length === 0
+				? "{}"
+				: decryptText(localStorage.getItem("user_details"))
 	  )
 	: {};
 

@@ -1,6 +1,6 @@
-import React from 'react';
+// React import removed - not needed with JSX transform
 
-import './showMsg.css';
+import "./showMsg.css";
 
 function ShowMsg({ msgText, type }) {
 	return (

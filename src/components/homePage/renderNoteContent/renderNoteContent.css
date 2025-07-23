@@ -21,23 +21,29 @@
 	display: none !important;
 }
 
+/* Quill Toolbar Styling */
+/* .ql-toolbar.ql-snow {
+	border: none !important;
+	padding: 0 !important;
+} */
+
 .ql-toolbar .ql-stroke {
 	fill: none;
-	stroke: #f1f1f1; /*fill toolobar icon color */
+	stroke: #f1f1f1;
 }
 
 .ql-toolbar .ql-fill,
 .ql-snow .ql-fill,
 .ql-snow .ql-stroke.ql-fill {
-	fill: #f1f1f1; /*fill toolobar icon color */
+	fill: #f1f1f1;
 }
 
 .ql-toolbar .ql-picker {
-	color: #f1f1f1; /*toolobar heading picker font color */
+	color: #f1f1f1;
 }
 
 .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
-	margin-top: -13px; /*toolobar heading arow icon alignment */
+	margin-top: -13px;
 }
 
 .ql-snow.ql-toolbar button,
@@ -45,41 +51,40 @@
 .ql-snow .ql-color-picker,
 .ql-snow .ql-icon-picker,
 .ql-snow .ql-icon-picker .ql-picker-item {
-	height: 30px; /*toolobar icon size */
+	height: 30px;
 	width: 30px;
 }
 
 .ql-picker-label svg {
-	height: 25px; /*toolobar icon size */
+	height: 25px;
 	width: 25px;
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-	border: unset; /* toolobar picker title | icon border remove*/
+	border: unset;
 }
 
 .ql-picker-options {
-	border: unset !important; /* toolobar option picker style*/
+	border: unset !important;
 	border-radius: 5px;
-	background-color: #121212 !important; /*toolobar picker option background color*/
+	background-color: #121212 !important;
 	background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12));
 	box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
 		0px 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* ............toolbar_end.............. */
-.ql-container {
-	border: unset !important; /* text area style*/
+/* Quill Container Styling */
+.ql-container.ql-snow {
+	border: unset !important;
 	font-size: 17px;
 	height: calc(100vh - 91px);
-	/* background-color: rgb(26, 26, 97); */
 }
 
-.disable_height {
-	height: auto !important; /*  text area style */
+.ql-container.ql-snow.disable_height {
+	height: auto !important;
 }
 
-.disable_height .ql-editor {
+.ql-container.ql-snow.disable_height .ql-editor {
 	padding-bottom: unset;
 }
 
@@ -88,14 +93,14 @@
 	overflow-x: hidden;
 	overflow-wrap: break-word;
 	padding-bottom: 400px;
-	/* background-color: rgb(37, 37, 117); */
 }
 
-.quill > .ql-container > .ql-editor.ql-blank::before {
-	font-size: 20px; /*placeholder font size*/
-	color: rgb(213, 213, 213); /*placeholder color*/
+.ql-editor.ql-blank::before {
+	font-size: 20px;
+	color: rgb(213, 213, 213);
 }
 
+/* Text Formatting Styles */
 .ql-editor span,
 .ql-editor strong,
 .ql-editor u,
@@ -120,6 +125,7 @@
 	text-decoration-color: #ff0000;
 }
 
+/* List Styling */
 .ql-editor ol,
 .ql-editor ul {
 	padding-left: unset;
@@ -130,25 +136,26 @@
 	margin-bottom: 5px;
 }
 
-.ql-editor ul[data-checked='true'] > li::before,
-.ql-editor ul[data-checked='false'] > li::before {
+/* Checklist Styling */
+.ql-editor li[data-list="unchecked"] > .ql-ui:before,
+.ql-editor li[data-list="checked"] > .ql-ui:before {
 	color: white;
 	font-family: system-ui;
 	transform: translate(-2px) scale(1.3);
 	cursor: pointer;
 }
 
-.ql-editor ul[data-checked='false'] > li::before {
+.ql-editor li[data-list="unchecked"] > .ql-ui:before {
 	font-weight: bold;
-	transform: translate(-3px, -1.5px) scale(1.5);
+	transform: translate(-4px, -2.5px) scale(1.5);
 }
 
-.ql-editor ul[data-checked='true'] > li {
+.ql-editor li[data-list="checked"] {
 	text-decoration-line: line-through;
 	text-decoration-color: red;
 }
 
-/* ...............M-Web................ */
+/* Responsive Design */
 @media screen and (max-width: 1088px) {
 	.notForPhone {
 		display: none !important;
@@ -162,13 +169,13 @@
 	#arrowBackIcon {
 		display: inline-block;
 	}
-	.ql-container {
+	.ql-container.ql-snow {
 		font-size: 16px;
 	}
 }
 
 @media screen and (max-width: 586px) {
-	.ql-container {
+	.ql-container.ql-snow {
 		height: calc(100vh - 121px);
 	}
 }

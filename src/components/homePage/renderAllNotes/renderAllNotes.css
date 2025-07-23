@@ -54,7 +54,8 @@
 .noteBox {
 	background: rgb(220 95 115);
 	color: white;
-	width: calc(95% - 40px);
+	width: 95%;
+	box-sizing: border-box;
 	padding: 10px 20px;
 	border-radius: 15px;
 	margin: 5px auto;

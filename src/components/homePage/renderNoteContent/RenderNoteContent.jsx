@@ -1,13 +1,14 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useEffect, useCallback, useState } from "react";
 
-import RenderDialogs from '../../dialogs/RenderDialogs';
+import RenderDialogs from "../../dialogs/RenderDialogs";
 
-import ReactQuill from 'react-quill';
-import QuillToolbar, { modules, formats } from './QuillToolbar';
-// import { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import Quill from "quill";
+import QuillToolbar from "./QuillToolbar";
+import { modules, formats } from "./quillConfig";
 
-import './renderNoteContent.css';
+import "quill/dist/quill.snow.css";
+
+import "./renderNoteContent.css";
 
 function RenderNoteContent({
 	isSaveBtnLoading,
@@ -24,13 +25,56 @@ function RenderNoteContent({
 	handleMsgShown,
 }) {
 	const quillRef = useRef(null);
+	const editorRef = useRef(null);
 	const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 	const [isShareDialogOpen, setIsShareDialogBoxOpen] = useState(false);
 	const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
+	// Initialize Quill editor
+	useEffect(() => {
+		if (!editorRef.current && quillRef.current) {
+			editorRef.current = new Quill(quillRef.current, {
+				theme: "snow",
+				modules,
+				formats,
+				placeholder: "Write something awesome...",
+				readOnly: !SharedUserCanEdit,
+			});
+
+			// Handle text changes
+			editorRef.current.on("text-change", (delta, oldDelta, source) => {
+				if (source === "user") {
+					const content = editorRef.current.root.innerHTML;
+					setOpenedNoteText(content);
+				}
+			});
+		}
+	}, [SharedUserCanEdit, setOpenedNoteText]);
+
+	// Update editor content when openedNoteText changes
+	useEffect(() => {
+		if (editorRef.current && openedNoteText !== editorRef.current.root.innerHTML) {
+			const currentSelection = editorRef.current.getSelection();
+			editorRef.current.root.innerHTML = openedNoteText || "";
+			if (currentSelection) {
+				editorRef.current.setSelection(currentSelection);
+			}
+		}
+	}, [openedNoteText]);
+
+	// Handle readOnly mode changes
+	useEffect(() => {
+		if (editorRef.current) {
+			editorRef.current.enable(SharedUserCanEdit);
+		}
+	}, [SharedUserCanEdit]);
+
+	// Focus and title update logic
 	useEffect(() => {
 		if (openedNoteAllData?.noteTitle) document.title = `Bhemu Notes | ${openedNoteAllData?.noteTitle}`;
-		if (SharedUserCanEdit) quillRef?.current?.focus();
+		if (SharedUserCanEdit && editorRef.current) {
+			editorRef.current.focus();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [SharedUserCanEdit, openedNoteAllData?.noteId]);
 
@@ -59,16 +103,7 @@ function RenderNoteContent({
 					toggleExportDialog={toggleExportDialog}
 					isSharedNoteType={isSharedNoteType}
 				/>
-				<ReactQuill
-					ref={quillRef}
-					theme="snow"
-					formats={formats}
-					value={openedNoteText}
-					onChange={setOpenedNoteText}
-					readOnly={!SharedUserCanEdit}
-					placeholder="Write something awesome..."
-					modules={modules}
-				/>
+				<div ref={quillRef} />
 			</div>
 
 			{(isConfirmationDialogOpen || isShareDialogOpen || isExportDialogOpen) && (
@@ -84,7 +119,7 @@ function RenderNoteContent({
 					openedNoteAllData={openedNoteAllData}
 					setOpenedNoteAllData={setOpenedNoteAllData}
 					handleMsgShown={handleMsgShown}
-					quillRef={quillRef}
+					quillRef={editorRef}
 					noteTitle={openedNoteAllData?.noteTitle}
 				/>
 			)}

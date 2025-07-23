@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from 'react';
-import { NavLink } from 'react-router-dom';
-import { handleForgetPassword } from '../firebase/auth';
-import Loader from '../components/loader/Loader';
+import { useState, useCallback } from "react";
+import { NavLink } from "react-router-dom";
+import { handleForgetPassword } from "../firebase/auth";
+import Loader from "../components/loader/Loader";
 
-import logo from '../img/newLogo.webp';
-import '../styles/loginPage.css';
+import logo from "../img/newLogo.webp";
+import "../styles/pages/loginPage.css";
 
-document.title = 'Bhemu Notes | Forget Password';
+document.title = "Bhemu Notes | Forget Password";
 
 function ForgetPasswordPage() {
-	const [msg, setMsg] = useState('');
+	const [msg, setMsg] = useState("");
 	const [isOTPApiLoading, setIsOTPApiLoading] = useState(false);
 
 	const handleForgetPasswordSubmit = useCallback((e) => {
@@ -17,8 +17,8 @@ function ForgetPasswordPage() {
 		handleForgetPassword(e, setMsg, setIsOTPApiLoading);
 	}, []);
 
-	const handleMsgHideOnKeyUp = useCallback((e) => {
-		setMsg('');
+	const handleMsgHideOnKeyUp = useCallback((_e) => {
+		setMsg("");
 	}, []);
 
 	return (
@@ -35,7 +35,7 @@ function ForgetPasswordPage() {
 					onChange={handleMsgHideOnKeyUp}
 				/>
 
-				<button className="button_2" style={{ marginTop: 'unset' }}>
+				<button className="button_2" style={{ marginTop: "unset" }}>
 					Send Link
 				</button>
 

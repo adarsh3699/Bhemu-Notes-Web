@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback, useRef } from 'react';
-import { Button } from '@mui/material';
+import { useEffect, useCallback, useRef } from "react";
+import { Button } from "@mui/material";
 
 // import './confirmationDialogBox.css';
 
@@ -18,11 +18,11 @@ function ConfirmationDialogBox({ title, message, onYesClick, toggleConfirmationD
 	useEffect(
 		function () {
 			// document.body.style.overflow = 'hidden';
-			document.addEventListener('click', handleClickOutside, true);
+			document.addEventListener("click", handleClickOutside, true);
 
 			//component did un-mount
 			return function () {
-				document.removeEventListener('click', handleClickOutside, true);
+				document.removeEventListener("click", handleClickOutside, true);
 			};
 		},
 		[handleClickOutside]
@@ -40,7 +40,7 @@ function ConfirmationDialogBox({ title, message, onYesClick, toggleConfirmationD
 						variant="contained"
 						color="error"
 						fullWidth
-						sx={{ mr: 2, fontSize: '17px' }}
+						sx={{ mr: 2, fontSize: "17px" }}
 						onClick={onYesClick}
 					>
 						Yes
@@ -50,7 +50,7 @@ function ConfirmationDialogBox({ title, message, onYesClick, toggleConfirmationD
 						variant="contained"
 						color="info"
 						fullWidth
-						sx={{ fontSize: '17px' }}
+						sx={{ fontSize: "17px" }}
 						onClick={toggleConfirmationDialog}
 					>
 						No

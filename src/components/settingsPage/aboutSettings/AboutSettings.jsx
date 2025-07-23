@@ -1,8 +1,8 @@
-import React from 'react';
-import { Accordion } from '../../Accordion';
+// React import removed - not needed with JSX transform
+import { Accordion } from "../../Accordion";
 
-import './aboutSettings.css';
-import './accordion.css';
+import "./aboutSettings.css";
+import "./accordion.css";
 
 function AboutSettings() {
 	return (
@@ -51,7 +51,7 @@ function AboutSettings() {
 			</div>
 			<div className="aboutPoints">
 				<a href="https://www.bhemu.me/about" target="_blank" className="" rel="noreferrer">
-					Click Here{' '}
+					Click Here{" "}
 				</a>
 				To know more.
 			</div>
